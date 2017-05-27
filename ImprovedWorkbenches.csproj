@@ -55,4 +55,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy /y $(TargetPath) "C:\Program Files (x86)\Steam\SteamApps\common\RimWorld\Mods\ImprovedWorkbenches\Assemblies"</PostBuildEvent>
+  </PropertyGroup>
 </Project>
