@@ -7,8 +7,8 @@
     <ProjectGuid>{85A03DEE-B0F7-46B8-8200-68FA00D607C3}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ImprovedWorkshops</RootNamespace>
-    <AssemblyName>ImprovedWorkshops</AssemblyName>
+    <RootNamespace>ImprovedWorkbenches</RootNamespace>
+    <AssemblyName>ImprovedWorkbenches</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -50,6 +50,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BillConfig_DoWindowContents_Patch.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

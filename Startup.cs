@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace ImprovedWorkshops
+﻿namespace ImprovedWorkbenches
 {
     public class Startup : HugsLib.ModBase
     {
-        public override string ModIdentifier => "ImprovedWorkshops";
+        public override string ModIdentifier => "ImprovedWorkbenches";
     }
 }
