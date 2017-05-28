@@ -12,6 +12,11 @@ namespace ImprovedWorkbenches
 
     public class Bill_ProductionWithFilters : Bill_Production, IBillWithThingFilter
     {
+        public Bill_ProductionWithFilters()
+        {
+            
+        }
+
         public Bill_ProductionWithFilters(RecipeDef recipe) : base(recipe)
         {
         }
@@ -26,11 +31,22 @@ namespace ImprovedWorkbenches
             return recipe;
         }
 
-        private readonly ThingFilter _outputFilter = new ThingFilter();
+        public override void ExposeData()
+        {
+            base.ExposeData();
+            Scribe_Deep.Look<ThingFilter>(ref _outputFilter, "outputFilter", new object[0]);
+        }
+
+        private ThingFilter _outputFilter = new ThingFilter();
     }
 
     public class Bill_ProductionWithUftWithFilters : Bill_ProductionWithUft, IBillWithThingFilter
     {
+        public Bill_ProductionWithUftWithFilters()
+        {
+            
+        }
+
         public Bill_ProductionWithUftWithFilters(RecipeDef recipe) : base(recipe)
         {
         }
@@ -45,6 +61,12 @@ namespace ImprovedWorkbenches
             return recipe;
         }
 
-        private readonly ThingFilter _outputFilter = new ThingFilter();
+        public override void ExposeData()
+        {
+            base.ExposeData();
+            Scribe_Deep.Look<ThingFilter>(ref _outputFilter, "outputFilter", new object[0]);
+        }
+
+        private ThingFilter _outputFilter = new ThingFilter();
     }
 }
