@@ -17,12 +17,16 @@ namespace ImprovedWorkbenches
             if (recipe.UsesUnfinishedThing)
             {
                 Main.Instance.Logger.Warning("Returning Bill_ProductionWithUftWithFilters");
-                __result = new Bill_ProductionWithUftWithFilters(recipe);
+                var newBill = new Bill_ProductionWithUftWithFilters(recipe);
+                SetDefaultFilter(newBill);
+                __result = newBill;
             }
             else
             {
                 Main.Instance.Logger.Warning("Returning Bill_ProductionWithFilters");
-                __result = new Bill_ProductionWithFilters(recipe);
+                var newBill = new Bill_ProductionWithFilters(recipe);
+                SetDefaultFilter(newBill);
+                __result = newBill;
             }
         }
 
@@ -33,11 +37,11 @@ namespace ImprovedWorkbenches
                    recipe.products.First().thingDef.BaseMarketValue > 0;
         }
 
-        private static void SetDefaultFilter<T>(T bill, RecipeDef recipe) where T: class 
+        private static void SetDefaultFilter<T>(T bill) where T: IBillWithThingFilter 
         {
-            var thingDef = recipe.products.First().thingDef;
-            bill.OutputFilter.SetDisallowAll();
-            bill.OutputFilter.SetAllow(thingDef, true);
+            var thingDef = bill.GetRecipeDef().products.First().thingDef;
+            bill.GetOutputFilter().SetDisallowAll();
+            bill.GetOutputFilter().SetAllow(thingDef, true);
         }
     }
 }

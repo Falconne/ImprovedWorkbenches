@@ -21,24 +21,10 @@ namespace ImprovedWorkbenches
 
             var bill = billRaw as Bill_ProductionWithUftWithFilters;
 
-            //Main.Instance.Logger.Warning("Converted");
-
-            if (!(bill.recipe.products != null &&
-                  bill.recipe.products.Count > 0 &&
-                  bill.recipe.products.First().thingDef.BaseMarketValue > 0))
-            {
-                return;
-            }
-
-            var thingDef = bill.recipe.products.First().thingDef;
-            var thingFilter = new ThingFilter();
-            thingFilter.SetDisallowAll();
-            thingFilter.SetAllow(thingDef, true);
-
             var rect = new Rect(0, inRect.height - 200f, 160f, 40f);
             Widgets.Label(rect, "Counted items filter:");
             var row = inRect.height - 150f;
-            DrawHitPointsFilterConfig(ref row, rect.width, thingFilter);
+            DrawHitPointsFilterConfig(ref row, rect.width, bill.GetOutputFilter());
 
         }
 
