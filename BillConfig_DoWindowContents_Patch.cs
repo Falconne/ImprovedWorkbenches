@@ -25,15 +25,10 @@ namespace ImprovedWorkbenches
             Widgets.Label(rect, "Output filter:");
             var row = inRect.height - 150f;
             DrawHitPointsFilterConfig(ref row, rect.width, bill.GetOutputFilter());
-
         }
 
         private static void DrawHitPointsFilterConfig(ref float y, float width, ThingFilter filter)
         {
-            if (!filter.allowedHitPointsConfigurable)
-            {
-                return;
-            }
             Rect rect = new Rect(0f, y, width, 26f);
             FloatRange allowedHitPointsPercents = filter.AllowedHitPointsPercents;
             Widgets.FloatRange(rect, 2, ref allowedHitPointsPercents, 0f, 1f, "HitPoints", ToStringStyle.PercentZero);
