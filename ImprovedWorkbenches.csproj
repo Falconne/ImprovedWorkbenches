@@ -56,10 +56,18 @@
     <Compile Include="Bill_ProductionWithFilters.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ThirdParty\Detours.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ThirdParty\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy /y $(TargetPath) "C:\Program Files (x86)\Steam\SteamApps\common\RimWorld\Mods\ImprovedWorkbenches\Assemblies"</PostBuildEvent>
+    <PostBuildEvent>xcopy /y/s  $(ProjectDir)dist\* "%25ProgramFiles(x86)%25\Steam\SteamApps\common\RimWorld\Mods"
+copy /y $(TargetPath) "%25ProgramFiles(x86)%25\Steam\SteamApps\common\RimWorld\Mods\ImprovedWorkbenches\Assemblies"</PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>if not exist $(ProjectDir)ThirdParty mkdir  $(ProjectDir)ThirdParty
+copy /y "%25ProgramFiles(x86)%25\Steam\SteamApps\common\RimWorld\RimWorldWin_Data\Managed\UnityEngine.dll"  $(ProjectDir)ThirdParty
+copy /y "%25ProgramFiles(x86)%25\Steam\SteamApps\common\RimWorld\RimWorldWin_Data\Managed\Assembly-CSharp.dll"  $(ProjectDir)ThirdParty</PreBuildEvent>
   </PropertyGroup>
 </Project>
