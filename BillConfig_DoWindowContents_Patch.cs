@@ -10,7 +10,7 @@ namespace ImprovedWorkbenches
     public static class BillConfig_DoWindowContents_Patch
     {
         [HarmonyPostfix]
-        public static void DrawHelloButton(Dialog_BillConfig __instance, Rect inRect)
+        public static void DrawFilters(Dialog_BillConfig __instance, Rect inRect)
         {
             var billRaw = (Bill_Production)AccessTools.Field(typeof(Dialog_BillConfig), "bill").GetValue(__instance);
             if (billRaw.repeatMode != BillRepeatModeDefOf.TargetCount)
