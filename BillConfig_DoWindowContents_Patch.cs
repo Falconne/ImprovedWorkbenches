@@ -22,7 +22,7 @@ namespace ImprovedWorkbenches
             var bill = billRaw as Bill_ProductionWithUftWithFilters;
 
             var rect = new Rect(0, inRect.height - 200f, 160f, 40f);
-            Widgets.Label(rect, "Counted items filter:");
+            Widgets.Label(rect, "Output filter:");
             var row = inRect.height - 150f;
             DrawHitPointsFilterConfig(ref row, rect.width, bill.GetOutputFilter());
 
@@ -36,11 +36,11 @@ namespace ImprovedWorkbenches
             }
             Rect rect = new Rect(0f, y, width, 26f);
             FloatRange allowedHitPointsPercents = filter.AllowedHitPointsPercents;
-            Widgets.FloatRange(rect, 1, ref allowedHitPointsPercents, 0f, 1f, "HitPoints", ToStringStyle.PercentZero);
+            Widgets.FloatRange(rect, 2, ref allowedHitPointsPercents, 0f, 1f, "HitPoints", ToStringStyle.PercentZero);
             filter.AllowedHitPointsPercents = allowedHitPointsPercents;
             y += 26f;
             y += 5f;
-            Text.Font = GameFont.Small;
+            //Text.Font = GameFont.Small;
         }
     }
 }
