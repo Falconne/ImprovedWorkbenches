@@ -288,4 +288,7 @@ __pycache__/
 *.odx.cs
 *.xsd.cs
 
-ThirdParty/
+*.dll
+*.exe
+
+ThirdParty/HugsLib.xml
