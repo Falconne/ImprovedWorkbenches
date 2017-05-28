@@ -10,8 +10,6 @@ namespace ImprovedWorkbenches
         }
 
         public ThingFilter OutputFilter = new ThingFilter();
-
-        public bool UseOutputFilter = false;
     }
 
     public class Bill_ProductionWithUftWithFilters : Bill_ProductionWithUft
@@ -21,7 +19,5 @@ namespace ImprovedWorkbenches
         }
 
         public ThingFilter OutputFilter = new ThingFilter();
-
-        public bool UseOutputFilter = false;
     }
 }

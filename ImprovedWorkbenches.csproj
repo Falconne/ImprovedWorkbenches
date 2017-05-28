@@ -54,7 +54,7 @@
     <Compile Include="BillConfig_DoWindowContents_Patch.cs" />
     <Compile Include="BillUtility_Detour.cs" />
     <Compile Include="Bill_ProductionWithFilters.cs" />
-    <Compile Include="Startup.cs" />
+    <Compile Include="Main.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ThirdParty\Detours.cs" />
   </ItemGroup>

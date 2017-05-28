@@ -12,9 +12,16 @@ namespace ImprovedWorkbenches
         [HarmonyPostfix]
         public static void DrawHelloButton(Dialog_BillConfig __instance, Rect inRect)
         {
-            var bill = (Bill_Production)AccessTools.Field(typeof(Dialog_BillConfig), "bill").GetValue(__instance);
-            if (bill.repeatMode != BillRepeatModeDefOf.TargetCount)
+            var billRaw = (Bill_Production)AccessTools.Field(typeof(Dialog_BillConfig), "bill").GetValue(__instance);
+            if (billRaw.repeatMode != BillRepeatModeDefOf.TargetCount)
                 return;
+
+            if (!(billRaw is Bill_ProductionWithUftWithFilters))
+                return;
+
+            var bill = billRaw as Bill_ProductionWithUftWithFilters;
+
+            //Main.Instance.Logger.Warning("Converted");
 
             if (!(bill.recipe.products != null &&
                   bill.recipe.products.Count > 0 &&
