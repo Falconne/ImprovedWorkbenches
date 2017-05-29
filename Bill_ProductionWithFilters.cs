@@ -4,8 +4,18 @@ using Verse;
 
 namespace ImprovedWorkbenches
 {
-    public class AllowDeadmansApparelWrapper
+    public class AllowDeadmansApparelWrapper : IExposable
     {
+        public AllowDeadmansApparelWrapper(bool value = false)
+        {
+            RawValue = value;
+        }
+
+        public void ExposeData()
+        {
+            Scribe_Values.Look<bool>(ref RawValue, "allowDeadmansApparelWrapped", false);
+        }
+
         public bool RawValue;
     }
 
@@ -55,7 +65,7 @@ namespace ImprovedWorkbenches
         {
             base.ExposeData();
             Scribe_Deep.Look<ThingFilter>(ref _outputFilter, "outputFilter", new object[0]);
-            Scribe_Deep.Look<AllowDeadmansApparelWrapper>(ref this._allowDeadmansApparel, 
+            Scribe_Deep.Look<AllowDeadmansApparelWrapper>(ref _allowDeadmansApparel, 
                 "allowDeadmansApparel", false);
         }
 
@@ -99,7 +109,7 @@ namespace ImprovedWorkbenches
         {
             base.ExposeData();
             Scribe_Deep.Look<ThingFilter>(ref _outputFilter, "outputFilter", new object[0]);
-            Scribe_Deep.Look<AllowDeadmansApparelWrapper>(ref this._allowDeadmansApparel,
+            Scribe_Deep.Look<AllowDeadmansApparelWrapper>(ref _allowDeadmansApparel,
                 "allowDeadmansApparel", false);
         }
 
