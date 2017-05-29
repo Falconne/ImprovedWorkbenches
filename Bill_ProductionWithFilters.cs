@@ -8,6 +8,8 @@ namespace ImprovedWorkbenches
         ThingFilter GetOutputFilter();
 
         RecipeDef GetRecipeDef();
+
+        Map GetMap();
     }
 
     public class Bill_ProductionWithFilters : Bill_Production, IBillWithThingFilter
@@ -29,6 +31,11 @@ namespace ImprovedWorkbenches
         public RecipeDef GetRecipeDef()
         {
             return recipe;
+        }
+
+        public Map GetMap()
+        {
+            return Map;
         }
 
         public override void ExposeData()
@@ -59,6 +66,11 @@ namespace ImprovedWorkbenches
         public RecipeDef GetRecipeDef()
         {
             return recipe;
+        }
+
+        public Map GetMap()
+        {
+            return Map;
         }
 
         public override void ExposeData()

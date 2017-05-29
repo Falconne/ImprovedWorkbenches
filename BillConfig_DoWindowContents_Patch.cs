@@ -19,7 +19,7 @@ namespace ImprovedWorkbenches
             if (!(billRaw is IBillWithThingFilter))
                 return;
 
-            var bill = billRaw as IBillWithThingFilter;
+            var bill = (IBillWithThingFilter) billRaw;
 
             var rect = new Rect(0, inRect.height - 200f, 160f, 40f);
             Widgets.Label(rect, "Output filter:");

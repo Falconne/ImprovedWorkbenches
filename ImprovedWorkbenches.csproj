@@ -54,6 +54,7 @@
     <Compile Include="BillConfig_DoWindowContents_Patch.cs" />
     <Compile Include="BillUtility_Detour.cs" />
     <Compile Include="Bill_ProductionWithFilters.cs" />
+    <Compile Include="FilteredProductCounter.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
