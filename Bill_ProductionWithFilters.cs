@@ -1,8 +1,14 @@
-﻿using RimWorld;
+﻿using System;
+using RimWorld;
 using Verse;
 
 namespace ImprovedWorkbenches
 {
+    public class AllowDeadmansApparelWrapper
+    {
+        public bool RawValue;
+    }
+
     public interface IBillWithThingFilter
     {
         ThingFilter GetOutputFilter();
@@ -10,6 +16,8 @@ namespace ImprovedWorkbenches
         RecipeDef GetRecipeDef();
 
         Map GetMap();
+
+        AllowDeadmansApparelWrapper GetAllowDeadmansApparelWrapper();
     }
 
     public class Bill_ProductionWithFilters : Bill_Production, IBillWithThingFilter
@@ -38,13 +46,22 @@ namespace ImprovedWorkbenches
             return Map;
         }
 
+        public AllowDeadmansApparelWrapper GetAllowDeadmansApparelWrapper()
+        {
+            return _allowDeadmansApparel;
+        }
+
         public override void ExposeData()
         {
             base.ExposeData();
             Scribe_Deep.Look<ThingFilter>(ref _outputFilter, "outputFilter", new object[0]);
+            Scribe_Deep.Look<AllowDeadmansApparelWrapper>(ref this._allowDeadmansApparel, 
+                "allowDeadmansApparel", false);
         }
 
         private ThingFilter _outputFilter = new ThingFilter();
+
+        private AllowDeadmansApparelWrapper _allowDeadmansApparel = new AllowDeadmansApparelWrapper();
     }
 
     public class Bill_ProductionWithUftWithFilters : Bill_ProductionWithUft, IBillWithThingFilter
@@ -73,12 +90,21 @@ namespace ImprovedWorkbenches
             return Map;
         }
 
+        public AllowDeadmansApparelWrapper GetAllowDeadmansApparelWrapper()
+        {
+            return _allowDeadmansApparel;
+        }
+
         public override void ExposeData()
         {
             base.ExposeData();
             Scribe_Deep.Look<ThingFilter>(ref _outputFilter, "outputFilter", new object[0]);
+            Scribe_Deep.Look<AllowDeadmansApparelWrapper>(ref this._allowDeadmansApparel,
+                "allowDeadmansApparel", false);
         }
 
         private ThingFilter _outputFilter = new ThingFilter();
+
+        private AllowDeadmansApparelWrapper _allowDeadmansApparel = new AllowDeadmansApparelWrapper();
     }
 }

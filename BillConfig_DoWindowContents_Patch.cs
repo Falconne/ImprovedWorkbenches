@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Harmony;
 using RimWorld;
 using UnityEngine;
@@ -23,13 +24,14 @@ namespace ImprovedWorkbenches
             var filter = bill.GetOutputFilter();
 
             const float columnWidth = 180f;
+            const float gap = 26f;
             var rect = new Rect(0, inRect.height - 211f, columnWidth, 40f);
             Widgets.Label(rect, "Output filter:");
             var y = rect.yMin + Text.LineHeight - 1;
 
-            var rect1 = new Rect(0f, y, columnWidth, 26f);
+            var rect1 = new Rect(0f, y, columnWidth, gap);
             var allowedHitPointsPercents = filter.AllowedHitPointsPercents;
-            Widgets.FloatRange(rect1, 2, ref allowedHitPointsPercents, 0f, 1f, 
+            Widgets.FloatRange(rect1, 10, ref allowedHitPointsPercents, 0f, 1f, 
                 "HitPoints", ToStringStyle.PercentZero);
             filter.AllowedHitPointsPercents = allowedHitPointsPercents;
 
@@ -37,10 +39,20 @@ namespace ImprovedWorkbenches
                 return;
 
             y += 33;
-            var rect2 = new Rect(0f, y, columnWidth, 26f);
+            var rect2 = new Rect(0f, y, columnWidth, gap);
             var allowedQualityLevels = filter.AllowedQualityLevels;
-            Widgets.QualityRange(rect2, 3, ref allowedQualityLevels);
+            Widgets.QualityRange(rect2, 11, ref allowedQualityLevels);
             filter.AllowedQualityLevels = allowedQualityLevels;
+
+            var deadmansFilter = new SpecialThingFilterWorker_NonDeadmansApparel();
+            var thingDef = bill.GetRecipeDef().products.First().thingDef;
+            if (!deadmansFilter.CanEverMatch(thingDef))
+                return;
+
+            y += 35;
+            var rect3 = new Rect(0f, y, columnWidth, gap);
+            var allowDeadmansApparel = bill.GetAllowDeadmansApparelWrapper();
+            Widgets.CheckboxLabeled(rect3, "Count Corpse Clothes", ref (allowDeadmansApparel.RawValue));
         }
     }
 }
