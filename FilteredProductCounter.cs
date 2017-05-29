@@ -17,16 +17,14 @@ namespace ImprovedWorkbenches
             {
                 // Counting a Thing that is a resource or is otherwise lacking hit-points.
                 // Defer back to vanilla counting function.
-                Main.Instance.Logger.Message("Counting thing with no quality");
                 return true;
             }
 
-            Main.Instance.Logger.Message("Counting thing WITH quality");
             var filter = billWithThingFilter.GetOutputFilter();
             var map = billWithThingFilter.GetMap();
             __result = 0;
 
-            // Filter code adapted from Fluffy's Colony Manager
+            // Filter code originally adapted from Fluffy's Colony Manager
             foreach (var thingDef in filter.AllowedThingDefs)
             {
                 var thingList = map.listerThings.ThingsOfDef(thingDef);
@@ -46,7 +44,9 @@ namespace ImprovedWorkbenches
                         continue;
                     }
 
-                    if (!filter.AllowedHitPointsPercents.IncludesEpsilon(thing.HitPoints))
+                    var thingHitPointsPercent = (float) thing.HitPoints / thing.MaxHitPoints;
+
+                    if (!filter.AllowedHitPointsPercents.IncludesEpsilon(thingHitPointsPercent))
                     {
                         continue;
                     }
