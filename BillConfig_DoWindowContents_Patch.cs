@@ -20,21 +20,27 @@ namespace ImprovedWorkbenches
                 return;
 
             var bill = (IBillWithThingFilter) billRaw;
+            var filter = bill.GetOutputFilter();
 
-            var rect = new Rect(0, inRect.height - 200f, 160f, 40f);
+            const float columnWidth = 180f;
+            var rect = new Rect(0, inRect.height - 211f, columnWidth, 40f);
             Widgets.Label(rect, "Output filter:");
-            var row = inRect.height - 150f;
-            DrawHitPointsFilterConfig(ref row, rect.width, bill.GetOutputFilter());
-        }
+            var y = rect.yMin + Text.LineHeight - 1;
 
-        private static void DrawHitPointsFilterConfig(ref float y, float width, ThingFilter filter)
-        {
-            Rect rect = new Rect(0f, y, width, 26f);
-            FloatRange allowedHitPointsPercents = filter.AllowedHitPointsPercents;
-            Widgets.FloatRange(rect, 2, ref allowedHitPointsPercents, 0f, 1f, "HitPoints", ToStringStyle.PercentZero);
+            var rect1 = new Rect(0f, y, columnWidth, 26f);
+            var allowedHitPointsPercents = filter.AllowedHitPointsPercents;
+            Widgets.FloatRange(rect1, 2, ref allowedHitPointsPercents, 0f, 1f, 
+                "HitPoints", ToStringStyle.PercentZero);
             filter.AllowedHitPointsPercents = allowedHitPointsPercents;
-            y += 26f;
-            y += 5f;
+
+            if (!filter.allowedQualitiesConfigurable)
+                return;
+
+            y += 33;
+            var rect2 = new Rect(0f, y, columnWidth, 26f);
+            var allowedQualityLevels = filter.AllowedQualityLevels;
+            Widgets.QualityRange(rect2, 3, ref allowedQualityLevels);
+            filter.AllowedQualityLevels = allowedQualityLevels;
         }
     }
 }

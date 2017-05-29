@@ -32,7 +32,7 @@ namespace ImprovedWorkbenches
                 foreach (var thing in thingList)
                 {
                     QualityCategory quality;
-                    if (thing.TryGetQuality(out quality))
+                    if (filter.allowedQualitiesConfigurable && thing.TryGetQuality(out quality))
                     {
                         if (!filter.AllowedQualityLevels.Includes(quality))
                         {
