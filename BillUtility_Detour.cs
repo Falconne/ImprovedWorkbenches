@@ -8,24 +8,32 @@ namespace ImprovedWorkbenches
     [HarmonyPatch(typeof(BillUtility), "MakeNewBill")]
     public static class BillUtility_Detour
     {
-        [HarmonyPostfix]
-        public static void MakeNewBill(ref Bill __result, ref RecipeDef recipe)
+        [HarmonyPrefix]
+        public static bool MakeNewBill(ref Bill __result, ref RecipeDef recipe)
         {
             if (!CanOutputBeFiltered(recipe))
-                return;
+                return true;
 
             if (recipe.UsesUnfinishedThing)
             {
                 var newBill = new Bill_ProductionWithUftWithFilters(recipe);
                 if (SetDefaultFilter(newBill))
+                {
                     __result = newBill;
+                    return false;
+                }
             }
             else
             {
                 var newBill = new Bill_ProductionWithFilters(recipe);
                 if (SetDefaultFilter(newBill))
+                {
                     __result = newBill;
+                    return false;
+                }
             }
+
+            return true;
         }
 
         // Figure out if output of recipe produces a "thing" with hit-points
