@@ -4,21 +4,6 @@ using Verse;
 
 namespace ImprovedWorkbenches
 {
-    public class AllowDeadmansApparelWrapper : IExposable
-    {
-        public AllowDeadmansApparelWrapper(bool value = false)
-        {
-            RawValue = value;
-        }
-
-        public void ExposeData()
-        {
-            Scribe_Values.Look<bool>(ref RawValue, "allowDeadmansApparelWrapped", false);
-        }
-
-        public bool RawValue;
-    }
-
     public interface IBillWithThingFilter
     {
         ThingFilter GetOutputFilter();
@@ -27,7 +12,7 @@ namespace ImprovedWorkbenches
 
         Map GetMap();
 
-        AllowDeadmansApparelWrapper GetAllowDeadmansApparelWrapper();
+        ref bool GetAllowDeadmansApparel();
     }
 
     public class Bill_ProductionWithFilters : Bill_Production, IBillWithThingFilter
@@ -56,22 +41,22 @@ namespace ImprovedWorkbenches
             return Map;
         }
 
-        public AllowDeadmansApparelWrapper GetAllowDeadmansApparelWrapper()
+        public ref bool GetAllowDeadmansApparel()
         {
-            return _allowDeadmansApparel;
+            return ref _allowDeadmansApparel;
         }
 
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Deep.Look<ThingFilter>(ref _outputFilter, "outputFilter", new object[0]);
-            Scribe_Deep.Look<AllowDeadmansApparelWrapper>(ref _allowDeadmansApparel, 
+            Scribe_Deep.Look(ref _outputFilter, "outputFilter", new object[0]);
+            Scribe_Values.Look(ref _allowDeadmansApparel, 
                 "allowDeadmansApparel", false);
         }
 
         private ThingFilter _outputFilter = new ThingFilter();
 
-        private AllowDeadmansApparelWrapper _allowDeadmansApparel = new AllowDeadmansApparelWrapper();
+        private bool _allowDeadmansApparel;
     }
 
     public class Bill_ProductionWithUftWithFilters : Bill_ProductionWithUft, IBillWithThingFilter
@@ -100,21 +85,21 @@ namespace ImprovedWorkbenches
             return Map;
         }
 
-        public AllowDeadmansApparelWrapper GetAllowDeadmansApparelWrapper()
+        public ref bool GetAllowDeadmansApparel()
         {
-            return _allowDeadmansApparel;
+            return ref _allowDeadmansApparel;
         }
 
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Deep.Look<ThingFilter>(ref _outputFilter, "outputFilter", new object[0]);
-            Scribe_Deep.Look<AllowDeadmansApparelWrapper>(ref _allowDeadmansApparel,
+            Scribe_Deep.Look(ref _outputFilter, "outputFilter", new object[0]);
+            Scribe_Values.Look(ref _allowDeadmansApparel,
                 "allowDeadmansApparel", false);
         }
 
         private ThingFilter _outputFilter = new ThingFilter();
 
-        private AllowDeadmansApparelWrapper _allowDeadmansApparel = new AllowDeadmansApparelWrapper();
+        private bool _allowDeadmansApparel;
     }
 }

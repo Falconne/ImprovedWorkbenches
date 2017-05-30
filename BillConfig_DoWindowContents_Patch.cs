@@ -51,8 +51,7 @@ namespace ImprovedWorkbenches
 
             y += 35;
             var rect3 = new Rect(0f, y, columnWidth, gap);
-            var allowDeadmansApparel = bill.GetAllowDeadmansApparelWrapper();
-            Widgets.CheckboxLabeled(rect3, "Count Corpse Clothes", ref (allowDeadmansApparel.RawValue));
+            Widgets.CheckboxLabeled(rect3, "Count Corpse Clothes", ref bill.GetAllowDeadmansApparel());
         }
     }
 }
