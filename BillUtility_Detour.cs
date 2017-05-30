@@ -16,14 +16,12 @@ namespace ImprovedWorkbenches
 
             if (recipe.UsesUnfinishedThing)
             {
-                Main.Instance.Logger.Warning("Returning Bill_ProductionWithUftWithFilters");
                 var newBill = new Bill_ProductionWithUftWithFilters(recipe);
                 if (SetDefaultFilter(newBill))
                     __result = newBill;
             }
             else
             {
-                Main.Instance.Logger.Warning("Returning Bill_ProductionWithFilters");
                 var newBill = new Bill_ProductionWithFilters(recipe);
                 if (SetDefaultFilter(newBill))
                     __result = newBill;
