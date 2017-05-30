@@ -24,6 +24,17 @@ namespace ImprovedWorkbenches
             var map = billWithThingFilter.GetMap();
             __result = 0;
 
+            SpecialThingFilterWorker_NonDeadmansApparel nonDeadmansApparelFilter = null;
+            var productThingDef = billWithThingFilter.GetRecipeDef().products.First().thingDef;
+            if (!billWithThingFilter.GetAllowDeadmansApparel())
+            {
+                // We want to filter out corpse worn apparel
+                nonDeadmansApparelFilter = new SpecialThingFilterWorker_NonDeadmansApparel();
+                if (!nonDeadmansApparelFilter.CanEverMatch(productThingDef))
+                    // Not apparel, don't bother checking
+                    nonDeadmansApparelFilter = null;
+                
+            }
             // Filter code originally adapted from Fluffy's Colony Manager
             foreach (var thingDef in filter.AllowedThingDefs)
             {
@@ -47,9 +58,10 @@ namespace ImprovedWorkbenches
                     var thingHitPointsPercent = (float) thing.HitPoints / thing.MaxHitPoints;
 
                     if (!filter.AllowedHitPointsPercents.IncludesEpsilon(thingHitPointsPercent))
-                    {
                         continue;
-                    }
+
+                    if (nonDeadmansApparelFilter != null && !nonDeadmansApparelFilter.Matches(thing))
+                        continue;
 
                     __result += thing.stackCount;
                 }

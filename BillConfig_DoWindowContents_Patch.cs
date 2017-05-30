@@ -25,8 +25,8 @@ namespace ImprovedWorkbenches
 
             const float columnWidth = 180f;
             const float gap = 26f;
-            var rect = new Rect(0, inRect.height - 211f, columnWidth, 40f);
-            Widgets.Label(rect, "Output filter:");
+            var rect = new Rect(0, inRect.height - 210f, columnWidth, 40f);
+            Widgets.Label(rect, "Counted items filter:");
             var y = rect.yMin + Text.LineHeight - 1;
 
             var rect1 = new Rect(0f, y, columnWidth, gap);
@@ -44,14 +44,16 @@ namespace ImprovedWorkbenches
             Widgets.QualityRange(rect2, 11, ref allowedQualityLevels);
             filter.AllowedQualityLevels = allowedQualityLevels;
 
-            var deadmansFilter = new SpecialThingFilterWorker_NonDeadmansApparel();
+            var nonDeadmansApparelFilter = new SpecialThingFilterWorker_NonDeadmansApparel();
             var thingDef = bill.GetRecipeDef().products.First().thingDef;
-            if (!deadmansFilter.CanEverMatch(thingDef))
+            if (!nonDeadmansApparelFilter.CanEverMatch(thingDef))
+            {
+                // Not apparel, so deadman check is not needed.
                 return;
-
+            }
             y += 35;
             var rect3 = new Rect(0f, y, columnWidth, gap);
-            Widgets.CheckboxLabeled(rect3, "Count Corpse Clothes", ref bill.GetAllowDeadmansApparel());
+            Widgets.CheckboxLabeled(rect3, "Count corpse clothes", ref bill.GetAllowDeadmansApparel());
         }
     }
 }
