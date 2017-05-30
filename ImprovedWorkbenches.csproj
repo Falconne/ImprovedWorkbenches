@@ -64,7 +64,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy /y/s  $(ProjectDir)dist\* "%25ProgramFiles(x86)%25\Steam\SteamApps\common\RimWorld\Mods"
-copy /y $(TargetPath) "%25ProgramFiles(x86)%25\Steam\SteamApps\common\RimWorld\Mods\ImprovedWorkbenches\Assemblies"</PostBuildEvent>
+copy /y $(TargetPath) "%25ProgramFiles(x86)%25\Steam\SteamApps\common\RimWorld\Mods\$(TargetName)\Assemblies"</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent>if not exist $(ProjectDir)ThirdParty mkdir  $(ProjectDir)ThirdParty
