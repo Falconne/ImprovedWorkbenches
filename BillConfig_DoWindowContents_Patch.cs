@@ -17,10 +17,10 @@ namespace ImprovedWorkbenches
             if (billRaw.repeatMode != BillRepeatModeDefOf.TargetCount)
                 return;
 
-            if (!(billRaw is IBillWithThingFilter))
+            var bill = billRaw as IBillWithThingFilter;
+            if (bill == null)
                 return;
 
-            var bill = (IBillWithThingFilter) billRaw;
             var filter = bill.GetOutputFilter();
 
             const float columnWidth = 180f;
