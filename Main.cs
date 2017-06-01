@@ -7,7 +7,6 @@ namespace ImprovedWorkbenches
         public Main()
         {
             Instance = this;
-            Logger.Warning("Mod started");
         }
 
         internal new ModLogger Logger => base.Logger;
