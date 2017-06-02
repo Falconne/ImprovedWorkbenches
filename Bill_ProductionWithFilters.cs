@@ -15,7 +15,14 @@ namespace ImprovedWorkbenches
         ref bool GetAllowDeadmansApparel();
     }
 
-    public class Bill_ProductionWithFilters : Bill_Production, IBillWithThingFilter
+    public interface IBillWithWorkerFilter
+    {
+        Pawn GetWorker();
+
+        void SetWorker(Pawn worker);
+    }
+
+    public class Bill_ProductionWithFilters : Bill_Production, IBillWithThingFilter, IBillWithWorkerFilter
     {
         public Bill_ProductionWithFilters()
         {
@@ -52,11 +59,13 @@ namespace ImprovedWorkbenches
             Scribe_Deep.Look(ref _outputFilter, "outputFilter", new object[0]);
             Scribe_Values.Look(ref _allowDeadmansApparel, 
                 "allowDeadmansApparel", false);
+            Scribe_References.Look(ref _worker, "worker");
         }
 
         private ThingFilter _outputFilter = new ThingFilter();
 
         private bool _allowDeadmansApparel;
+        private Pawn _worker;
     }
 
     public class Bill_ProductionWithUftWithFilters : Bill_ProductionWithUft, IBillWithThingFilter
@@ -96,10 +105,12 @@ namespace ImprovedWorkbenches
             Scribe_Deep.Look(ref _outputFilter, "outputFilter", new object[0]);
             Scribe_Values.Look(ref _allowDeadmansApparel,
                 "allowDeadmansApparel", false);
+            Scribe_References.Look(ref _worker, "worker");
         }
 
         private ThingFilter _outputFilter = new ThingFilter();
 
         private bool _allowDeadmansApparel;
+        private Pawn _worker;
     }
 }
