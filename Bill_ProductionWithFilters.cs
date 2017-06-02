@@ -53,14 +53,26 @@ namespace ImprovedWorkbenches
             return ref _allowDeadmansApparel;
         }
 
+        public Pawn GetWorker()
+        {
+            return _worker;
+        }
+
+        public void SetWorker(Pawn worker)
+        {
+            _worker = worker;
+        }
+
+
         public override void ExposeData()
         {
             base.ExposeData();
             Scribe_Deep.Look(ref _outputFilter, "outputFilter", new object[0]);
-            Scribe_Values.Look(ref _allowDeadmansApparel, 
+            Scribe_Values.Look(ref _allowDeadmansApparel,
                 "allowDeadmansApparel", false);
             Scribe_References.Look(ref _worker, "worker");
         }
+
 
         private ThingFilter _outputFilter = new ThingFilter();
 
@@ -68,7 +80,8 @@ namespace ImprovedWorkbenches
         private Pawn _worker;
     }
 
-    public class Bill_ProductionWithUftWithFilters : Bill_ProductionWithUft, IBillWithThingFilter
+    public class Bill_ProductionWithUftWithFilters : 
+        Bill_ProductionWithUft, IBillWithThingFilter, IBillWithWorkerFilter
     {
         public Bill_ProductionWithUftWithFilters()
         {
@@ -99,6 +112,17 @@ namespace ImprovedWorkbenches
             return ref _allowDeadmansApparel;
         }
 
+        public Pawn GetWorker()
+        {
+            return _worker;
+        }
+
+        public void SetWorker(Pawn worker)
+        {
+            _worker = worker;
+        }
+
+
         public override void ExposeData()
         {
             base.ExposeData();
@@ -107,6 +131,7 @@ namespace ImprovedWorkbenches
                 "allowDeadmansApparel", false);
             Scribe_References.Look(ref _worker, "worker");
         }
+
 
         private ThingFilter _outputFilter = new ThingFilter();
 

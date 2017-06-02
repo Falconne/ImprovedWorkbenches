@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Harmony;
 using RimWorld;
@@ -14,26 +15,43 @@ namespace ImprovedWorkbenches
         public static void DrawFilters(Dialog_BillConfig __instance, Rect inRect)
         {
             var billRaw = (Bill_Production)AccessTools.Field(typeof(Dialog_BillConfig), "bill").GetValue(__instance);
-            if (billRaw.repeatMode != BillRepeatModeDefOf.TargetCount)
+            var billWithWorkerFilter = billRaw as IBillWithWorkerFilter;
+            if (billWithWorkerFilter == null)
+                // Not one of our controlled Bills
                 return;
-
-            var bill = billRaw as IBillWithThingFilter;
-            if (bill == null)
-                return;
-
-            var filter = bill.GetOutputFilter();
 
             const float columnWidth = 180f;
             const float gap = 26f;
             var rect = new Rect(0, inRect.height - 300f, columnWidth, 40f);
 
-
-
-            Widgets.Label(rect, "Counted items filter:");
+            // Assigned worker filter
+            Widgets.Label(rect, "Worker:");
             var y = rect.yMin + Text.LineHeight - 1;
 
-            var rect1 = new Rect(0f, y, columnWidth, gap);
+            var workerButtonRect = new Rect(0f, y, columnWidth, gap);
+
+            var workerLabel = 
+                billWithWorkerFilter.GetWorker()?.NameStringShort.CapitalizeFirst().Truncate(columnWidth) ??
+                "Anybody";
+
+            if (Widgets.ButtonText(workerButtonRect, workerLabel))
+            {
+                var potentialWorkerList = new List<FloatMenuOption>();
+                Find.WindowStack.Add(new FloatMenu(potentialWorkerList));
+            }
+
+            // Counted items filter (if applicable)
+            if (billRaw.repeatMode != BillRepeatModeDefOf.TargetCount)
+                return;
+
+            Widgets.Label(rect, "Counted items filter:");
+
+            var billWithThingFilter = billRaw as IBillWithThingFilter;
+            // This won't be null, if we got here.
+            // ReSharper disable once PossibleNullReferenceException
+            var filter = billWithThingFilter.GetOutputFilter();
             var allowedHitPointsPercents = filter.AllowedHitPointsPercents;
+            var rect1 = new Rect(0f, y, columnWidth, gap);
             Widgets.FloatRange(rect1, 10, ref allowedHitPointsPercents, 0f, 1f, 
                 "HitPoints", ToStringStyle.PercentZero);
             filter.AllowedHitPointsPercents = allowedHitPointsPercents;
@@ -48,7 +66,7 @@ namespace ImprovedWorkbenches
             filter.AllowedQualityLevels = allowedQualityLevels;
 
             var nonDeadmansApparelFilter = new SpecialThingFilterWorker_NonDeadmansApparel();
-            var thingDef = bill.GetRecipeDef().products.First().thingDef;
+            var thingDef = billWithThingFilter.GetRecipeDef().products.First().thingDef;
             if (!nonDeadmansApparelFilter.CanEverMatch(thingDef))
             {
                 // Not apparel, so deadman check is not needed.
@@ -56,7 +74,7 @@ namespace ImprovedWorkbenches
             }
             y += 35;
             var rect3 = new Rect(0f, y, columnWidth, gap);
-            Widgets.CheckboxLabeled(rect3, "Count corpse clothes", ref bill.GetAllowDeadmansApparel());
+            Widgets.CheckboxLabeled(rect3, "Count corpse clothes", ref billWithThingFilter.GetAllowDeadmansApparel());
         }
     }
 }
