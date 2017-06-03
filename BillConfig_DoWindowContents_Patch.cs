@@ -61,7 +61,9 @@ namespace ImprovedWorkbenches
                 }
 
                 
-            }            // Counted items filter (if applicable)
+            }
+            
+            // Counted items filter (if applicable)
             if (billRaw.repeatMode != BillRepeatModeDefOf.TargetCount)
                 return;
 
