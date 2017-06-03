@@ -23,41 +23,45 @@ namespace ImprovedWorkbenches
             const float columnWidth = 180f;
             const float gap = 26f;
             var rect = new Rect(0f, inRect.height - 300f, columnWidth, 40f);
-
-            // Assigned worker filter
-            Widgets.Label(rect, "Worker:");
             var y = rect.yMin + Text.LineHeight - 1;
 
-            var workerButtonRect = new Rect(0f, y, columnWidth, gap);
+            // Allowed worker filter
+            var potentialWorkers = GetAllowedWorkersWithSkillLevel(billWithWorkerFilter);
 
-            var currentWorkerLabel = 
-                billWithWorkerFilter.GetWorker()?.NameStringShort.CapitalizeFirst().Truncate(columnWidth) ??
-                "Anybody";
-
-            if (Widgets.ButtonText(workerButtonRect, currentWorkerLabel))
+            if (potentialWorkers != null)
             {
-                var potentialWorkerList = new List<FloatMenuOption>
-                {
-                    new FloatMenuOption(
-                        "Anybody", delegate { billWithWorkerFilter.SetWorker(null); })
-                };
+                Widgets.Label(rect, "Restrict to:");
+                var workerButtonRect = new Rect(0f, y, columnWidth, gap);
 
-                var potentialWorkers = GetSortedAllowedWorkers(billWithWorkerFilter.GetBillGiver());
-                if (potentialWorkers != null)
+                var currentWorkerLabel = 
+                    billWithWorkerFilter.GetWorker()?.NameStringShort.CapitalizeFirst().Truncate(columnWidth) ??
+                    "Anybody";
+
+                if (Widgets.ButtonText(workerButtonRect, currentWorkerLabel))
                 {
-                    foreach (var allowedWorker in potentialWorkers)
+                    var potentialWorkerList = new List<FloatMenuOption>
                     {
-                        var workerMenuItem = new FloatMenuOption(allowedWorker.NameStringShort,
+                        new FloatMenuOption(
+                            "Anybody", delegate { billWithWorkerFilter.SetWorker(null); })
+                    };
+
+                    foreach (var allowedWorkerAndTheirSkill in potentialWorkers)
+                    {
+                        var allowedWorker = allowedWorkerAndTheirSkill.First;
+                        var nameWithSkill = $"[{allowedWorkerAndTheirSkill.Second}] {allowedWorker}";
+                        nameWithSkill = nameWithSkill.Truncate(columnWidth);
+
+                        var workerMenuItem = new FloatMenuOption(nameWithSkill,
                             delegate { billWithWorkerFilter.SetWorker(allowedWorker); });
 
                         potentialWorkerList.Add(workerMenuItem);
                     }
                     
+                    Find.WindowStack.Add(new FloatMenu(potentialWorkerList));
                 }
-                Find.WindowStack.Add(new FloatMenu(potentialWorkerList));
-            }
 
-            // Counted items filter (if applicable)
+                
+            }            // Counted items filter (if applicable)
             if (billRaw.repeatMode != BillRepeatModeDefOf.TargetCount)
                 return;
 
@@ -98,13 +102,16 @@ namespace ImprovedWorkbenches
                 ref billWithThingFilter.GetAllowDeadmansApparel());
         }
 
-        private static IEnumerable<Pawn> GetSortedAllowedWorkers(IBillGiver billGiver)
+        private static IEnumerable<Pair<Pawn, int>> GetAllowedWorkersWithSkillLevel(
+            IBillWithWorkerFilter billWithWorkerFilter)
         {
-            var thing = billGiver as Thing;
+            var thing = billWithWorkerFilter.GetBillGiver() as Thing;
             if (thing == null)
-            {
                 return null;
-            }
+
+            var workSkill = billWithWorkerFilter.GetRecipeDef()?.workSkill;
+            if (workSkill == null)
+                return null;
 
             var allDefsListForReading = DefDatabase<WorkGiverDef>.AllDefsListForReading;
 
@@ -112,15 +119,17 @@ namespace ImprovedWorkbenches
                 t.fixedBillGiverDefs != null && t.fixedBillGiverDefs.Contains(thing.def))?.workType;
 
             if (workTypeDef == null)
-            {
-                Main.Instance.Logger.Warning("workTypeDef is null");
                 return null;
-            }
 
             var validPawns = Find.VisibleMap.mapPawns.FreeColonists.Where(
                 p => p.workSettings.WorkIsActive(workTypeDef));
 
-            return validPawns;
+            var pawnsWithTheirSkill = validPawns.Select(
+                p => new Pair<Pawn, int>(p, p.skills.GetSkill(workSkill).Level));
+
+            var pawnsOrderedBySkill = pawnsWithTheirSkill.OrderByDescending(pws => pws.Second);
+
+            return pawnsOrderedBySkill;
         }
     }
 }

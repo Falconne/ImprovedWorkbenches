@@ -22,6 +22,8 @@ namespace ImprovedWorkbenches
         void SetWorker(Pawn worker);
 
         IBillGiver GetBillGiver();
+
+        RecipeDef GetRecipeDef();
     }
 
     public class Bill_ProductionWithFilters : Bill_Production, IBillWithThingFilter, IBillWithWorkerFilter
