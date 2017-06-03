@@ -25,7 +25,8 @@ namespace ImprovedWorkbenches
             __result = 0;
 
             SpecialThingFilterWorker_NonDeadmansApparel nonDeadmansApparelFilter = null;
-            var productThingDef = billWithThingFilter.GetRecipeDef().products.First().thingDef;
+            var product = billWithThingFilter.GetRecipeDef().products.First();
+            var productThingDef = product.thingDef;
             if (!billWithThingFilter.GetAllowDeadmansApparel())
             {
                 // We want to filter out corpse worn apparel
@@ -33,8 +34,8 @@ namespace ImprovedWorkbenches
                 if (!nonDeadmansApparelFilter.CanEverMatch(productThingDef))
                     // Not apparel, don't bother checking
                     nonDeadmansApparelFilter = null;
-                
             }
+
             // Filter code originally adapted from Fluffy's Colony Manager
             foreach (var thingDef in filter.AllowedThingDefs)
             {
@@ -42,22 +43,7 @@ namespace ImprovedWorkbenches
 
                 foreach (var thing in thingList)
                 {
-                    QualityCategory quality;
-                    if (filter.allowedQualitiesConfigurable && thing.TryGetQuality(out quality))
-                    {
-                        if (!filter.AllowedQualityLevels.Includes(quality))
-                        {
-                            continue;
-                        }
-                    }
-                    else
-                    {
-                        continue;
-                    }
-
-                    var thingHitPointsPercent = (float) thing.HitPoints / thing.MaxHitPoints;
-
-                    if (!filter.AllowedHitPointsPercents.IncludesEpsilon(thingHitPointsPercent))
+                    if (!DoesThingMatchFilter(filter, thing))
                         continue;
 
                     if (nonDeadmansApparelFilter != null && !nonDeadmansApparelFilter.Matches(thing))
@@ -68,6 +54,26 @@ namespace ImprovedWorkbenches
             }
 
             return false;
+        }
+
+        private static bool DoesThingMatchFilter(ThingFilter filter, Thing thing)
+        {
+            QualityCategory quality;
+            if (filter.allowedQualitiesConfigurable && thing.TryGetQuality(out quality))
+            {
+                if (!filter.AllowedQualityLevels.Includes(quality))
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
+
+            var thingHitPointsPercent = (float) thing.HitPoints / thing.MaxHitPoints;
+
+            return filter.AllowedHitPointsPercents.IncludesEpsilon(thingHitPointsPercent);
         }
     }
 }
