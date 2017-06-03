@@ -20,6 +20,8 @@ namespace ImprovedWorkbenches
         Pawn GetWorker();
 
         void SetWorker(Pawn worker);
+
+        IBillGiver GetBillGiver();
     }
 
     public class Bill_ProductionWithFilters : Bill_Production, IBillWithThingFilter, IBillWithWorkerFilter
@@ -61,6 +63,11 @@ namespace ImprovedWorkbenches
         public void SetWorker(Pawn worker)
         {
             _worker = worker;
+        }
+
+        public IBillGiver GetBillGiver()
+        {
+            return billStack?.billGiver;
         }
 
 
@@ -120,6 +127,11 @@ namespace ImprovedWorkbenches
         public void SetWorker(Pawn worker)
         {
             _worker = worker;
+        }
+
+        public IBillGiver GetBillGiver()
+        {
+            return billStack?.billGiver;
         }
 
 

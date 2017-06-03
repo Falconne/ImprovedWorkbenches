@@ -22,7 +22,7 @@ namespace ImprovedWorkbenches
 
             const float columnWidth = 180f;
             const float gap = 26f;
-            var rect = new Rect(0, inRect.height - 300f, columnWidth, 40f);
+            var rect = new Rect(0f, inRect.height - 300f, columnWidth, 40f);
 
             // Assigned worker filter
             Widgets.Label(rect, "Worker:");
@@ -36,12 +36,24 @@ namespace ImprovedWorkbenches
 
             if (Widgets.ButtonText(workerButtonRect, currentWorkerLabel))
             {
-                var potentialWorkerList = new List<FloatMenuOption>();
+                var potentialWorkerList = new List<FloatMenuOption>
+                {
+                    new FloatMenuOption(
+                        "Anybody", delegate { billWithWorkerFilter.SetWorker(null); })
+                };
 
-                potentialWorkerList.Add(new FloatMenuOption(
-                    "Anybody", delegate { billWithWorkerFilter.SetWorker(null); }));
+                var potentialWorkers = GetSortedAllowedWorkers(billWithWorkerFilter.GetBillGiver());
+                if (potentialWorkers != null)
+                {
+                    foreach (var allowedWorker in potentialWorkers)
+                    {
+                        var workerMenuItem = new FloatMenuOption(allowedWorker.NameStringShort,
+                            delegate { billWithWorkerFilter.SetWorker(allowedWorker); });
 
-
+                        potentialWorkerList.Add(workerMenuItem);
+                    }
+                    
+                }
                 Find.WindowStack.Add(new FloatMenu(potentialWorkerList));
             }
 
@@ -49,7 +61,10 @@ namespace ImprovedWorkbenches
             if (billRaw.repeatMode != BillRepeatModeDefOf.TargetCount)
                 return;
 
-            Widgets.Label(rect, "Counted items filter:");
+            y += 33;
+            var countedLabelRect = new Rect(0f, y, columnWidth, gap);
+            Widgets.Label(countedLabelRect, "Counted items filter:");
+            y += Text.LineHeight;
 
             var billWithThingFilter = billRaw as IBillWithThingFilter;
             // This won't be null, if we got here.
@@ -79,7 +94,33 @@ namespace ImprovedWorkbenches
             }
             y += 35;
             var rect3 = new Rect(0f, y, columnWidth, gap);
-            Widgets.CheckboxLabeled(rect3, "Count corpse clothes", ref billWithThingFilter.GetAllowDeadmansApparel());
+            Widgets.CheckboxLabeled(rect3, "Count corpse clothes", 
+                ref billWithThingFilter.GetAllowDeadmansApparel());
+        }
+
+        private static IEnumerable<Pawn> GetSortedAllowedWorkers(IBillGiver billGiver)
+        {
+            var thing = billGiver as Thing;
+            if (thing == null)
+            {
+                return null;
+            }
+
+            var allDefsListForReading = DefDatabase<WorkGiverDef>.AllDefsListForReading;
+
+            var workTypeDef = allDefsListForReading.FirstOrDefault(t =>
+                t.fixedBillGiverDefs != null && t.fixedBillGiverDefs.Contains(thing.def))?.workType;
+
+            if (workTypeDef == null)
+            {
+                Main.Instance.Logger.Warning("workTypeDef is null");
+                return null;
+            }
+
+            var validPawns = Find.VisibleMap.mapPawns.FreeColonists.Where(
+                p => p.workSettings.WorkIsActive(workTypeDef));
+
+            return validPawns;
         }
     }
 }
