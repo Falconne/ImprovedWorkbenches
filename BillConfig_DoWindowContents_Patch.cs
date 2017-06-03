@@ -30,13 +30,18 @@ namespace ImprovedWorkbenches
 
             var workerButtonRect = new Rect(0f, y, columnWidth, gap);
 
-            var workerLabel = 
+            var currentWorkerLabel = 
                 billWithWorkerFilter.GetWorker()?.NameStringShort.CapitalizeFirst().Truncate(columnWidth) ??
                 "Anybody";
 
-            if (Widgets.ButtonText(workerButtonRect, workerLabel))
+            if (Widgets.ButtonText(workerButtonRect, currentWorkerLabel))
             {
                 var potentialWorkerList = new List<FloatMenuOption>();
+
+                potentialWorkerList.Add(new FloatMenuOption(
+                    "Anybody", delegate { billWithWorkerFilter.SetWorker(null); }));
+
+
                 Find.WindowStack.Add(new FloatMenu(potentialWorkerList));
             }
 
