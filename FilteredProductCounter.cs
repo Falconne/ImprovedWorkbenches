@@ -49,6 +49,23 @@ namespace ImprovedWorkbenches
                 __result += thing.stackCount;
             }
 
+            if (!productThingDef.Minifiable)
+                return false;
+
+            var minifiedThings = bill.Map.listerThings.ThingsInGroup(ThingRequestGroup.MinifiedThing);
+            foreach (var thing in minifiedThings)
+            {
+                var minifiedThing = (MinifiedThing) thing;
+                var innerThing = minifiedThing.InnerThing;
+                if (innerThing.def == productThingDef &&
+                    DoesThingMatchFilter(filter, innerThing) &&
+                    DoesThingMatchFilter(filter, minifiedThing))
+                {
+                    __result++;
+                }
+            }
+
+
             return false;
         }
 
