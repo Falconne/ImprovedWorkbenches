@@ -36,21 +36,17 @@ namespace ImprovedWorkbenches
                     nonDeadmansApparelFilter = null;
             }
 
-            // Filter code originally adapted from Fluffy's Colony Manager
-            foreach (var thingDef in filter.AllowedThingDefs)
+            var thingList = map.listerThings.ThingsOfDef(productThingDef);
+
+            foreach (var thing in thingList)
             {
-                var thingList = map.listerThings.ThingsOfDef(thingDef);
+                if (!DoesThingMatchFilter(filter, thing))
+                    continue;
 
-                foreach (var thing in thingList)
-                {
-                    if (!DoesThingMatchFilter(filter, thing))
-                        continue;
+                if (nonDeadmansApparelFilter != null && !nonDeadmansApparelFilter.Matches(thing))
+                    continue;
 
-                    if (nonDeadmansApparelFilter != null && !nonDeadmansApparelFilter.Matches(thing))
-                        continue;
-
-                    __result += thing.stackCount;
-                }
+                __result += thing.stackCount;
             }
 
             return false;
