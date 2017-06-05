@@ -62,10 +62,6 @@ namespace ImprovedWorkbenches
                     return false;
                 }
             }
-            else
-            {
-                return false;
-            }
 
             var thingHitPointsPercent = (float) thing.HitPoints / thing.MaxHitPoints;
 
