@@ -22,7 +22,7 @@ namespace ImprovedWorkbenches
 
             const float columnWidth = 180f;
             const float gap = 26f;
-            var rect = new Rect(0f, inRect.height - 210f, columnWidth, 40f);
+            var rect = new Rect(0f, inRect.height - 211f, columnWidth, 40f);
             var y = rect.yMin + Text.LineHeight - 1;
 
             // Allowed worker filter

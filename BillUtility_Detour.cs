@@ -11,9 +11,6 @@ namespace ImprovedWorkbenches
         [HarmonyPrefix]
         public static bool MakeNewBill(ref Bill __result, ref RecipeDef recipe)
         {
-            if (!CanOutputBeFiltered(recipe))
-                return true;
-
             if (recipe.UsesUnfinishedThing)
             {
                 var newBill = new Bill_ProductionWithUftWithFilters(recipe);
@@ -48,8 +45,10 @@ namespace ImprovedWorkbenches
 
         private static T SetDefaultFilter<T>(T bill) where T : Bill_Production, IBillWithThingFilter
         {
-            var billProduction = (Bill_Production)bill;
-            var thingDef = billProduction.recipe.products.First().thingDef;
+            if (!CanOutputBeFiltered(bill))
+                return bill;
+
+            var thingDef = bill.recipe.products.First().thingDef;
             bill.GetOutputFilter().SetDisallowAll();
             bill.GetOutputFilter().SetAllow(thingDef, true);
 
