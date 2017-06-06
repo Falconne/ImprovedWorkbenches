@@ -13,9 +13,9 @@ namespace ImprovedWorkbenches
         static bool Prefix(ref Bill_Production bill, ref int __result)
         {
             var billWithThingFilter = bill as IBillWithThingFilter;
-            if (billWithThingFilter == null)
+            if (billWithThingFilter == null || !BillUtility_Detour.CanOutputBeFiltered(bill))
             {
-                // Counting a Thing that is a resource or is otherwise lacking hit-points.
+                // Counting a Thing that is a resource or a bill we don't control.
                 // Defer back to vanilla counting function.
                 return true;
             }
@@ -78,6 +78,9 @@ namespace ImprovedWorkbenches
                     return false;
                 }
             }
+
+            if (!filter.allowedHitPointsConfigurable)
+                return true;
 
             var thingHitPointsPercent = (float) thing.HitPoints / thing.MaxHitPoints;
 

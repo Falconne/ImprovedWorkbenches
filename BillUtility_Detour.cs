@@ -17,23 +17,20 @@ namespace ImprovedWorkbenches
             if (recipe.UsesUnfinishedThing)
             {
                 var newBill = new Bill_ProductionWithUftWithFilters(recipe);
-                if (SetDefaultFilter(newBill))
-                {
-                    __result = newBill;
-                    return false;
-                }
+                __result = SetDefaultFilter(newBill);
             }
             else
             {
                 var newBill = new Bill_ProductionWithFilters(recipe);
-                if (SetDefaultFilter(newBill))
-                {
-                    __result = newBill;
-                    return false;
-                }
+                __result = SetDefaultFilter(newBill);
             }
 
-            return true;
+            return false;
+        }
+
+        internal static bool CanOutputBeFiltered(Bill_Production bill)
+        {
+            return CanOutputBeFiltered(bill.recipe);
         }
 
         // Figure out if output of recipe produces a "thing" with hit-points
@@ -49,15 +46,14 @@ namespace ImprovedWorkbenches
             return !thingDef.CountAsResource;
         }
 
-        private static bool SetDefaultFilter<T>(T bill) where T: Bill_Production, IBillWithThingFilter
+        private static T SetDefaultFilter<T>(T bill) where T : Bill_Production, IBillWithThingFilter
         {
-            var billProduction = (Bill_Production) bill;
+            var billProduction = (Bill_Production)bill;
             var thingDef = billProduction.recipe.products.First().thingDef;
             bill.GetOutputFilter().SetDisallowAll();
             bill.GetOutputFilter().SetAllow(thingDef, true);
 
-            // If we can't filter on hit-points, ignore it completely
-            return bill.GetOutputFilter().allowedHitPointsConfigurable;
+            return bill;
         }
     }
 }

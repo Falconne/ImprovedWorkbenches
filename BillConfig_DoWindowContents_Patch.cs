@@ -22,7 +22,7 @@ namespace ImprovedWorkbenches
 
             const float columnWidth = 180f;
             const float gap = 26f;
-            var rect = new Rect(0f, inRect.height - 300f, columnWidth, 40f);
+            var rect = new Rect(0f, inRect.height - 210f, columnWidth, 40f);
             var y = rect.yMin + Text.LineHeight - 1;
 
             // Allowed worker filter
@@ -76,11 +76,14 @@ namespace ImprovedWorkbenches
             // This won't be null, if we got here.
             // ReSharper disable once PossibleNullReferenceException
             var filter = billWithThingFilter.GetOutputFilter();
-            var allowedHitPointsPercents = filter.AllowedHitPointsPercents;
-            var rect1 = new Rect(0f, y, columnWidth, gap);
-            Widgets.FloatRange(rect1, 10, ref allowedHitPointsPercents, 0f, 1f, 
-                "HitPoints", ToStringStyle.PercentZero);
-            filter.AllowedHitPointsPercents = allowedHitPointsPercents;
+            if (filter.allowedHitPointsConfigurable)
+            {
+                var allowedHitPointsPercents = filter.AllowedHitPointsPercents;
+                var rect1 = new Rect(0f, y, columnWidth, gap);
+                Widgets.FloatRange(rect1, 10, ref allowedHitPointsPercents, 0f, 1f, 
+                    "HitPoints", ToStringStyle.PercentZero);
+                filter.AllowedHitPointsPercents = allowedHitPointsPercents;
+            }
 
             if (!filter.allowedQualitiesConfigurable)
                 return;
