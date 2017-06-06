@@ -25,7 +25,8 @@ namespace ImprovedWorkbenches
             __result = 0;
 
             SpecialThingFilterWorker_NonDeadmansApparel nonDeadmansApparelFilter = null;
-            var productThingDef = billWithThingFilter.GetRecipeDef().products.First().thingDef;
+            var product = billWithThingFilter.GetRecipeDef().products.First();
+            var productThingDef = product.thingDef;
             if (!billWithThingFilter.GetAllowDeadmansApparel())
             {
                 // We want to filter out corpse worn apparel
@@ -33,41 +34,55 @@ namespace ImprovedWorkbenches
                 if (!nonDeadmansApparelFilter.CanEverMatch(productThingDef))
                     // Not apparel, don't bother checking
                     nonDeadmansApparelFilter = null;
-                
             }
-            // Filter code originally adapted from Fluffy's Colony Manager
-            foreach (var thingDef in filter.AllowedThingDefs)
+
+            var thingList = map.listerThings.ThingsOfDef(productThingDef);
+
+            foreach (var thing in thingList)
             {
-                var thingList = map.listerThings.ThingsOfDef(thingDef);
+                if (!DoesThingMatchFilter(filter, thing))
+                    continue;
 
-                foreach (var thing in thingList)
+                if (nonDeadmansApparelFilter != null && !nonDeadmansApparelFilter.Matches(thing))
+                    continue;
+
+                __result += thing.stackCount;
+            }
+
+            if (!productThingDef.Minifiable)
+                return false;
+
+            var minifiedThings = bill.Map.listerThings.ThingsInGroup(ThingRequestGroup.MinifiedThing);
+            foreach (var thing in minifiedThings)
+            {
+                var minifiedThing = (MinifiedThing) thing;
+                var innerThing = minifiedThing.InnerThing;
+                if (innerThing.def == productThingDef &&
+                    DoesThingMatchFilter(filter, innerThing) &&
+                    DoesThingMatchFilter(filter, minifiedThing))
                 {
-                    QualityCategory quality;
-                    if (filter.allowedQualitiesConfigurable && thing.TryGetQuality(out quality))
-                    {
-                        if (!filter.AllowedQualityLevels.Includes(quality))
-                        {
-                            continue;
-                        }
-                    }
-                    else
-                    {
-                        continue;
-                    }
-
-                    var thingHitPointsPercent = (float) thing.HitPoints / thing.MaxHitPoints;
-
-                    if (!filter.AllowedHitPointsPercents.IncludesEpsilon(thingHitPointsPercent))
-                        continue;
-
-                    if (nonDeadmansApparelFilter != null && !nonDeadmansApparelFilter.Matches(thing))
-                        continue;
-
-                    __result += thing.stackCount;
+                    __result++;
                 }
             }
 
+
             return false;
+        }
+
+        private static bool DoesThingMatchFilter(ThingFilter filter, Thing thing)
+        {
+            QualityCategory quality;
+            if (filter.allowedQualitiesConfigurable && thing.TryGetQuality(out quality))
+            {
+                if (!filter.AllowedQualityLevels.Includes(quality))
+                {
+                    return false;
+                }
+            }
+
+            var thingHitPointsPercent = (float) thing.HitPoints / thing.MaxHitPoints;
+
+            return filter.AllowedHitPointsPercents.IncludesEpsilon(thingHitPointsPercent);
         }
     }
 }
