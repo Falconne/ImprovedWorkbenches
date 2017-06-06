@@ -21,11 +21,10 @@ namespace ImprovedWorkbenches
             }
 
             var filter = billWithThingFilter.GetOutputFilter();
-            var map = billWithThingFilter.GetMap();
             __result = 0;
 
             SpecialThingFilterWorker_NonDeadmansApparel nonDeadmansApparelFilter = null;
-            var product = billWithThingFilter.GetRecipeDef().products.First();
+            var product = bill.recipe.products.First();
             var productThingDef = product.thingDef;
             if (!billWithThingFilter.GetAllowDeadmansApparel())
             {
@@ -36,7 +35,7 @@ namespace ImprovedWorkbenches
                     nonDeadmansApparelFilter = null;
             }
 
-            var thingList = map.listerThings.ThingsOfDef(productThingDef);
+            var thingList = bill.Map.listerThings.ThingsOfDef(productThingDef);
 
             foreach (var thing in thingList)
             {

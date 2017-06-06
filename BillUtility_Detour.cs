@@ -49,9 +49,10 @@ namespace ImprovedWorkbenches
             return !thingDef.CountAsResource;
         }
 
-        private static bool SetDefaultFilter<T>(T bill) where T: IBillWithThingFilter 
+        private static bool SetDefaultFilter<T>(T bill) where T: Bill_Production, IBillWithThingFilter
         {
-            var thingDef = bill.GetRecipeDef().products.First().thingDef;
+            var billProduction = (Bill_Production) bill;
+            var thingDef = billProduction.recipe.products.First().thingDef;
             bill.GetOutputFilter().SetDisallowAll();
             bill.GetOutputFilter().SetAllow(thingDef, true);
 

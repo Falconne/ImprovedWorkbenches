@@ -26,7 +26,7 @@ namespace ImprovedWorkbenches
             var y = rect.yMin + Text.LineHeight - 1;
 
             // Allowed worker filter
-            var potentialWorkers = GetAllowedWorkersWithSkillLevel(billWithWorkerFilter);
+            var potentialWorkers = GetAllowedWorkersWithSkillLevel(billRaw);
 
             if (potentialWorkers != null)
             {
@@ -92,7 +92,7 @@ namespace ImprovedWorkbenches
             filter.AllowedQualityLevels = allowedQualityLevels;
 
             var nonDeadmansApparelFilter = new SpecialThingFilterWorker_NonDeadmansApparel();
-            var thingDef = billWithThingFilter.GetRecipeDef().products.First().thingDef;
+            var thingDef = billRaw.recipe.products.First().thingDef;
             if (!nonDeadmansApparelFilter.CanEverMatch(thingDef))
             {
                 // Not apparel, so deadman check is not needed.
@@ -105,13 +105,13 @@ namespace ImprovedWorkbenches
         }
 
         private static IEnumerable<Pair<Pawn, int>> GetAllowedWorkersWithSkillLevel(
-            IBillWithWorkerFilter billWithWorkerFilter)
+            Bill_Production bill)
         {
-            var thing = billWithWorkerFilter.GetBillGiver() as Thing;
+            var thing = bill.billStack?.billGiver as Thing;
             if (thing == null)
                 return null;
 
-            var workSkill = billWithWorkerFilter.GetRecipeDef()?.workSkill;
+            var workSkill = bill.recipe?.workSkill;
             if (workSkill == null)
                 return null;
 

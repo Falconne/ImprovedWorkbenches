@@ -8,10 +8,6 @@ namespace ImprovedWorkbenches
     {
         ThingFilter GetOutputFilter();
 
-        RecipeDef GetRecipeDef();
-
-        Map GetMap();
-
         ref bool GetAllowDeadmansApparel();
     }
 
@@ -20,10 +16,6 @@ namespace ImprovedWorkbenches
         Pawn GetWorker();
 
         void SetWorker(Pawn worker);
-
-        IBillGiver GetBillGiver();
-
-        RecipeDef GetRecipeDef();
     }
 
     public class Bill_ProductionWithFilters : Bill_Production, IBillWithThingFilter, IBillWithWorkerFilter
@@ -42,16 +34,6 @@ namespace ImprovedWorkbenches
             return _outputFilter;
         }
 
-        public RecipeDef GetRecipeDef()
-        {
-            return recipe;
-        }
-
-        public Map GetMap()
-        {
-            return Map;
-        }
-
         public ref bool GetAllowDeadmansApparel()
         {
             return ref _allowDeadmansApparel;
@@ -65,11 +47,6 @@ namespace ImprovedWorkbenches
         public void SetWorker(Pawn worker)
         {
             _worker = worker;
-        }
-
-        public IBillGiver GetBillGiver()
-        {
-            return billStack?.billGiver;
         }
 
 
@@ -106,16 +83,6 @@ namespace ImprovedWorkbenches
             return _outputFilter;
         }
 
-        public RecipeDef GetRecipeDef()
-        {
-            return recipe;
-        }
-
-        public Map GetMap()
-        {
-            return Map;
-        }
-
         public ref bool GetAllowDeadmansApparel()
         {
             return ref _allowDeadmansApparel;
@@ -129,11 +96,6 @@ namespace ImprovedWorkbenches
         public void SetWorker(Pawn worker)
         {
             _worker = worker;
-        }
-
-        public IBillGiver GetBillGiver()
-        {
-            return billStack?.billGiver;
         }
 
 
