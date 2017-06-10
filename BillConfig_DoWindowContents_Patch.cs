@@ -71,7 +71,18 @@ namespace ImprovedWorkbenches
                 var sectionLeft = columnWidth + 34f;
                 var buttonWidth = 42f;
                 var buttonHeight = 24f;
-                var plusOneRect = new Rect(sectionLeft, inRect.height - 70, buttonWidth, buttonHeight);
+                var minusOneRect = new Rect(sectionLeft, inRect.height - 70, buttonWidth, buttonHeight);
+                if (Widgets.ButtonText(minusOneRect, "-1"))
+                {
+                    if (billRaw.unpauseWhenYouHave > 0)
+                    {
+                        billRaw.unpauseWhenYouHave--;
+                    }
+                }
+
+                var plusOneRect = new Rect(minusOneRect);
+                plusOneRect.xMin += buttonWidth + 2f;
+                plusOneRect.xMax += buttonWidth + 2f;
                 if (Widgets.ButtonText(plusOneRect, "+1"))
                 {
                     if (billRaw.unpauseWhenYouHave < billRaw.targetCount - 1)
