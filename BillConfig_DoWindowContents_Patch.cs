@@ -48,7 +48,22 @@ namespace ImprovedWorkbenches
                     foreach (var allowedWorkerAndTheirSkill in potentialWorkers)
                     {
                         var allowedWorker = allowedWorkerAndTheirSkill.First;
-                        var nameWithSkill = $"[{allowedWorkerAndTheirSkill.Second}] {allowedWorker}";
+                        var level = allowedWorkerAndTheirSkill.Second.Level;
+                        string passion;
+                        switch (allowedWorkerAndTheirSkill.Second.passion)
+                        {
+                            case Passion.Minor:
+                                passion = "+";
+                                break;
+                            case Passion.Major:
+                                passion = "++";
+                                break;
+                            default:
+                                passion = "";
+                                break;
+                        }
+
+                        var nameWithSkill = $"[{level}{passion}] {allowedWorker}";
                         nameWithSkill = nameWithSkill.Truncate(columnWidth);
 
                         var workerMenuItem = new FloatMenuOption(nameWithSkill,
@@ -147,8 +162,8 @@ namespace ImprovedWorkbenches
                 ref billWithThingFilter.GetAllowDeadmansApparel());
         }
 
-        private static IEnumerable<Pair<Pawn, int>> GetAllowedWorkersWithSkillLevel(
-            Bill_Production bill)
+        private static IEnumerable<Pair<Pawn, SkillRecord>> GetAllowedWorkersWithSkillLevel(
+            Bill bill)
         {
             var thing = bill.billStack?.billGiver as Thing;
             if (thing == null)
@@ -170,9 +185,12 @@ namespace ImprovedWorkbenches
                 p => p.workSettings.WorkIsActive(workTypeDef));
 
             var pawnsWithTheirSkill = validPawns.Select(
-                p => new Pair<Pawn, int>(p, p.skills.GetSkill(workSkill).Level));
+                p => new Pair<Pawn, SkillRecord>(p, p.skills.GetSkill(workSkill)));
 
-            var pawnsOrderedBySkill = pawnsWithTheirSkill.OrderByDescending(pws => pws.Second);
+            var maxPassion = Enum.GetNames(typeof(Passion)).Length + 1f;
+
+            var pawnsOrderedBySkill = pawnsWithTheirSkill.OrderByDescending(pws => 
+                pws.Second.Level + (int) pws.Second.passion / maxPassion);
 
             return pawnsOrderedBySkill;
         }
