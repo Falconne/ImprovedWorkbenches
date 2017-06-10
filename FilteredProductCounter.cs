@@ -22,10 +22,27 @@ namespace ImprovedWorkbenches
 
             var filter = billWithThingFilter.GetOutputFilter();
             __result = 0;
+            var productThingDef = bill.recipe.products.First().thingDef;
+
+            if (productThingDef.Minifiable)
+            {
+                var minifiedThings = bill.Map.listerThings.ThingsInGroup(ThingRequestGroup.MinifiedThing);
+                foreach (var thing in minifiedThings)
+                {
+                    var minifiedThing = (MinifiedThing)thing;
+                    var innerThing = minifiedThing.InnerThing;
+                    if (innerThing.def == productThingDef &&
+                        DoesThingMatchFilter(filter, innerThing) &&
+                        DoesThingMatchFilter(filter, minifiedThing))
+                    {
+                        __result++;
+                    }
+                }
+
+                return false;
+            }
 
             SpecialThingFilterWorker_NonDeadmansApparel nonDeadmansApparelFilter = null;
-            var product = bill.recipe.products.First();
-            var productThingDef = product.thingDef;
             if (!billWithThingFilter.GetAllowDeadmansApparel())
             {
                 // We want to filter out corpse worn apparel
@@ -48,23 +65,6 @@ namespace ImprovedWorkbenches
                 __result += thing.stackCount;
             }
 
-            if (!productThingDef.Minifiable)
-                return false;
-
-            var minifiedThings = bill.Map.listerThings.ThingsInGroup(ThingRequestGroup.MinifiedThing);
-            foreach (var thing in minifiedThings)
-            {
-                var minifiedThing = (MinifiedThing) thing;
-                var innerThing = minifiedThing.InnerThing;
-                if (innerThing.def == productThingDef &&
-                    DoesThingMatchFilter(filter, innerThing) &&
-                    DoesThingMatchFilter(filter, minifiedThing))
-                {
-                    __result++;
-                }
-            }
-
-
             return false;
         }
 
@@ -82,7 +82,7 @@ namespace ImprovedWorkbenches
             if (!filter.allowedHitPointsConfigurable)
                 return true;
 
-            var thingHitPointsPercent = (float) thing.HitPoints / thing.MaxHitPoints;
+            var thingHitPointsPercent = (float)thing.HitPoints / thing.MaxHitPoints;
 
             return filter.AllowedHitPointsPercents.IncludesEpsilon(thingHitPointsPercent);
         }
