@@ -33,7 +33,7 @@ namespace ImprovedWorkbenches
                 Widgets.Label(rect, "Restrict to:");
                 var workerButtonRect = new Rect(0f, y, columnWidth, gap);
 
-                var currentWorkerLabel = 
+                var currentWorkerLabel =
                     billWithWorkerFilter.GetWorker()?.NameStringShort.CapitalizeFirst().Truncate(columnWidth) ??
                     "Anybody";
 
@@ -56,16 +56,27 @@ namespace ImprovedWorkbenches
 
                         potentialWorkerList.Add(workerMenuItem);
                     }
-                    
+
                     Find.WindowStack.Add(new FloatMenu(potentialWorkerList));
                 }
-
-                
             }
-            
+
             // Counted items filter (if applicable)
             if (billRaw.repeatMode != BillRepeatModeDefOf.TargetCount)
                 return;
+
+            // "Unpause when" level adjustment buttons
+            if (billRaw.pauseWhenSatisfied)
+            {
+                var plusOneRect = new Rect(columnWidth, inRect.height - 50, 40, 40);
+                if (Widgets.ButtonText(plusOneRect, "+1"))
+                {
+                    if (billRaw.unpauseWhenYouHave < billRaw.targetCount - 1)
+                    {
+                        billRaw.unpauseWhenYouHave++;
+                    }
+                }
+            }
 
             y += 33;
             var countedLabelRect = new Rect(0f, y, columnWidth, gap);
@@ -80,7 +91,7 @@ namespace ImprovedWorkbenches
             {
                 var allowedHitPointsPercents = filter.AllowedHitPointsPercents;
                 var rect1 = new Rect(0f, y, columnWidth, gap);
-                Widgets.FloatRange(rect1, 10, ref allowedHitPointsPercents, 0f, 1f, 
+                Widgets.FloatRange(rect1, 10, ref allowedHitPointsPercents, 0f, 1f,
                     "HitPoints", ToStringStyle.PercentZero);
                 filter.AllowedHitPointsPercents = allowedHitPointsPercents;
             }
@@ -103,7 +114,7 @@ namespace ImprovedWorkbenches
             }
             y += 35;
             var rect3 = new Rect(0f, y, columnWidth, gap);
-            Widgets.CheckboxLabeled(rect3, "Count corpse clothes", 
+            Widgets.CheckboxLabeled(rect3, "Count corpse clothes",
                 ref billWithThingFilter.GetAllowDeadmansApparel());
         }
 
