@@ -34,7 +34,7 @@ namespace ImprovedWorkbenches
                 var workerButtonRect = new Rect(0f, y, columnWidth, gap);
 
                 var currentWorkerLabel =
-                    billWithWorkerFilter.GetWorker()?.NameStringShort.CapitalizeFirst().Truncate(columnWidth) ??
+                    billWithWorkerFilter.GetWorker()?.NameStringShort.CapitalizeFirst() ??
                     "Anybody";
 
                 if (Widgets.ButtonText(workerButtonRect, currentWorkerLabel))
@@ -48,23 +48,27 @@ namespace ImprovedWorkbenches
                     foreach (var allowedWorkerAndTheirSkill in potentialWorkers)
                     {
                         var allowedWorker = allowedWorkerAndTheirSkill.First;
-                        var level = allowedWorkerAndTheirSkill.Second.Level;
-                        string passion;
-                        switch (allowedWorkerAndTheirSkill.Second.passion)
+                        var skillRecord = allowedWorkerAndTheirSkill.Second;
+                        var skillPrefix = "";
+                        if (skillRecord != null)
                         {
-                            case Passion.Minor:
-                                passion = "+";
-                                break;
-                            case Passion.Major:
-                                passion = "++";
-                                break;
-                            default:
-                                passion = "";
-                                break;
+                            var level = skillRecord.Level;
+                            string passion;
+                            switch (skillRecord.passion)
+                            {
+                                case Passion.Minor:
+                                    passion = "+";
+                                    break;
+                                case Passion.Major:
+                                    passion = "++";
+                                    break;
+                                default:
+                                    passion = "";
+                                    break;
+                            }
+                            skillPrefix = $"[{level}{passion}] ";
                         }
-
-                        var nameWithSkill = $"[{level}{passion}] {allowedWorker}";
-                        nameWithSkill = nameWithSkill.Truncate(columnWidth);
+                        var nameWithSkill = $"{skillPrefix}{allowedWorker}";
 
                         var workerMenuItem = new FloatMenuOption(nameWithSkill,
                             delegate { billWithWorkerFilter.SetWorker(allowedWorker); });
@@ -167,11 +171,11 @@ namespace ImprovedWorkbenches
         {
             var thing = bill.billStack?.billGiver as Thing;
             if (thing == null)
-                return null;
+                return GetAllPawnsForUnskilledJob();
 
             var workSkill = bill.recipe?.workSkill;
             if (workSkill == null)
-                return null;
+                return GetAllPawnsForUnskilledJob();
 
             var allDefsListForReading = DefDatabase<WorkGiverDef>.AllDefsListForReading;
 
@@ -179,7 +183,7 @@ namespace ImprovedWorkbenches
                 t.fixedBillGiverDefs != null && t.fixedBillGiverDefs.Contains(thing.def))?.workType;
 
             if (workTypeDef == null)
-                return null;
+                return GetAllPawnsForUnskilledJob();
 
             var validPawns = Find.VisibleMap.mapPawns.FreeColonists.Where(
                 p => p.workSettings.WorkIsActive(workTypeDef));
@@ -193,6 +197,12 @@ namespace ImprovedWorkbenches
                 pws.Second.Level + (int) pws.Second.passion / maxPassion);
 
             return pawnsOrderedBySkill;
+        }
+
+        private static IEnumerable<Pair<Pawn, SkillRecord>> GetAllPawnsForUnskilledJob()
+        {
+            return Find.VisibleMap.mapPawns.FreeColonists.Select(
+                p => new Pair<Pawn, SkillRecord>(p, null));
         }
     }
 }
