@@ -68,7 +68,10 @@ namespace ImprovedWorkbenches
             // "Unpause when" level adjustment buttons
             if (billRaw.pauseWhenSatisfied)
             {
-                var plusOneRect = new Rect(columnWidth, inRect.height - 50, 40, 40);
+                var sectionLeft = columnWidth + 34f;
+                var buttonWidth = 42f;
+                var buttonHeight = 24f;
+                var plusOneRect = new Rect(sectionLeft, inRect.height - 70, buttonWidth, buttonHeight);
                 if (Widgets.ButtonText(plusOneRect, "+1"))
                 {
                     if (billRaw.unpauseWhenYouHave < billRaw.targetCount - 1)
