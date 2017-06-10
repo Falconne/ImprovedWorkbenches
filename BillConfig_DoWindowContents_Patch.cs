@@ -62,8 +62,11 @@ namespace ImprovedWorkbenches
             }
 
             // Counted items filter (if applicable)
-            if (billRaw.repeatMode != BillRepeatModeDefOf.TargetCount)
+            if (billRaw.repeatMode != BillRepeatModeDefOf.TargetCount ||
+                !BillUtility_Detour.CanOutputBeFiltered(billRaw))
+            {
                 return;
+            }
 
             // "Unpause when" level adjustment buttons
             if (billRaw.pauseWhenSatisfied)
