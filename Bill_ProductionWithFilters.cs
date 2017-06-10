@@ -9,6 +9,8 @@ namespace ImprovedWorkbenches
         ThingFilter GetOutputFilter();
 
         ref bool GetAllowDeadmansApparel();
+
+        ref bool GetUseInputFilter();
     }
 
     public interface IBillWithWorkerFilter
@@ -39,6 +41,11 @@ namespace ImprovedWorkbenches
             return ref _allowDeadmansApparel;
         }
 
+        public ref bool GetUseInputFilter()
+        {
+            return ref _useInputFilter;
+        }
+
         public Pawn GetWorker()
         {
             return _worker;
@@ -56,6 +63,8 @@ namespace ImprovedWorkbenches
             Scribe_Deep.Look(ref _outputFilter, "outputFilter", new object[0]);
             Scribe_Values.Look(ref _allowDeadmansApparel,
                 "allowDeadmansApparel", false);
+            Scribe_Values.Look(ref _useInputFilter,
+                "useInputFilter", false);
             Scribe_References.Look(ref _worker, "worker");
         }
 
@@ -63,6 +72,7 @@ namespace ImprovedWorkbenches
         private ThingFilter _outputFilter = new ThingFilter();
 
         private bool _allowDeadmansApparel;
+        private bool _useInputFilter;
         private Pawn _worker;
     }
 
@@ -88,6 +98,11 @@ namespace ImprovedWorkbenches
             return ref _allowDeadmansApparel;
         }
 
+        public ref bool GetUseInputFilter()
+        {
+            return ref _useInputFilter;
+        }
+
         public Pawn GetWorker()
         {
             return _worker;
@@ -105,6 +120,8 @@ namespace ImprovedWorkbenches
             Scribe_Deep.Look(ref _outputFilter, "outputFilter", new object[0]);
             Scribe_Values.Look(ref _allowDeadmansApparel,
                 "allowDeadmansApparel", false);
+            Scribe_Values.Look(ref _useInputFilter,
+                "useInputFilter", false);
             Scribe_References.Look(ref _worker, "worker");
         }
 
@@ -112,6 +129,7 @@ namespace ImprovedWorkbenches
         private ThingFilter _outputFilter = new ThingFilter();
 
         private bool _allowDeadmansApparel;
+        private bool _useInputFilter;
         private Pawn _worker;
     }
 }

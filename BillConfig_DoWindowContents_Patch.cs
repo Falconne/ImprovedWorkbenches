@@ -119,8 +119,20 @@ namespace ImprovedWorkbenches
             Widgets.QualityRange(rect2, 11, ref allowedQualityLevels);
             filter.AllowedQualityLevels = allowedQualityLevels;
 
-            var nonDeadmansApparelFilter = new SpecialThingFilterWorker_NonDeadmansApparel();
+
             var thingDef = billRaw.recipe.products.First().thingDef;
+            // Use input ingredients for counted items filter
+            if (billRaw.ingredientFilter != null && thingDef.MadeFromStuff)
+            {
+                y += 35;
+                var subRect = new Rect(0f, y, columnWidth, gap);
+                Widgets.CheckboxLabeled(subRect, "Match input ingredients",
+                    ref billWithThingFilter.GetUseInputFilter());
+            }
+
+
+            // Deadmans clothing count filter
+            var nonDeadmansApparelFilter = new SpecialThingFilterWorker_NonDeadmansApparel();
             if (!nonDeadmansApparelFilter.CanEverMatch(thingDef))
             {
                 // Not apparel, so deadman check is not needed.

@@ -20,7 +20,6 @@ namespace ImprovedWorkbenches
                 return true;
             }
 
-            var filter = billWithThingFilter.GetOutputFilter();
             __result = 0;
             var productThingDef = bill.recipe.products.First().thingDef;
 
@@ -32,8 +31,8 @@ namespace ImprovedWorkbenches
                     var minifiedThing = (MinifiedThing)thing;
                     var innerThing = minifiedThing.InnerThing;
                     if (innerThing.def == productThingDef &&
-                        DoesThingMatchFilter(filter, innerThing) &&
-                        DoesThingMatchFilter(filter, minifiedThing))
+                        DoesThingMatchFilter(billWithThingFilter, innerThing) &&
+                        DoesThingMatchFilter(billWithThingFilter, minifiedThing))
                     {
                         __result++;
                     }
@@ -56,7 +55,7 @@ namespace ImprovedWorkbenches
 
             foreach (var thing in thingList)
             {
-                if (!DoesThingMatchFilter(filter, thing))
+                if (!DoesThingMatchFilter(billWithThingFilter, thing))
                     continue;
 
                 if (nonDeadmansApparelFilter != null && !nonDeadmansApparelFilter.Matches(thing))
@@ -68,8 +67,19 @@ namespace ImprovedWorkbenches
             return false;
         }
 
-        private static bool DoesThingMatchFilter(ThingFilter filter, Thing thing)
+        private static bool DoesThingMatchFilter(IBillWithThingFilter bill, Thing thing)
         {
+            if (bill.GetUseInputFilter() && thing.Stuff != null)
+            {
+                var billRaw = (Bill) bill;
+                if (billRaw.ingredientFilter != null)
+                {
+                    if (!billRaw.ingredientFilter.Allows(thing.Stuff))
+                        return false;
+                }
+            }
+
+            var filter = bill.GetOutputFilter();
             QualityCategory quality;
             if (filter.allowedQualitiesConfigurable && thing.TryGetQuality(out quality))
             {
