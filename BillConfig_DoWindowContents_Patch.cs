@@ -80,12 +80,8 @@ namespace ImprovedWorkbenches
                 }
             }
 
-            // Counted items filter (if applicable)
-            if (billRaw.repeatMode != BillRepeatModeDefOf.TargetCount ||
-                !BillUtility_Detour.CanOutputBeFiltered(billRaw))
-            {
+            if (billRaw.repeatMode != BillRepeatModeDefOf.TargetCount)
                 return;
-            }
 
             // "Unpause when" level adjustment buttons
             if (billRaw.pauseWhenSatisfied)
@@ -114,6 +110,10 @@ namespace ImprovedWorkbenches
                 }
             }
 
+            if (!BillUtility_Detour.CanOutputBeFiltered(billRaw))
+                return;
+
+            // Counted items filter
             y += 33;
             var countedLabelRect = new Rect(0f, y, columnWidth, gap);
             Widgets.Label(countedLabelRect, "Counted items filter:");
