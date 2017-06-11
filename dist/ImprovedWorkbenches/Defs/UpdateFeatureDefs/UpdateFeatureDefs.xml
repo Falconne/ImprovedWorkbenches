@@ -9,6 +9,6 @@
     <HugsLib.UpdateFeatureDef ParentName="UpdateFeatureBase">
         <defName>ImprovedWorkbenches_17_1_0</defName>
         <assemblyVersion>17.1.0</assemblyVersion>
-        <content>* Bills can now be restricted to specific colonists, like in Enhanched Crafting.|* Added buttons to fine tune bill resume level, like in Enhanced Crafting.|* Added option to only count items that use materials defined in the input ingredients filter.|* Placed minifiables, such as installed statues, no longer count as available items.</content>
+        <content>* Bills can now be restricted to specific colonists, like in Enhanced Crafting.|* Added buttons to fine tune bill resume level, like in Enhanced Crafting.|* Added option to only count items that use materials defined in the input ingredients filter.|* Placed minifiables, such as installed statues, no longer count as available items.</content>
     </HugsLib.UpdateFeatureDef>
 </Defs>
