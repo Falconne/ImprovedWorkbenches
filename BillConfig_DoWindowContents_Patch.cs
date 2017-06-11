@@ -169,13 +169,10 @@ namespace ImprovedWorkbenches
         private static IEnumerable<Pair<Pawn, SkillRecord>> GetAllowedWorkersWithSkillLevel(
             Bill bill)
         {
+            var validPawns = Find.VisibleMap.mapPawns.FreeColonists;
             var thing = bill.billStack?.billGiver as Thing;
             if (thing == null)
-                return GetAllPawnsForUnskilledJob();
-
-            var workSkill = bill.recipe?.workSkill;
-            if (workSkill == null)
-                return GetAllPawnsForUnskilledJob();
+                return GetPawnsForUnskilledJob(validPawns);
 
             var allDefsListForReading = DefDatabase<WorkGiverDef>.AllDefsListForReading;
 
@@ -183,10 +180,14 @@ namespace ImprovedWorkbenches
                 t.fixedBillGiverDefs != null && t.fixedBillGiverDefs.Contains(thing.def))?.workType;
 
             if (workTypeDef == null)
-                return GetAllPawnsForUnskilledJob();
+                return GetPawnsForUnskilledJob(validPawns);
 
-            var validPawns = Find.VisibleMap.mapPawns.FreeColonists.Where(
+            validPawns = Find.VisibleMap.mapPawns.FreeColonists.Where(
                 p => p.workSettings.WorkIsActive(workTypeDef));
+
+            var workSkill = bill.recipe?.workSkill;
+            if (workSkill == null)
+                return GetPawnsForUnskilledJob(validPawns);
 
             var pawnsWithTheirSkill = validPawns.Select(
                 p => new Pair<Pawn, SkillRecord>(p, p.skills.GetSkill(workSkill)));
@@ -199,10 +200,9 @@ namespace ImprovedWorkbenches
             return pawnsOrderedBySkill;
         }
 
-        private static IEnumerable<Pair<Pawn, SkillRecord>> GetAllPawnsForUnskilledJob()
+        private static IEnumerable<Pair<Pawn, SkillRecord>> GetPawnsForUnskilledJob(IEnumerable<Pawn> validPawns)
         {
-            return Find.VisibleMap.mapPawns.FreeColonists.Select(
-                p => new Pair<Pawn, SkillRecord>(p, null));
+            return validPawns.Select(p => new Pair<Pawn, SkillRecord>(p, null));
         }
     }
 }
