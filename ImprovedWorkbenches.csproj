@@ -55,6 +55,8 @@
     <Compile Include="BillUtility_Detour.cs" />
     <Compile Include="Bill_Detour.cs" />
     <Compile Include="Bill_ProductionWithFilters.cs" />
+    <Compile Include="ExtendedBillData.cs" />
+    <Compile Include="ExtendedBillDataStorage.cs" />
     <Compile Include="FilteredProductCounter.cs" />
     <Compile Include="MainTabWindow_Inspect_Detour.cs" />
     <Compile Include="Main.cs" />
