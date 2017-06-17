@@ -17,11 +17,13 @@ namespace ImprovedWorkbenches
             if (!__result)
                 return;
 
-            var bill = __instance as IBillWithWorkerFilter;
-            if (bill == null)
+            var billProduction = __instance as Bill_Production;
+            if (billProduction == null)
                 return;
 
-            var assignedWorker = bill.GetWorker();
+            var extendedBillData = Main.Instance.ExtendedBillDataStorage.GetDataFor(billProduction);
+
+            var assignedWorker = extendedBillData?.Worker;
             if (assignedWorker == null)
                 return;
 

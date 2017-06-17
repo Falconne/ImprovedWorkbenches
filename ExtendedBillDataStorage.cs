@@ -45,7 +45,6 @@ namespace ImprovedWorkbenches
                     $"Found old Bill ({bill.GetUniqueLoadID()}), migrating to new format");
 
                 newExtendedData = new ExtendedBillData(bill);
-                _store[loadId] = newExtendedData;
             }
             else
             {
@@ -56,6 +55,7 @@ namespace ImprovedWorkbenches
                     newExtendedData.SetDefaultFilter(bill);
             }
 
+            _store[loadId] = newExtendedData;
             return newExtendedData;
         }
 
