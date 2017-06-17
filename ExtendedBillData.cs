@@ -1,4 +1,5 @@
-﻿using Verse;
+﻿using RimWorld;
+using Verse;
 
 namespace ImprovedWorkbenches
 {
@@ -8,6 +9,28 @@ namespace ImprovedWorkbenches
         public bool AllowDeadmansApparel;
         public bool UseInputFilter;
         public Pawn Worker;
+
+        public ExtendedBillData()
+        {
+        }
+
+        // Constructor for migrating old data storage format to new method.
+        public ExtendedBillData(Bill_Production bill)
+        {
+            var billWithWorkerFilter = bill as IBillWithWorkerFilter;
+            Worker = billWithWorkerFilter.GetWorker();
+
+            if (!BillUtility_Detour.CanOutputBeFiltered(bill))
+                return;
+
+            var billWithThingFilter = bill as IBillWithThingFilter;
+            if (billWithThingFilter == null)
+                return;
+
+            OutputFilter = billWithThingFilter.GetOutputFilter();
+            AllowDeadmansApparel = billWithThingFilter.GetAllowDeadmansApparel();
+            UseInputFilter = billWithThingFilter.GetUseInputFilter();
+        }
 
         public void ExposeData()
         {
