@@ -21,7 +21,7 @@ namespace ImprovedWorkbenches
             if (billProduction == null)
                 return;
 
-            var extendedBillData = Main.Instance.ExtendedBillDataStorage.GetDataFor(billProduction);
+            var extendedBillData = Main.Instance.GetDataFor(billProduction);
 
             var assignedWorker = extendedBillData?.Worker;
             if (assignedWorker == null)

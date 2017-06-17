@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using HugsLib.Utils;
 using ImprovedWorkbenches;
 using RimWorld;
 using Verse;
 
 namespace ImprovedWorkbenches
 {
-    public class ExtendedBillDataStorage : IExposable
+    public class ExtendedBillDataStorage : UtilityWorldObject, IExposable
     {
         private Dictionary<int, ExtendedBillData> _store =
             new Dictionary<int, ExtendedBillData>();
@@ -19,8 +20,9 @@ namespace ImprovedWorkbenches
         private static readonly FieldInfo LoadIdGetter = typeof(Bill).GetField("loadID",
             BindingFlags.NonPublic | BindingFlags.Instance);
 
-        public void ExposeData()
+        public override void ExposeData()
         {
+            base.ExposeData();
 			Scribe_Collections.Look(
                 ref _store, "store", 
                 LookMode.Value, LookMode.Deep, 

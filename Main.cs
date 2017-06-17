@@ -1,5 +1,7 @@
 ﻿using HugsLib.Settings;
 using HugsLib.Utils;
+using RimWorld;
+using Verse;
 
 namespace ImprovedWorkbenches
 {
@@ -8,6 +10,14 @@ namespace ImprovedWorkbenches
         public Main()
         {
             Instance = this;
+        }
+
+        public override void WorldLoaded()
+        {
+            base.WorldLoaded();
+            Logger.Message("Loading ExtendedBillDataStorage");
+            _extendedBillDataStorage =
+                UtilityWorldObjectManager.GetUtilityWorldObject<ExtendedBillDataStorage>();
         }
 
         public override void DefsLoaded()
@@ -22,7 +32,12 @@ namespace ImprovedWorkbenches
             return _expandBillsTab;
         }
 
-        public ExtendedBillDataStorage ExtendedBillDataStorage = new ExtendedBillDataStorage();
+        public ExtendedBillData GetDataFor(Bill_Production bill)
+        {
+            return _extendedBillDataStorage?.GetDataFor(bill);
+        }
+
+        private ExtendedBillDataStorage _extendedBillDataStorage;
 
         internal new ModLogger Logger => base.Logger;
 
