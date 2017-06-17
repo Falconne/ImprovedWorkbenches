@@ -11,6 +11,9 @@ namespace ImprovedWorkbenches
         [HarmonyPostfix]
         public static void Postfix(MainTabWindow_Inspect __instance)
         {
+            if (!Main.Instance.ShouldExpandBillsTab())
+                return;
+
             var tab = __instance.CurTabs?.FirstOrDefault();
 
             if (!(tab is ITab_Bills))
