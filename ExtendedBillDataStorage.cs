@@ -31,7 +31,7 @@ namespace ImprovedWorkbenches
 
         // Return the associate extended data for a given bill, creating a new association
         // if required.
-        public ExtendedBillData GetDataFor(Bill_Production bill)
+        public ExtendedBillData GetExtendedDataFor(Bill_Production bill)
         {
 
             var loadId = (int) LoadIdGetter.GetValue(bill);
@@ -59,6 +59,13 @@ namespace ImprovedWorkbenches
 
             _store[loadId] = newExtendedData;
             return newExtendedData;
+        }
+
+        // Delete extended data when bill is deleted
+        public void DeleteExtendedDataFor(Bill_Production bill)
+        {
+            var loadId = (int) LoadIdGetter.GetValue(bill);
+            _store.Remove(loadId);
         }
 
         // Figure out if output of bill produces a "thing" with quality or hit-points

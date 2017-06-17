@@ -32,9 +32,15 @@ namespace ImprovedWorkbenches
             return _expandBillsTab;
         }
 
-        public ExtendedBillData GetDataFor(Bill_Production bill)
+        public ExtendedBillData GetExtendedDataFor(Bill_Production bill)
         {
-            return _extendedBillDataStorage?.GetDataFor(bill);
+            return _extendedBillDataStorage?.GetExtendedDataFor(bill);
+        }
+
+        public void DeleteExtendedDataFor(Bill_Production bill)
+        {
+            Main.Instance.Logger.Message($"Deleting extended data for {bill.GetUniqueLoadID()}");
+            _extendedBillDataStorage?.DeleteExtendedDataFor(bill);
         }
 
         private ExtendedBillDataStorage _extendedBillDataStorage;

@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BillConfig_DoWindowContents_Patch.cs" />
+    <Compile Include="BillStack_Detour.cs" />
     <Compile Include="Bill_Detour.cs" />
     <Compile Include="Bill_ProductionWithFilters.cs" />
     <Compile Include="ExtendedBillData.cs" />
