@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using ImprovedWorkbenches;
 using RimWorld;
@@ -26,6 +27,8 @@ namespace ImprovedWorkbenches
                 ref _billIDsWorkingList, ref _extendedBillDataWorkingList);
         }
 
+        // Return the associate extended data for a given bill, creating a new association
+        // if required.
         public ExtendedBillData GetDataFor(Bill_Production bill)
         {
 
@@ -49,9 +52,31 @@ namespace ImprovedWorkbenches
                 Main.Instance.Logger.Message(
                     $"Creating new data for {bill.GetUniqueLoadID()}");
                 newExtendedData = new ExtendedBillData();
+                if (CanOutputBeFiltered(bill))
+                    newExtendedData.SetDefaultFilter(bill);
             }
 
             return newExtendedData;
         }
+
+        // Figure out if output of bill produces a "thing" with quality or hit-points
+        internal static bool CanOutputBeFiltered(Bill_Production bill)
+        {
+            return CanOutputBeFiltered(bill.recipe);
+        }
+
+        // Figure out if output of recipe produces a "thing" with quality or hit-points
+        private static bool CanOutputBeFiltered(RecipeDef recipe)
+        {
+            if (recipe.products == null || recipe.products.Count == 0)
+                return false;
+
+            var thingDef = recipe.products.First().thingDef;
+            if (thingDef.BaseMarketValue <= 0)
+                return false;
+
+            return !thingDef.CountAsResource;
+        }
+
     }
 }

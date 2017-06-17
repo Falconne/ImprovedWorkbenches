@@ -113,7 +113,7 @@ namespace ImprovedWorkbenches
                 }
             }
 
-            if (!BillUtility_Detour.CanOutputBeFiltered(billRaw))
+            if (!ExtendedBillDataStorage.CanOutputBeFiltered(billRaw))
                 return;
 
             // Counted items filter

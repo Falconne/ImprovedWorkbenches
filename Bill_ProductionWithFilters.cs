@@ -4,6 +4,9 @@ using Verse;
 
 namespace ImprovedWorkbenches
 {
+    // These classes are no longer used. They are only left here to support porting
+    // data over from older saves. Data is now stored in ExtendedBillDataStorage.
+
     public interface IBillWithThingFilter
     {
         ThingFilter GetOutputFilter();

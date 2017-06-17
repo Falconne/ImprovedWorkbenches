@@ -12,13 +12,16 @@ namespace ImprovedWorkbenches
         [HarmonyPrefix]
         static bool Prefix(ref Bill_Production bill, ref int __result)
         {
-            var billWithThingFilter = bill as IBillWithThingFilter;
-            if (billWithThingFilter == null || !BillUtility_Detour.CanOutputBeFiltered(bill))
+            if (!ExtendedBillDataStorage.CanOutputBeFiltered(bill))
             {
                 // Counting a Thing that is a resource or a bill we don't control.
                 // Defer back to vanilla counting function.
                 return true;
             }
+
+            var extendedBillData = Main.Instance.ExtendedBillDataStorage.GetDataFor(bill);
+            if (extendedBillData == null)
+                return true;
 
             __result = 0;
             var productThingDef = bill.recipe.products.First().thingDef;
@@ -31,8 +34,8 @@ namespace ImprovedWorkbenches
                     var minifiedThing = (MinifiedThing)thing;
                     var innerThing = minifiedThing.InnerThing;
                     if (innerThing.def == productThingDef &&
-                        DoesThingMatchFilter(billWithThingFilter, innerThing) &&
-                        DoesThingMatchFilter(billWithThingFilter, minifiedThing))
+                        DoesThingMatchFilter(bill, extendedBillData, innerThing) &&
+                        DoesThingMatchFilter(bill, extendedBillData, minifiedThing))
                     {
                         __result++;
                     }
@@ -42,7 +45,7 @@ namespace ImprovedWorkbenches
             }
 
             SpecialThingFilterWorker_NonDeadmansApparel nonDeadmansApparelFilter = null;
-            if (!billWithThingFilter.GetAllowDeadmansApparel())
+            if (!extendedBillData.AllowDeadmansApparel)
             {
                 // We want to filter out corpse worn apparel
                 nonDeadmansApparelFilter = new SpecialThingFilterWorker_NonDeadmansApparel();
@@ -55,7 +58,7 @@ namespace ImprovedWorkbenches
 
             foreach (var thing in thingList)
             {
-                if (!DoesThingMatchFilter(billWithThingFilter, thing))
+                if (!DoesThingMatchFilter(bill, extendedBillData, thing))
                     continue;
 
                 if (nonDeadmansApparelFilter != null && !nonDeadmansApparelFilter.Matches(thing))
@@ -67,19 +70,19 @@ namespace ImprovedWorkbenches
             return false;
         }
 
-        private static bool DoesThingMatchFilter(IBillWithThingFilter bill, Thing thing)
+        private static bool DoesThingMatchFilter(Bill_Production bill, 
+            ExtendedBillData extendedBillData, Thing thing)
         {
-            if (bill.GetUseInputFilter() && thing.Stuff != null)
+            if (extendedBillData.UseInputFilter && thing.Stuff != null)
             {
-                var billRaw = (Bill) bill;
-                if (billRaw.ingredientFilter != null)
+                if (bill.ingredientFilter != null)
                 {
-                    if (!billRaw.ingredientFilter.Allows(thing.Stuff))
+                    if (!bill.ingredientFilter.Allows(thing.Stuff))
                         return false;
                 }
             }
 
-            var filter = bill.GetOutputFilter();
+            var filter = extendedBillData.OutputFilter;
             QualityCategory quality;
             if (filter.allowedQualitiesConfigurable && thing.TryGetQuality(out quality))
             {

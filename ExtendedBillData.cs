@@ -1,4 +1,5 @@
-﻿using RimWorld;
+﻿using System.Linq;
+using RimWorld;
 using Verse;
 
 namespace ImprovedWorkbenches
@@ -20,7 +21,7 @@ namespace ImprovedWorkbenches
             var billWithWorkerFilter = bill as IBillWithWorkerFilter;
             Worker = billWithWorkerFilter.GetWorker();
 
-            if (!BillUtility_Detour.CanOutputBeFiltered(bill))
+            if (!ExtendedBillDataStorage.CanOutputBeFiltered(bill))
                 return;
 
             var billWithThingFilter = bill as IBillWithThingFilter;
@@ -30,6 +31,13 @@ namespace ImprovedWorkbenches
             OutputFilter = billWithThingFilter.GetOutputFilter();
             AllowDeadmansApparel = billWithThingFilter.GetAllowDeadmansApparel();
             UseInputFilter = billWithThingFilter.GetUseInputFilter();
+        }
+
+        public void SetDefaultFilter(Bill_Production bill)
+        {
+            var thingDef = bill.recipe.products.First().thingDef;
+            OutputFilter.SetDisallowAll();
+            OutputFilter.SetAllow(thingDef, true);
         }
 
         public void ExposeData()
