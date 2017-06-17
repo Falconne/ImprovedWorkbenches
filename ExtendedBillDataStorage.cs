@@ -15,7 +15,7 @@ namespace ImprovedWorkbenches
 
         private List<ExtendedBillData> _extendedBillDataWorkingList;
 
-        private readonly FieldInfo _loadIdGetter = typeof(Bill).GetField("loadID",
+        private static readonly FieldInfo LoadIdGetter = typeof(Bill).GetField("loadID",
             BindingFlags.NonPublic | BindingFlags.Instance);
 
         public void ExposeData()
@@ -29,7 +29,7 @@ namespace ImprovedWorkbenches
         public ExtendedBillData GetDataFor(Bill_Production bill)
         {
 
-            var loadId = (int) _loadIdGetter.GetValue(bill);
+            var loadId = (int) LoadIdGetter.GetValue(bill);
             if (_store.TryGetValue(loadId, out ExtendedBillData data))
             {
                 return data;
@@ -38,7 +38,7 @@ namespace ImprovedWorkbenches
             ExtendedBillData newExtendedData;
             if (bill is IBillWithThingFilter)
             {
-                Main.Instance.Logger.Message(
+                Main.Instance.Logger.Warning(
                     $"Found old Bill ({bill.GetUniqueLoadID()}), migrating to new format");
 
                 newExtendedData = new ExtendedBillData(bill);
@@ -46,6 +46,8 @@ namespace ImprovedWorkbenches
             }
             else
             {
+                Main.Instance.Logger.Message(
+                    $"Creating new data for {bill.GetUniqueLoadID()}");
                 newExtendedData = new ExtendedBillData();
             }
 

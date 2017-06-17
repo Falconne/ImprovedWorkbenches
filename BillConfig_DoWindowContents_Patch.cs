@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Harmony;
 using RimWorld;
 using UnityEngine;
@@ -11,13 +12,15 @@ namespace ImprovedWorkbenches
     [HarmonyPatch(typeof(Dialog_BillConfig), "DoWindowContents")]
     public static class BillConfig_DoWindowContents_Patch
     {
+        private static readonly FieldInfo BillGetter = typeof(Dialog_BillConfig).GetField("bill",
+            BindingFlags.NonPublic | BindingFlags.Instance);
+
         [HarmonyPostfix]
         public static void DrawFilters(Dialog_BillConfig __instance, Rect inRect)
         {
-            var billRaw = (Bill_Production)AccessTools.Field(typeof(Dialog_BillConfig), "bill").GetValue(__instance);
-            var billWithWorkerFilter = billRaw as IBillWithWorkerFilter;
-            if (billWithWorkerFilter == null)
-                // Not one of our controlled Bills
+            var billRaw = (Bill_Production)BillGetter.GetValue(__instance);
+            var extendedBillData = Main.Instance.ExtendedBillDataStorage.GetDataFor(billRaw);
+            if (extendedBillData == null)
                 return;
 
             const float columnWidth = 180f;
@@ -34,7 +37,7 @@ namespace ImprovedWorkbenches
                 var workerButtonRect = new Rect(0f, y, columnWidth, gap);
 
                 var currentWorkerLabel =
-                    billWithWorkerFilter.GetWorker()?.NameStringShort.CapitalizeFirst() ??
+                    extendedBillData.Worker?.NameStringShort.CapitalizeFirst() ??
                     "Anybody";
 
                 if (Widgets.ButtonText(workerButtonRect, currentWorkerLabel))
@@ -42,7 +45,7 @@ namespace ImprovedWorkbenches
                     var potentialWorkerList = new List<FloatMenuOption>
                     {
                         new FloatMenuOption(
-                            "Anybody", delegate { billWithWorkerFilter.SetWorker(null); })
+                            "Anybody", delegate { extendedBillData.Worker = null; })
                     };
 
                     foreach (var allowedWorkerAndTheirSkill in potentialWorkers)
@@ -71,7 +74,7 @@ namespace ImprovedWorkbenches
                         var nameWithSkill = $"{skillPrefix}{allowedWorker}";
 
                         var workerMenuItem = new FloatMenuOption(nameWithSkill,
-                            delegate { billWithWorkerFilter.SetWorker(allowedWorker); });
+                            delegate { extendedBillData.Worker = allowedWorker; });
 
                         potentialWorkerList.Add(workerMenuItem);
                     }
@@ -119,10 +122,7 @@ namespace ImprovedWorkbenches
             Widgets.Label(countedLabelRect, "Counted items filter:");
             y += Text.LineHeight;
 
-            var billWithThingFilter = billRaw as IBillWithThingFilter;
-            // This won't be null, if we got here.
-            // ReSharper disable once PossibleNullReferenceException
-            var filter = billWithThingFilter.GetOutputFilter();
+            var filter = extendedBillData.OutputFilter;
             if (filter.allowedHitPointsConfigurable)
             {
                 var allowedHitPointsPercents = filter.AllowedHitPointsPercents;
@@ -149,7 +149,7 @@ namespace ImprovedWorkbenches
                 y += 35;
                 var subRect = new Rect(0f, y, columnWidth, gap);
                 Widgets.CheckboxLabeled(subRect, "Match input ingredients",
-                    ref billWithThingFilter.GetUseInputFilter());
+                    ref extendedBillData.UseInputFilter);
             }
 
 
@@ -163,7 +163,7 @@ namespace ImprovedWorkbenches
             y += 35;
             var rect3 = new Rect(0f, y, columnWidth, gap);
             Widgets.CheckboxLabeled(rect3, "Count corpse clothes",
-                ref billWithThingFilter.GetAllowDeadmansApparel());
+                ref extendedBillData.AllowDeadmansApparel);
         }
 
         private static IEnumerable<Pair<Pawn, SkillRecord>> GetAllowedWorkersWithSkillLevel(

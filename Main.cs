@@ -22,6 +22,8 @@ namespace ImprovedWorkbenches
             return _expandBillsTab;
         }
 
+        public ExtendedBillDataStorage ExtendedBillDataStorage = new ExtendedBillDataStorage();
+
         internal new ModLogger Logger => base.Logger;
 
         internal static Main Instance { get; private set; }

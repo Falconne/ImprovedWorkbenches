@@ -5,26 +5,8 @@ using Verse;
 
 namespace ImprovedWorkbenches
 {
-    [HarmonyPatch(typeof(BillUtility), "MakeNewBill")]
     public static class BillUtility_Detour
     {
-        [HarmonyPrefix]
-        public static bool MakeNewBill(ref Bill __result, ref RecipeDef recipe)
-        {
-            if (recipe.UsesUnfinishedThing)
-            {
-                var newBill = new Bill_ProductionWithUftWithFilters(recipe);
-                __result = SetDefaultFilter(newBill);
-            }
-            else
-            {
-                var newBill = new Bill_ProductionWithFilters(recipe);
-                __result = SetDefaultFilter(newBill);
-            }
-
-            return false;
-        }
-
         internal static bool CanOutputBeFiltered(Bill_Production bill)
         {
             return CanOutputBeFiltered(bill.recipe);
