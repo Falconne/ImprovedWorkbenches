@@ -33,20 +33,16 @@ namespace ImprovedWorkbenches
             return _expandBillsTab;
         }
 
-        public ExtendedBillData GetExtendedDataFor(Bill_Production bill)
+        public ExtendedBillDataStorage GetExtendedBillDataStorage()
         {
-            return _extendedBillDataStorage?.GetExtendedDataFor(bill);
-        }
-
-        public void DeleteExtendedDataFor(Bill_Production bill)
-        {
-            Main.Instance.Logger.Message($"Deleting extended data for {bill.GetUniqueLoadID()}");
-            _extendedBillDataStorage?.DeleteExtendedDataFor(bill);
+            return _extendedBillDataStorage;
         }
 
         internal new ModLogger Logger => base.Logger;
 
         internal static Main Instance { get; private set; }
+
+        public readonly BillCopyPaste BillCopyPasteHandler = new BillCopyPaste();
 
         public override string ModIdentifier => "ImprovedWorkbenches";
 

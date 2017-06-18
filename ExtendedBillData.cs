@@ -33,6 +33,14 @@ namespace ImprovedWorkbenches
             UseInputFilter = billWithThingFilter.GetUseInputFilter();
         }
 
+        public void CloneFrom(ExtendedBillData other)
+        {
+            OutputFilter.CopyAllowancesFrom(other.OutputFilter);
+            AllowDeadmansApparel = other.AllowDeadmansApparel;
+            UseInputFilter = other.UseInputFilter;
+            Worker = other.Worker;
+        }
+
         public void SetDefaultFilter(Bill_Production bill)
         {
             var thingDef = bill.recipe.products.First().thingDef;

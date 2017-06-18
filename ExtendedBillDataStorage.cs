@@ -64,6 +64,7 @@ namespace ImprovedWorkbenches
         // Delete extended data when bill is deleted
         public void DeleteExtendedDataFor(Bill_Production bill)
         {
+            Main.Instance.Logger.Message($"Deleting extended data for {bill.GetUniqueLoadID()}");
             var loadId = (int) LoadIdGetter.GetValue(bill);
             _store.Remove(loadId);
         }

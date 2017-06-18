@@ -19,7 +19,7 @@ namespace ImprovedWorkbenches
                 return true;
             }
 
-            var extendedBillData = Main.Instance.GetExtendedDataFor(bill);
+            var extendedBillData = Main.Instance.GetExtendedBillDataStorage().GetExtendedDataFor(bill);
             if (extendedBillData == null)
                 return true;
 

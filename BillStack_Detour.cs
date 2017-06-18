@@ -12,7 +12,7 @@ namespace ImprovedWorkbenches
             var billProduction = bill as Bill_Production;
             if (billProduction == null)
                 return true;
-            Main.Instance.DeleteExtendedDataFor(billProduction);
+            Main.Instance.GetExtendedBillDataStorage().DeleteExtendedDataFor(billProduction);
             return true;
         }
     }
