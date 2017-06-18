@@ -9,7 +9,7 @@ using Verse;
 namespace ImprovedWorkbenches
 {
     [HarmonyPatch(typeof(Bill), "PawnAllowedToStartAnew")]
-    public static class Bill_Detour
+    public static class Bill_PawnAllowedToStartAnew_Detour
     {
         [HarmonyPostfix]
         public static void Postfix(Bill __instance, ref bool __result, Pawn p)

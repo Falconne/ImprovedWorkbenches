@@ -1,6 +1,7 @@
 ﻿using HugsLib.Settings;
 using HugsLib.Utils;
 using RimWorld;
+using UnityEngine;
 using Verse;
 
 namespace ImprovedWorkbenches
@@ -43,8 +44,6 @@ namespace ImprovedWorkbenches
             _extendedBillDataStorage?.DeleteExtendedDataFor(bill);
         }
 
-        private ExtendedBillDataStorage _extendedBillDataStorage;
-
         internal new ModLogger Logger => base.Logger;
 
         internal static Main Instance { get; private set; }
@@ -52,5 +51,7 @@ namespace ImprovedWorkbenches
         public override string ModIdentifier => "ImprovedWorkbenches";
 
         private SettingHandle<bool> _expandBillsTab;
+
+        private ExtendedBillDataStorage _extendedBillDataStorage;
     }
 }
