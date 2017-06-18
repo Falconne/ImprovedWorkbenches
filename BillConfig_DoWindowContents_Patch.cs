@@ -22,7 +22,7 @@ namespace ImprovedWorkbenches
             if (billRaw == null)
                 return;
 
-            Main.Instance.GetExtendedBillDataStorage().MirrorBillToLinkedBills(__instance);
+            Main.Instance.GetExtendedBillDataStorage().MirrorBillToLinkedBills(billRaw);
 
             var extendedBillData = Main.Instance.GetExtendedBillDataStorage().GetExtendedDataFor(billRaw);
             if (extendedBillData == null)

@@ -61,6 +61,7 @@
     <Compile Include="ExtendedBillDataStorage.cs" />
     <Compile Include="FilteredProductCounter.cs" />
     <Compile Include="BillStack_DoListing_Detour.cs" />
+    <Compile Include="ITab_Bills_TabUpdate_Detour.cs" />
     <Compile Include="LinkedBillsSet.cs" />
     <Compile Include="MainTabWindow_Inspect_Detour.cs" />
     <Compile Include="Main.cs" />
