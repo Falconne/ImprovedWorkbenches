@@ -74,7 +74,7 @@ namespace ImprovedWorkbenches
         public void DeleteExtendedDataFor(Bill_Production bill)
         {
             var billId = GetBillId(bill);
-            RemoveBillFromLinkSets(billId);
+            RemoveBillFromLinkSets(bill);
             _store.Remove(billId);
         }
 
@@ -84,47 +84,47 @@ namespace ImprovedWorkbenches
             var childId = GetBillId(child);
             Main.Instance.Logger.Message($"Linking bills {parentId} -> {childId}");
 
-            var existingBillSet = GetBillSetContaining(parentId);
+            var existingBillSet = GetBillSetContaining(parent);
             if (existingBillSet != null)
             {
-                Main.Instance.Logger.Message($"Existing set found with {existingBillSet.BillIds.Count} entries");
-                existingBillSet.BillIds.Add(childId);
+                Main.Instance.Logger.Message($"Existing set found with {existingBillSet.Count} entries");
+                existingBillSet.Add(child);
                 return;
             }
 
             Main.Instance.Logger.Message("Creating new set");
             var newSet = new LinkedBillsSet();
-            newSet.BillIds.Add(parentId);
-            newSet.BillIds.Add(childId);
+            newSet.Add(parent);
+            newSet.Add(child);
             _linkedBillsSets.Add(newSet);
         }
 
-        public LinkedBillsSet GetBillSetContaining(int billId)
+        public LinkedBillsSet GetBillSetContaining(Bill_Production bill)
         {
             foreach (var billsSet in _linkedBillsSets)
             {
-                if (billsSet.BillIds.Contains(billId))
+                if (billsSet.Contains(bill))
                     return billsSet;
             }
 
             return null;
         }
 
-        public void RemoveBillFromLinkSets(int billId)
+        public void RemoveBillFromLinkSets(Bill_Production bill)
         {
-            var existingBillSet = GetBillSetContaining(billId);
+            var existingBillSet = GetBillSetContaining(bill);
             if (existingBillSet == null)
                 return;
 
-            Main.Instance.Logger.Message($"Removing {billId} from existing set");
-            if (existingBillSet.BillIds.Count <= 2)
+            Main.Instance.Logger.Message("Removing bill from existing set");
+            if (existingBillSet.Count <= 2)
             {
                 Main.Instance.Logger.Message("Removing entire set");
                 _linkedBillsSets.Remove(existingBillSet);
             }
             else
             {
-                existingBillSet.BillIds.Remove(billId);
+                existingBillSet.Remove(bill);
             }
 
             Main.Instance.Logger.Message($"Link sets remaining: {_linkedBillsSets.Count}");

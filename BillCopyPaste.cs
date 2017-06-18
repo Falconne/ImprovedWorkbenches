@@ -7,6 +7,11 @@ namespace ImprovedWorkbenches
 {
     public class BillCopyPaste
     {
+        public void Clear()
+        {
+            _copiedBills.Clear();
+        }
+
         public void DoCopy(Bill_Production billProduction)
         {
             _copiedBills.Clear();

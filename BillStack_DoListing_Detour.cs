@@ -15,14 +15,18 @@ namespace ImprovedWorkbenches
             if (workTable == null)
                 return;
 
+
             var gap = 4f;
             var buttonWidth = 70f;
             var rectCopyAll = new Rect(rect.xMin + 154f, rect.yMin, buttonWidth, 29f);
-            if (Widgets.ButtonText(rectCopyAll, "Copy All"))
+            if (workTable.BillStack != null && workTable.BillStack.Count > 0)
             {
-                Main.Instance.BillCopyPasteHandler.DoCopy(workTable);
+                if (Widgets.ButtonText(rectCopyAll, "Copy All"))
+                {
+                    Main.Instance.BillCopyPasteHandler.DoCopy(workTable);
+                }
+                TooltipHandler.TipRegion(rectCopyAll, "Copy all bills in this workbench");
             }
-            TooltipHandler.TipRegion(rectCopyAll, "Copy all bills in this workbench");
 
             if (!Main.Instance.BillCopyPasteHandler.CanPasteInto(workTable))
                 return;
@@ -46,7 +50,7 @@ namespace ImprovedWorkbenches
             {
                 Main.Instance.BillCopyPasteHandler.DoPasteInto(workTable, true);
             }
-            TooltipHandler.TipRegion(rectLink, "Paste copied bills and link them back to the originals");
+            TooltipHandler.TipRegion(rectLink, "Paste copied bills and link them back to their originals");
 
             Text.Font = oldFont;
         }

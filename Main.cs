@@ -16,9 +16,9 @@ namespace ImprovedWorkbenches
         public override void WorldLoaded()
         {
             base.WorldLoaded();
-            Logger.Message("Loading ExtendedBillDataStorage");
             _extendedBillDataStorage =
                 UtilityWorldObjectManager.GetUtilityWorldObject<ExtendedBillDataStorage>();
+            BillCopyPasteHandler.Clear();
         }
 
         public override void DefsLoaded()
