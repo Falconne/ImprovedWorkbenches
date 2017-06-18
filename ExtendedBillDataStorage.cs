@@ -87,15 +87,15 @@ namespace ImprovedWorkbenches
             var existingBillSet = GetBillSetContaining(parent);
             if (existingBillSet != null)
             {
-                Main.Instance.Logger.Message($"Existing set found with {existingBillSet.Count} entries");
-                existingBillSet.Add(child);
+                Main.Instance.Logger.Message($"Existing set found with {existingBillSet.Bills.Count} entries");
+                existingBillSet.Bills.Add(child);
                 return;
             }
 
             Main.Instance.Logger.Message("Creating new set");
             var newSet = new LinkedBillsSet();
-            newSet.Add(parent);
-            newSet.Add(child);
+            newSet.Bills.Add(parent);
+            newSet.Bills.Add(child);
             _linkedBillsSets.Add(newSet);
         }
 
@@ -103,7 +103,7 @@ namespace ImprovedWorkbenches
         {
             foreach (var billsSet in _linkedBillsSets)
             {
-                if (billsSet.Contains(bill))
+                if (billsSet.Bills.Contains(bill))
                     return billsSet;
             }
 
@@ -117,17 +117,56 @@ namespace ImprovedWorkbenches
                 return;
 
             Main.Instance.Logger.Message("Removing bill from existing set");
-            if (existingBillSet.Count <= 2)
+            if (existingBillSet.Bills.Count <= 2)
             {
                 Main.Instance.Logger.Message("Removing entire set");
                 _linkedBillsSets.Remove(existingBillSet);
             }
             else
             {
-                existingBillSet.Remove(bill);
+                existingBillSet.Bills.Remove(bill);
             }
 
             Main.Instance.Logger.Message($"Link sets remaining: {_linkedBillsSets.Count}");
+        }
+
+        public void MirrorBillToLinkedBills(Bill_Production sourceBill)
+        {
+            var existingBillSet = GetBillSetContaining(sourceBill);
+            if (existingBillSet == null)
+                return;
+
+            foreach (var linkedBill in existingBillSet.Bills)
+            {
+                if (linkedBill == sourceBill)
+                    continue;
+
+                MirrorBills(sourceBill, linkedBill);
+            }
+        }
+
+        public void MirrorBills(Bill_Production sourceBill, Bill_Production destinationBill)
+        {
+            destinationBill.ingredientFilter.CopyAllowancesFrom(sourceBill.ingredientFilter);
+            destinationBill.ingredientSearchRadius = sourceBill.ingredientSearchRadius;
+            destinationBill.allowedSkillRange = sourceBill.allowedSkillRange;
+            destinationBill.repeatMode = sourceBill.repeatMode;
+            destinationBill.repeatCount = sourceBill.repeatCount;
+            destinationBill.targetCount = sourceBill.targetCount;
+            destinationBill.storeMode = sourceBill.storeMode;
+            destinationBill.pauseWhenSatisfied = sourceBill.pauseWhenSatisfied;
+            destinationBill.unpauseWhenYouHave = sourceBill.unpauseWhenYouHave;
+            destinationBill.paused = sourceBill.paused;
+
+            var sourceExtendedData = GetExtendedDataFor(sourceBill);
+
+            if (sourceExtendedData == null)
+                return;
+
+            var destinationExtendedData = GetExtendedDataFor(destinationBill);
+
+            destinationExtendedData?.CloneFrom(sourceExtendedData);
+
         }
 
         // Figure out if output of bill produces a "thing" with quality or hit-points

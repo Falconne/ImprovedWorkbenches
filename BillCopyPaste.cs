@@ -66,27 +66,7 @@ namespace ImprovedWorkbenches
                 var newBill = (Bill_Production)sourceBill.recipe.MakeNewBill();
                 workTable.BillStack.AddBill(newBill);
 
-                newBill.ingredientFilter.CopyAllowancesFrom(sourceBill.ingredientFilter);
-                newBill.ingredientSearchRadius = sourceBill.ingredientSearchRadius;
-                newBill.allowedSkillRange = sourceBill.allowedSkillRange;
-                newBill.repeatMode = sourceBill.repeatMode;
-                newBill.repeatCount = sourceBill.repeatCount;
-                newBill.targetCount = sourceBill.targetCount;
-                newBill.storeMode = sourceBill.storeMode;
-                newBill.pauseWhenSatisfied = sourceBill.pauseWhenSatisfied;
-                newBill.unpauseWhenYouHave = sourceBill.unpauseWhenYouHave;
-                newBill.paused = sourceBill.paused;
-
-                var sourceExtendedData = 
-                    Main.Instance.GetExtendedBillDataStorage().GetExtendedDataFor(sourceBill);
-
-                if (sourceExtendedData == null)
-                    continue;
-
-                var newExtendedData =
-                    Main.Instance.GetExtendedBillDataStorage().GetExtendedDataFor(newBill);
-
-                newExtendedData?.CloneFrom(sourceExtendedData);
+                Main.Instance.GetExtendedBillDataStorage().MirrorBills(sourceBill, newBill);
 
                 if (link)
                 {

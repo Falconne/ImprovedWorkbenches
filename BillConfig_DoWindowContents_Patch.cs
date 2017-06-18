@@ -19,6 +19,11 @@ namespace ImprovedWorkbenches
         public static void DrawFilters(Dialog_BillConfig __instance, Rect inRect)
         {
             var billRaw = (Bill_Production)BillGetter.GetValue(__instance);
+            if (billRaw == null)
+                return;
+
+            Main.Instance.GetExtendedBillDataStorage().MirrorBillToLinkedBills(__instance);
+
             var extendedBillData = Main.Instance.GetExtendedBillDataStorage().GetExtendedDataFor(billRaw);
             if (extendedBillData == null)
                 return;
