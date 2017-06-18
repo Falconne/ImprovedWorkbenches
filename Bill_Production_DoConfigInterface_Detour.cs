@@ -21,6 +21,7 @@ namespace ImprovedWorkbenches
             {
                 Main.Instance.BillCopyPasteHandler.DoCopy(__instance);
             }
+			TooltipHandler.TipRegion(rect, "Copy bill");
         }
     }
 }

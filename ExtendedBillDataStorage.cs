@@ -13,12 +13,15 @@ namespace ImprovedWorkbenches
         private Dictionary<int, ExtendedBillData> _store =
             new Dictionary<int, ExtendedBillData>();
 
+        private List<LinkedBillsSet> _linkedBillsSets = new List<LinkedBillsSet>();
+
         private List<int> _billIDsWorkingList;
 
         private List<ExtendedBillData> _extendedBillDataWorkingList;
 
         private static readonly FieldInfo LoadIdGetter = typeof(Bill).GetField("loadID",
             BindingFlags.NonPublic | BindingFlags.Instance);
+
 
         public override void ExposeData()
         {
@@ -27,6 +30,14 @@ namespace ImprovedWorkbenches
                 ref _store, "store", 
                 LookMode.Value, LookMode.Deep, 
                 ref _billIDsWorkingList, ref _extendedBillDataWorkingList);
+
+            Scribe_Collections.Look(ref _linkedBillsSets, "linkedBillsSets", 
+                LookMode.Deep);
+
+            if (Scribe.mode == LoadSaveMode.LoadingVars && _linkedBillsSets == null)
+            {
+                _linkedBillsSets = new List<LinkedBillsSet>();
+            }
         }
 
         // Return the associate extended data for a given bill, creating a new association
@@ -34,7 +45,7 @@ namespace ImprovedWorkbenches
         public ExtendedBillData GetExtendedDataFor(Bill_Production bill)
         {
 
-            var loadId = (int) LoadIdGetter.GetValue(bill);
+            var loadId = GetBillId(bill);
             if (_store.TryGetValue(loadId, out ExtendedBillData data))
             {
                 return data;
@@ -50,8 +61,6 @@ namespace ImprovedWorkbenches
             }
             else
             {
-                Main.Instance.Logger.Message(
-                    $"Creating new data for {bill.GetUniqueLoadID()}");
                 newExtendedData = new ExtendedBillData();
                 if (CanOutputBeFiltered(bill))
                     newExtendedData.SetDefaultFilter(bill);
@@ -64,13 +73,65 @@ namespace ImprovedWorkbenches
         // Delete extended data when bill is deleted
         public void DeleteExtendedDataFor(Bill_Production bill)
         {
-            Main.Instance.Logger.Message($"Deleting extended data for {bill.GetUniqueLoadID()}");
-            var loadId = (int) LoadIdGetter.GetValue(bill);
-            _store.Remove(loadId);
+            var billId = GetBillId(bill);
+            RemoveBillFromLinkSets(billId);
+            _store.Remove(billId);
+        }
+
+        public void LinkBills(Bill_Production parent, Bill_Production child)
+        {
+            var parentId = GetBillId(parent);
+            var childId = GetBillId(child);
+            Main.Instance.Logger.Message($"Linking bills {parentId} -> {childId}");
+
+            var existingBillSet = GetBillSetContaining(parentId);
+            if (existingBillSet != null)
+            {
+                Main.Instance.Logger.Message($"Existing set found with {existingBillSet.BillIds.Count} entries");
+                existingBillSet.BillIds.Add(childId);
+                return;
+            }
+
+            Main.Instance.Logger.Message("Creating new set");
+            var newSet = new LinkedBillsSet();
+            newSet.BillIds.Add(parentId);
+            newSet.BillIds.Add(childId);
+            _linkedBillsSets.Add(newSet);
+        }
+
+        public LinkedBillsSet GetBillSetContaining(int billId)
+        {
+            foreach (var billsSet in _linkedBillsSets)
+            {
+                if (billsSet.BillIds.Contains(billId))
+                    return billsSet;
+            }
+
+            return null;
+        }
+
+        public void RemoveBillFromLinkSets(int billId)
+        {
+            var existingBillSet = GetBillSetContaining(billId);
+            if (existingBillSet == null)
+                return;
+
+            Main.Instance.Logger.Message($"Removing {billId} from existing set");
+            if (existingBillSet.BillIds.Count <= 2)
+            {
+                Main.Instance.Logger.Message("Removing entire set");
+                _linkedBillsSets.Remove(existingBillSet);
+            }
+            else
+            {
+                existingBillSet.BillIds.Remove(billId);
+            }
+
+            Main.Instance.Logger.Message($"Link sets remaining: {_linkedBillsSets.Count}");
         }
 
         // Figure out if output of bill produces a "thing" with quality or hit-points
-        internal static bool CanOutputBeFiltered(Bill_Production bill)
+        public static bool CanOutputBeFiltered(Bill_Production bill)
         {
             return CanOutputBeFiltered(bill.recipe);
         }
@@ -88,5 +149,9 @@ namespace ImprovedWorkbenches
             return !thingDef.CountAsResource;
         }
 
+        private int GetBillId(Bill_Production bill)
+        {
+            return (int)LoadIdGetter.GetValue(bill);
+        }
     }
 }

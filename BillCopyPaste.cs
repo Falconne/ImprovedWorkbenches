@@ -83,8 +83,10 @@ namespace ImprovedWorkbenches
 
                 newExtendedData?.CloneFrom(sourceExtendedData);
 
-                if (!link)
-                    continue;
+                if (link)
+                {
+                    Main.Instance.GetExtendedBillDataStorage().LinkBills(sourceBill, newBill);
+                }
             }
         }
 

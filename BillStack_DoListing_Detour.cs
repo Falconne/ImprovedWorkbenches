@@ -22,6 +22,7 @@ namespace ImprovedWorkbenches
             {
                 Main.Instance.BillCopyPasteHandler.DoCopy(workTable);
             }
+            TooltipHandler.TipRegion(rectCopyAll, "Copy all bills in this workbench");
 
             if (!Main.Instance.BillCopyPasteHandler.CanPasteInto(workTable))
                 return;
@@ -33,6 +34,7 @@ namespace ImprovedWorkbenches
             {
                 Main.Instance.BillCopyPasteHandler.DoPasteInto(workTable, false);
             }
+            TooltipHandler.TipRegion(rectPaste, "Paste copied bills as new entries");
 
             var oldFont = Text.Font;
             Text.Font = GameFont.Tiny;
@@ -44,6 +46,7 @@ namespace ImprovedWorkbenches
             {
                 Main.Instance.BillCopyPasteHandler.DoPasteInto(workTable, true);
             }
+            TooltipHandler.TipRegion(rectLink, "Paste copied bills and link them back to the originals");
 
             Text.Font = oldFont;
         }
