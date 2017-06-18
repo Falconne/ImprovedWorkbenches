@@ -92,6 +92,7 @@ namespace ImprovedWorkbenches
         {
             return workTable.BillStack.Count < 15 &&
                 recipe.AvailableNow &&
+                workTable.def.AllRecipes != null &&
                 workTable.def.AllRecipes.Contains(recipe);
         }
 
