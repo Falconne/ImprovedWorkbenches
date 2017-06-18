@@ -37,11 +37,10 @@ namespace ImprovedWorkbenches
             if (workTable.BillStack == null || workTable.BillStack.Count >= 15)
                 return false;
 
+            _copiedBills.RemoveAll(bill => bill.DeletedOrDereferenced);
+
             foreach (var bill in _copiedBills)
             {
-                if (bill.DeletedOrDereferenced)
-                    continue;
-
                 if (CanWorkTableDoRecipeNow(workTable, bill.recipe))
                     return true;
             }
@@ -76,14 +75,17 @@ namespace ImprovedWorkbenches
                 var sourceExtendedData = 
                     Main.Instance.GetExtendedBillDataStorage().GetExtendedDataFor(sourceBill);
 
+                if (sourceExtendedData == null)
+                    continue;
+
                 var newExtendedData =
                     Main.Instance.GetExtendedBillDataStorage().GetExtendedDataFor(newBill);
 
-                newExtendedData.CloneFrom(sourceExtendedData);
-            }
+                newExtendedData?.CloneFrom(sourceExtendedData);
 
-            if (!link)
-                return;
+                if (!link)
+                    continue;
+            }
         }
 
         private static bool CanWorkTableDoRecipeNow(Building_WorkTable workTable, RecipeDef recipe)
