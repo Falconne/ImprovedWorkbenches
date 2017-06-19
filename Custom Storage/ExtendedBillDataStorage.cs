@@ -80,19 +80,13 @@ namespace ImprovedWorkbenches
 
         public void LinkBills(Bill_Production parent, Bill_Production child)
         {
-            var parentId = GetBillId(parent);
-            var childId = GetBillId(child);
-            Main.Instance.Logger.Message($"Linking bills {parentId} -> {childId}");
-
             var existingBillSet = GetBillSetContaining(parent);
             if (existingBillSet != null)
             {
-                Main.Instance.Logger.Message($"Existing set found with {existingBillSet.Bills.Count} entries");
                 existingBillSet.Bills.Add(child);
                 return;
             }
 
-            Main.Instance.Logger.Message("Creating new set");
             var newSet = new LinkedBillsSet();
             newSet.Bills.Add(parent);
             newSet.Bills.Add(child);
@@ -121,18 +115,14 @@ namespace ImprovedWorkbenches
             if (existingBillSet == null)
                 return;
 
-            Main.Instance.Logger.Message("Removing bill from existing set");
             if (existingBillSet.Bills.Count <= 2)
             {
-                Main.Instance.Logger.Message("Removing entire set");
                 _linkedBillsSets.Remove(existingBillSet);
             }
             else
             {
                 existingBillSet.Bills.Remove(bill);
             }
-
-            Main.Instance.Logger.Message($"Link sets remaining: {_linkedBillsSets.Count}");
         }
 
         public void MirrorBillToLinkedBills(Bill_Production sourceBill)

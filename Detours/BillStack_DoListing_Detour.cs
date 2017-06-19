@@ -40,7 +40,7 @@ namespace ImprovedWorkbenches
             {
                 billCopyPasteHandler.DoPasteInto(workTable, false);
             }
-            TooltipHandler.TipRegion(rectPaste, "Paste copied bill(s) as new entries");
+            TooltipHandler.TipRegion(rectPaste, "Paste copied bill(s) as new bill(s) here.");
 
             var oldFont = Text.Font;
             Text.Font = GameFont.Tiny;
