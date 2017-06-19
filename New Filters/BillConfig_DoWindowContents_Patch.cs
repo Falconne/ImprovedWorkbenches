@@ -39,6 +39,25 @@ namespace ImprovedWorkbenches
                 TooltipHandler.TipRegion(unlinkRect, "Break link to other bills");
             }
 
+            if (!string.IsNullOrEmpty(extendedBillData.Name))
+            {
+                var oldFont = Text.Font;
+                Text.Font = GameFont.Medium;
+                var billNameRect = new Rect(0f, 0f, 400f, 50f);
+                Widgets.DrawBoxSolid(billNameRect, new ColorInt(21, 25, 29).ToColor);
+                Widgets.Label(billNameRect, extendedBillData.Name);
+                Text.Font = oldFont;
+            }
+
+            {
+                var renameRect = new Rect(inRect.xMax - 28f, inRect.yMin + 4f, 24f, 24f);
+                if (Widgets.ButtonImage(renameRect, Resources.Rename))
+                {
+				    Find.WindowStack.Add(new Dialog_RenameBill(extendedBillData));
+                }
+                TooltipHandler.TipRegion(renameRect, "Rename bill (use empty string to reset)");
+            }
+
             const float columnWidth = 180f;
             const float gap = 26f;
             var rect = new Rect(0f, inRect.height - 211f, columnWidth, 40f);

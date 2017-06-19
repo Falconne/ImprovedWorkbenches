@@ -10,6 +10,7 @@ namespace ImprovedWorkbenches
         public bool AllowDeadmansApparel;
         public bool UseInputFilter;
         public Pawn Worker;
+        public string Name;
 
         public ExtendedBillData()
         {
@@ -51,11 +52,10 @@ namespace ImprovedWorkbenches
         public void ExposeData()
         {
             Scribe_Deep.Look(ref OutputFilter, "outputFilter", new object[0]);
-            Scribe_Values.Look(ref AllowDeadmansApparel,
-                "allowDeadmansApparel", false);
-            Scribe_Values.Look(ref UseInputFilter,
-                "useInputFilter", false);
+            Scribe_Values.Look(ref AllowDeadmansApparel, "allowDeadmansApparel", false);
+            Scribe_Values.Look(ref UseInputFilter, "useInputFilter", false);
             Scribe_References.Look(ref Worker, "worker");
+            Scribe_Values.Look(ref Name, "name", null);
         }
     }
 }
