@@ -2,9 +2,14 @@
 <ModMetaData>
   <name>Improved Workbench Filters</name>
   <author>Falconne</author>
-  <description>Improves 'Do until you have X' job target by letting you set quality, hitpoint and material limits for counted items, as well as ignore corpse worn apparel.
+  <description>* Improves the 'Do until you have X' job target by letting you set quality, hitpoint and material limits for counted items, as well as ignore corpse worn apparel.
 
-Also lets you restrict bills to a particular pawn and fine tune the "unpause at" level with buttons, the way the Enhanced Crafting mod does (as this mod is not compatible with that one).</description>
+* Copy and paste bills within and between workshops, optionally linking multiple bills to mirror changes between all bills in the chain.
+
+* Restrict bills to a particular pawn, fine tune the "unpause at" level with buttons and rename bills, as the Enhanced Crafting mod does (these two mods are not compatible).
+
+* Convenience feature to automatically open Bills tab when a workbench is selected.
+</description>
   <url>https://ludeon.com/forums/index.php?topic=33083.0</url>
   <targetVersion>0.17.1557</targetVersion>
 </ModMetaData>
