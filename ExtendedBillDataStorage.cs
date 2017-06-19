@@ -110,6 +110,11 @@ namespace ImprovedWorkbenches
             return null;
         }
 
+        public bool IsLinkedBill(Bill_Production bill)
+        {
+            return GetBillSetContaining(bill) != null;
+        }
+
         public void RemoveBillFromLinkSets(Bill_Production bill)
         {
             var existingBillSet = GetBillSetContaining(bill);
