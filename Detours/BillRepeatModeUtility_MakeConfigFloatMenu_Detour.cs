@@ -14,8 +14,13 @@ namespace ImprovedWorkbenches
             if (!Main.Instance.GetExtendedBillDataStorage().IsLinkedBill(bill))
                 return true;
 
-            var list = new List<FloatMenuOption>();
-            list.Add(new FloatMenuOption("Use Details to change linked bill mode", delegate {}));
+            if (Find.WindowStack.currentlyDrawnWindow is Dialog_BillConfig)
+                return true;
+
+            var list = new List<FloatMenuOption>
+            {
+                new FloatMenuOption("Use Details to change linked bill mode", delegate { })
+            };
             Find.WindowStack.Add(new FloatMenu(list));
 
             return false;
