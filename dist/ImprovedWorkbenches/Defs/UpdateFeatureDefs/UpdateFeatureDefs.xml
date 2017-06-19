@@ -11,4 +11,10 @@
         <assemblyVersion>17.1.0</assemblyVersion>
         <content>* Bills can now be restricted to specific colonists, like in Enhanced Crafting.|* Added buttons to fine tune bill resume level, like in Enhanced Crafting.|* Added option to only count items that use materials defined in the input ingredients filter.|* Placed minifiables, such as installed statues, no longer count as available items.</content>
     </HugsLib.UpdateFeatureDef>
+
+    <HugsLib.UpdateFeatureDef ParentName="UpdateFeatureBase">
+        <defName>ImprovedWorkbenches_17_3_0</defName>
+        <assemblyVersion>17.3.0</assemblyVersion>
+        <content>* Bills can now be copied and pasted within and between compatible workbenches. This can be done one at a time or you can copy all the bills in a workbench and paste them all at once. New buttons will appear in the Bills tab UI for this.|* When pasting bills you can "Paste Link", which links the bills back to their originals. Any changes made to a linked bill will be mirrored to all bills in the chain. Links can be broken manually later.|* When a workbench is selected, its Bills tab will automatically open. This can be disabled in the Mod Settings menu.|* Bills can now be renamed.</content>
+    </HugsLib.UpdateFeatureDef>
 </Defs>
