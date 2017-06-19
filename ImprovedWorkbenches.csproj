@@ -51,19 +51,19 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BillConfig_DoWindowContents_Patch.cs" />
-    <Compile Include="BillCopyPaste.cs" />
-    <Compile Include="BillStack_Detour.cs" />
-    <Compile Include="Bill_Production_DoConfigInterface_Detour.cs" />
-    <Compile Include="Bill_PawnAllowedToStartAnew_Detour.cs" />
-    <Compile Include="Bill_ProductionWithFilters.cs" />
-    <Compile Include="ExtendedBillData.cs" />
-    <Compile Include="ExtendedBillDataStorage.cs" />
-    <Compile Include="FilteredProductCounter.cs" />
-    <Compile Include="BillStack_DoListing_Detour.cs" />
-    <Compile Include="ITab_Bills_TabUpdate_Detour.cs" />
-    <Compile Include="LinkedBillsSet.cs" />
-    <Compile Include="MainTabWindow_Inspect_Detour.cs" />
+    <Compile Include="New Filters\BillConfig_DoWindowContents_Patch.cs" />
+    <Compile Include="CopyPasteLink\BillCopyPaste.cs" />
+    <Compile Include="Detours\BillStack_Detour.cs" />
+    <Compile Include="Detours\Bill_Production_DoConfigInterface_Detour.cs" />
+    <Compile Include="Detours\Bill_PawnAllowedToStartAnew_Detour.cs" />
+    <Compile Include="Legacy Support\Bill_ProductionWithFilters.cs" />
+    <Compile Include="Custom Storage\ExtendedBillData.cs" />
+    <Compile Include="Custom Storage\ExtendedBillDataStorage.cs" />
+    <Compile Include="New Filters\FilteredProductCounter.cs" />
+    <Compile Include="Detours\BillStack_DoListing_Detour.cs" />
+    <Compile Include="Detours\ITab_Bills_TabUpdate_Detour.cs" />
+    <Compile Include="CopyPasteLink\LinkedBillsSet.cs" />
+    <Compile Include="Detours\MainTabWindow_Inspect_Detour.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources.cs" />

@@ -22,11 +22,22 @@ namespace ImprovedWorkbenches
             if (billRaw == null)
                 return;
 
-            Main.Instance.GetExtendedBillDataStorage().MirrorBillToLinkedBills(billRaw);
+            var extendedBillDataStorage = Main.Instance.GetExtendedBillDataStorage();
+            extendedBillDataStorage.MirrorBillToLinkedBills(billRaw);
 
-            var extendedBillData = Main.Instance.GetExtendedBillDataStorage().GetExtendedDataFor(billRaw);
+            var extendedBillData = extendedBillDataStorage.GetExtendedDataFor(billRaw);
             if (extendedBillData == null)
                 return;
+
+            if (extendedBillDataStorage.IsLinkedBill(billRaw))
+            {
+                var unlinkRect = new Rect(inRect.xMin + 28f, inRect.yMin + 50f, 24f, 24f);
+                if (Widgets.ButtonImage(unlinkRect, Resources.BreakLink))
+                {
+                    extendedBillDataStorage.RemoveBillFromLinkSets(billRaw);
+                }
+                TooltipHandler.TipRegion(unlinkRect, "Break link to other bills");
+            }
 
             const float columnWidth = 180f;
             const float gap = 26f;
