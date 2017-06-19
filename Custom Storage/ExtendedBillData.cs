@@ -40,6 +40,7 @@ namespace ImprovedWorkbenches
             AllowDeadmansApparel = other.AllowDeadmansApparel;
             UseInputFilter = other.UseInputFilter;
             Worker = other.Worker;
+            Name = other.Name;
         }
 
         public void SetDefaultFilter(Bill_Production bill)
