@@ -53,6 +53,11 @@ namespace ImprovedWorkbenches
             return false;
         }
 
+        public bool IsMultipleBillsCopied()
+        {
+            return _copiedBills.Count > 1;
+        }
+
         public void DoPasteInto(Building_WorkTable workTable, bool link)
         {
             foreach (var sourceBill in _copiedBills)

@@ -19,26 +19,28 @@ namespace ImprovedWorkbenches
             var gap = 4f;
             var buttonWidth = 70f;
             var rectCopyAll = new Rect(rect.xMin + 154f, rect.yMin, buttonWidth, 29f);
+            var billCopyPasteHandler = Main.Instance.BillCopyPasteHandler;
             if (workTable.BillStack != null && workTable.BillStack.Count > 0)
             {
                 if (Widgets.ButtonText(rectCopyAll, "Copy All"))
                 {
-                    Main.Instance.BillCopyPasteHandler.DoCopy(workTable);
+                    billCopyPasteHandler.DoCopy(workTable);
                 }
                 TooltipHandler.TipRegion(rectCopyAll, "Copy all bills in this workbench");
             }
 
-            if (!Main.Instance.BillCopyPasteHandler.CanPasteInto(workTable))
+            if (!billCopyPasteHandler.CanPasteInto(workTable))
                 return;
 
             var rectPaste = new Rect(rectCopyAll);
             rectPaste.xMin += buttonWidth + gap;
             rectPaste.xMax += buttonWidth + gap;
-            if (Widgets.ButtonText(rectPaste, "Paste"))
+            if (Widgets.ButtonText(rectPaste, 
+                billCopyPasteHandler.IsMultipleBillsCopied() ? "Paste All" : "Paste"))
             {
-                Main.Instance.BillCopyPasteHandler.DoPasteInto(workTable, false);
+                billCopyPasteHandler.DoPasteInto(workTable, false);
             }
-            TooltipHandler.TipRegion(rectPaste, "Paste copied bills as new entries");
+            TooltipHandler.TipRegion(rectPaste, "Paste copied bill(s) as new entries");
 
             var oldFont = Text.Font;
             Text.Font = GameFont.Tiny;
@@ -48,9 +50,10 @@ namespace ImprovedWorkbenches
             rectLink.xMax += buttonWidth + gap;
             if (Widgets.ButtonText(rectLink, "Paste Link"))
             {
-                Main.Instance.BillCopyPasteHandler.DoPasteInto(workTable, true);
+                billCopyPasteHandler.DoPasteInto(workTable, true);
             }
-            TooltipHandler.TipRegion(rectLink, "Paste copied bills and link them back to their originals");
+            TooltipHandler.TipRegion(rectLink, 
+                "Paste copied bill(s) and link them back to original(s). Changes will be mirrored to all connected bills.");
 
             Text.Font = oldFont;
         }
