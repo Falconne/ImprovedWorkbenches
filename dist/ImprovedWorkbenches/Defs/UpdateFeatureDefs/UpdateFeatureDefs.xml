@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Defs>
     <HugsLib.UpdateFeatureDef Abstract="true" Name="UpdateFeatureBase">
-        <modNameReadable>Improved Workbench Filters</modNameReadable>
+        <modNameReadable>Better Workbench Management</modNameReadable>
         <modIdentifier>ImprovedWorkbenches</modIdentifier>
         <linkUrl>https://ludeon.com/forums/index.php?topic=33083</linkUrl>
     </HugsLib.UpdateFeatureDef>
@@ -16,5 +16,11 @@
         <defName>ImprovedWorkbenches_17_3_0</defName>
         <assemblyVersion>17.3.0</assemblyVersion>
         <content>* Bills can now be copied and pasted within and between compatible workbenches. This can be done one at a time or you can copy all the bills in a workbench and paste them all at once. New buttons will appear in the Bills tab UI for this.|* When pasting bills you can "Paste Link", which links the bills back to their originals. Any changes made to a linked bill will be mirrored to all bills in the chain. Links can be broken manually later.|* When a workbench is selected, its Bills tab will automatically open. This can be disabled in the Mod Settings menu.|* Bills can now be renamed.</content>
+    </HugsLib.UpdateFeatureDef>
+
+    <HugsLib.UpdateFeatureDef ParentName="UpdateFeatureBase">
+        <defName>ImprovedWorkbenches_17_4_0</defName>
+        <assemblyVersion>17.4.0</assemblyVersion>
+        <content>Name changed from "Improved Workbench Filters" to "Better Workbench Management".</content>
     </HugsLib.UpdateFeatureDef>
 </Defs>

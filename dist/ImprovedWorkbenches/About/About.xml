@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ModMetaData>
-  <name>Improved Workbench Filters</name>
+  <name>Better Workbench Management</name>
   <author>Falconne</author>
   <description>* Improves the 'Do until you have X' job target by letting you set quality, hitpoint and material limits for counted items, as well as ignore corpse worn apparel.
 
