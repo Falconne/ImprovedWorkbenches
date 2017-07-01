@@ -6,15 +6,19 @@ namespace ImprovedWorkbenches
     {
         private readonly ExtendedBillData _extendedBill;
 
-        public Dialog_RenameBill(ExtendedBillData extendedBill)
+        private readonly string _defaultName;
+
+        public Dialog_RenameBill(ExtendedBillData extendedBill, string defaultName)
         {
             _extendedBill = extendedBill;
-            curName = extendedBill.Name ?? "";
+            _defaultName = defaultName;
+            curName = string.IsNullOrEmpty(extendedBill.Name) ? defaultName : extendedBill.Name;
         }
 
         protected override void SetName(string name)
         {
-            _extendedBill.Name = name;
+            if (string.IsNullOrEmpty(name) || name != _defaultName)
+                _extendedBill.Name = name;
         }
 
         protected override AcceptanceReport NameIsValid(string name)

@@ -53,7 +53,7 @@ namespace ImprovedWorkbenches
                 var renameRect = new Rect(inRect.xMax - 28f, inRect.yMin + 4f, 24f, 24f);
                 if (Widgets.ButtonImage(renameRect, Resources.Rename))
                 {
-				    Find.WindowStack.Add(new Dialog_RenameBill(extendedBillData));
+				    Find.WindowStack.Add(new Dialog_RenameBill(extendedBillData, billRaw.LabelCap));
                 }
                 TooltipHandler.TipRegion(renameRect, "Rename bill (use empty string to reset)");
             }
