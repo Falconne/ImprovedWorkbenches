@@ -43,7 +43,7 @@ namespace ImprovedWorkbenches
                 var renameRect = new Rect(inRect.xMax - 28f, inRect.yMin + 4f, 24f, 24f);
                 if (Widgets.ButtonImage(renameRect, Resources.Rename))
                 {
-				    Find.WindowStack.Add(new Dialog_RenameBill(extendedBillData, billRaw.LabelCap));
+                    Find.WindowStack.Add(new Dialog_RenameBill(extendedBillData, billRaw.LabelCap));
                 }
                 TooltipHandler.TipRegion(renameRect, "Rename bill (use empty string to reset)");
             }
@@ -107,6 +107,39 @@ namespace ImprovedWorkbenches
                     Find.WindowStack.Add(new FloatMenu(potentialWorkerList));
                 }
             }
+
+            // Filter copy/paste buttons
+            if (billRaw.ingredientFilter != null)
+            {
+                const float filterButtonWidth = 96f;
+                const float filterButtonHeight = 24f;
+                var oldFont = Text.Font;
+                Text.Font = GameFont.Tiny;
+
+                var copyPasteHandler = Main.Instance.BillCopyPasteHandler;
+                var copyButtonRect = new Rect(inRect.xMax - filterButtonWidth * 2 + 4f, inRect.yMax - 35f,
+                    filterButtonWidth, filterButtonHeight);
+
+                var parentFilter = billRaw.recipe?.fixedIngredientFilter;
+                if (Widgets.ButtonText(copyButtonRect, "Copy Filter"))
+                {
+                    copyPasteHandler.CopyFilter(billRaw.ingredientFilter, parentFilter);
+                }
+
+                if (copyPasteHandler.IsMatchingFilterCopied(parentFilter))
+                {
+                    var pasteButtonRect = new Rect(copyButtonRect);
+                    pasteButtonRect.xMin += filterButtonWidth + 4f;
+                    pasteButtonRect.xMax += filterButtonWidth + 4f;
+                    if (Widgets.ButtonText(pasteButtonRect, "Paste Filter"))
+                    {
+                        copyPasteHandler.PasteCopiedFilterInto(billRaw.ingredientFilter);
+                    }
+                }
+
+                Text.Font = oldFont;
+            }
+
 
             if (billRaw.repeatMode != BillRepeatModeDefOf.TargetCount)
                 return;
@@ -219,8 +252,8 @@ namespace ImprovedWorkbenches
 
             var maxPassion = Enum.GetNames(typeof(Passion)).Length + 1f;
 
-            var pawnsOrderedBySkill = pawnsWithTheirSkill.OrderByDescending(pws => 
-                pws.Second.Level + (int) pws.Second.passion / maxPassion);
+            var pawnsOrderedBySkill = pawnsWithTheirSkill.OrderByDescending(pws =>
+                pws.Second.Level + (int)pws.Second.passion / maxPassion);
 
             return pawnsOrderedBySkill;
         }

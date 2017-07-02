@@ -7,6 +7,12 @@ namespace ImprovedWorkbenches
 {
     public class BillCopyPaste
     {
+        private readonly List<Bill_Production> _copiedBills = new List<Bill_Production>();
+
+        private ThingFilter _copiedFilter;
+
+        private ThingFilter _copiedFiltersParent;
+
         public void Clear()
         {
             _copiedBills.Clear();
@@ -80,6 +86,23 @@ namespace ImprovedWorkbenches
             }
         }
 
+        public bool IsMatchingFilterCopied(ThingFilter parent)
+        {
+            return _copiedFilter != null && DoFiltersMatch(_copiedFiltersParent, parent);
+        }
+
+        public void CopyFilter(ThingFilter filter, ThingFilter parent)
+        {
+            _copiedFilter = new ThingFilter();
+            _copiedFilter.CopyAllowancesFrom(filter);
+            _copiedFiltersParent = parent;
+        }
+
+        public void PasteCopiedFilterInto(ThingFilter other)
+        {
+            other.CopyAllowancesFrom(_copiedFilter);
+        }
+
         private static bool CanWorkTableDoRecipeNow(Building_WorkTable workTable, RecipeDef recipe)
         {
             return workTable.BillStack.Count < 15 &&
@@ -88,6 +111,28 @@ namespace ImprovedWorkbenches
                 workTable.def.AllRecipes.Contains(recipe);
         }
 
-        private readonly List<Bill_Production> _copiedBills = new List<Bill_Production>();
+        private bool DoFiltersMatch(ThingFilter first, ThingFilter second)
+        {
+            if (first == null && second == null)
+                return true;
+
+            if (first == null || second == null)
+                return false;
+
+            // Only matching on allowed things for performance. May need to match
+            // other fields in the future;
+            if (first.AllowedDefCount != second.AllowedDefCount)
+                return false;
+
+            foreach (var thingDef in first.AllowedThingDefs)
+            {
+                if (first.Allows(thingDef) != second.Allows(thingDef))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
     }
 }
