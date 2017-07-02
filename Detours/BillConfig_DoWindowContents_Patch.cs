@@ -125,6 +125,7 @@ namespace ImprovedWorkbenches
                 {
                     copyPasteHandler.CopyFilter(billRaw.ingredientFilter, parentFilter);
                 }
+                TooltipHandler.TipRegion(copyButtonRect, "Copy ingredients filter settings, for pasting into a matching filter");
 
                 if (copyPasteHandler.IsMatchingFilterCopied(parentFilter))
                 {
