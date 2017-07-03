@@ -29,6 +29,9 @@ namespace ImprovedWorkbenches
             if (extendedBillData == null)
                 return;
 
+            DrawWorkTableNavigation(__instance, billRaw, inRect);
+
+            // Linked bill handling
             if (extendedBillDataStorage.IsLinkedBill(billRaw))
             {
                 var unlinkRect = new Rect(inRect.xMin + 28f, inRect.yMin + 50f, 24f, 24f);
@@ -40,7 +43,7 @@ namespace ImprovedWorkbenches
             }
 
             {
-                var renameRect = new Rect(inRect.xMax - 28f, inRect.yMin + 4f, 24f, 24f);
+                var renameRect = new Rect(inRect.xMax - 75f, inRect.yMin + 4f, 24f, 24f);
                 if (Widgets.ButtonImage(renameRect, Resources.Rename))
                 {
                     Find.WindowStack.Add(new Dialog_RenameBill(extendedBillData, billRaw.LabelCap));
@@ -223,6 +226,45 @@ namespace ImprovedWorkbenches
             var rect3 = new Rect(0f, y, columnWidth, gap);
             Widgets.CheckboxLabeled(rect3, "Count corpse clothes",
                 ref extendedBillData.AllowDeadmansApparel);
+        }
+
+        private static void DrawWorkTableNavigation(Dialog_BillConfig dialog, Bill_Production bill, Rect inRect)
+        {
+            var workTable = Find.Selector.SingleSelectedThing as Building_WorkTable;
+            var billStack = workTable?.BillStack;
+            if (billStack == null || billStack.Count < 2)
+                return;
+
+            const float buttonWidth = 14f;
+            const float xOffset = 10f + 2 * buttonWidth;
+            var leftRect = new Rect(inRect.xMax - xOffset, inRect.yMin + 4f, buttonWidth, 24f);
+            var thisBillIndexInWorkTable = billStack.Bills.FirstIndexOf(b => b == bill);
+
+            Action<int> mover = direction =>
+            {
+                var otherBill = (Bill_Production)billStack.Bills[thisBillIndexInWorkTable + direction];
+                dialog.Close();
+                Find.WindowStack.Add(new Dialog_BillConfig(otherBill, workTable.Position));
+            };
+
+            if (thisBillIndexInWorkTable > 0)
+            {
+                if (Widgets.ButtonImage(leftRect, Resources.LeftArrow))
+                {
+                    mover(-1);
+                }
+            }
+
+            if (thisBillIndexInWorkTable < billStack.Count - 1)
+            {
+                var rightRect = new Rect(leftRect);
+                rightRect.xMin += 4f + buttonWidth;
+                rightRect.xMax += 4f + buttonWidth;
+                if (Widgets.ButtonImage(rightRect, Resources.RightArrow))
+                {
+                    mover(1);
+                }
+            }
         }
 
         private static IEnumerable<Pair<Pawn, SkillRecord>> GetAllowedWorkersWithSkillLevel(
