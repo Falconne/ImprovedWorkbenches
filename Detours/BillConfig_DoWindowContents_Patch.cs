@@ -253,6 +253,7 @@ namespace ImprovedWorkbenches
                 {
                     mover(-1);
                 }
+                TooltipHandler.TipRegion(leftRect, "Open previous bill in workbench");
             }
 
             if (thisBillIndexInWorkTable < billStack.Count - 1)
@@ -264,6 +265,7 @@ namespace ImprovedWorkbenches
                 {
                     mover(1);
                 }
+                TooltipHandler.TipRegion(rightRect, "Open next bill in workbench");
             }
         }
 
