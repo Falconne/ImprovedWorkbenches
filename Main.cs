@@ -26,11 +26,20 @@ namespace ImprovedWorkbenches
             _expandBillsTab = Settings.GetHandle(
                 "expandBillsTab", "Automatically open bills tab", 
                 "When a workbench is selected, its Bills tab will be opened immediately", true);
+
+            _showIngredientCount = Settings.GetHandle(
+                "showIngredientCount", "Show item count in filter",
+                "Shows item counts in ingredients tab in bill details", true);
         }
 
         public bool ShouldExpandBillsTab()
         {
             return _expandBillsTab;
+        }
+
+        public bool ShouldShowIngredientCount()
+        {
+            return _showIngredientCount;
         }
 
         public ExtendedBillDataStorage GetExtendedBillDataStorage()
@@ -49,6 +58,8 @@ namespace ImprovedWorkbenches
         public override string ModIdentifier => "ImprovedWorkbenches";
 
         private SettingHandle<bool> _expandBillsTab;
+
+        private SettingHandle<bool> _showIngredientCount;
 
         private ExtendedBillDataStorage _extendedBillDataStorage;
     }

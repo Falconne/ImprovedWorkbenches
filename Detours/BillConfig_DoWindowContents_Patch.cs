@@ -18,6 +18,9 @@ namespace ImprovedWorkbenches
         [HarmonyPrefix]
         public static bool Prefix(Dialog_BillConfig __instance)
         {
+            if (!Main.Instance.ShouldShowIngredientCount())
+                return true;
+
             if (!(BillGetter.GetValue(__instance) is Bill_Production))
                 return true;
 
