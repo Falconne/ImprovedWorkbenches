@@ -63,7 +63,7 @@
     <Compile Include="Legacy Support\Bill_ProductionWithFilters.cs" />
     <Compile Include="Custom Storage\ExtendedBillData.cs" />
     <Compile Include="Custom Storage\ExtendedBillDataStorage.cs" />
-    <Compile Include="New Filters\FilteredProductCounter.cs" />
+    <Compile Include="Detours\RecipeWorkerCounter_CountProducts_Detour.cs" />
     <Compile Include="Detours\BillStack_DoListing_Detour.cs" />
     <Compile Include="Detours\ITab_Bills_TabUpdate_Detour.cs" />
     <Compile Include="CopyPasteLink\LinkedBillsSet.cs" />

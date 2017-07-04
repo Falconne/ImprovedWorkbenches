@@ -7,7 +7,7 @@ using Verse;
 namespace ImprovedWorkbenches
 {
     [HarmonyPatch(typeof(RecipeWorkerCounter), "CountProducts")]
-    public static class FilteredProductCounter
+    public static class RecipeWorkerCounter_CountProducts_Detour
     {
         [HarmonyPrefix]
         static bool Prefix(ref Bill_Production bill, ref int __result)
