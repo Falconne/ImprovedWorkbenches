@@ -50,6 +50,29 @@ namespace ImprovedWorkbenches
             OutputFilter.SetAllow(thingDef, true);
         }
 
+        public bool IsAnyFilteringRequired(bool isCorpseWornApparelRelevant)
+        {
+            if (UseInputFilter)
+                return true;
+
+            if (isCorpseWornApparelRelevant && !AllowDeadmansApparel)
+                return true;
+
+            if (OutputFilter.allowedHitPointsConfigurable &&
+                OutputFilter.AllowedHitPointsPercents != FloatRange.ZeroToOne)
+            {
+                return true;
+            }
+
+            if (OutputFilter.allowedQualitiesConfigurable &&
+                OutputFilter.AllowedQualityLevels != QualityRange.All)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
         public void ExposeData()
         {
             Scribe_Deep.Look(ref OutputFilter, "outputFilter", new object[0]);
