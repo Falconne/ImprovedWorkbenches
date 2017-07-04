@@ -50,12 +50,9 @@ namespace ImprovedWorkbenches
             OutputFilter.SetAllow(thingDef, true);
         }
 
-        public bool IsAnyFilteringRequired(bool isCorpseWornApparelRelevant)
+        public bool IsAnyFilteringRequired()
         {
             if (UseInputFilter)
-                return true;
-
-            if (isCorpseWornApparelRelevant && !AllowDeadmansApparel)
                 return true;
 
             if (OutputFilter.allowedHitPointsConfigurable &&

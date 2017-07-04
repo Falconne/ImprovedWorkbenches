@@ -23,9 +23,22 @@ namespace ImprovedWorkbenches
             if (extendedBillData == null)
                 return true;
 
-            __result = 0;
             var productThingDef = bill.recipe.products.First().thingDef;
 
+            SpecialThingFilterWorker_NonDeadmansApparel nonDeadmansApparelFilter = null;
+            if (!extendedBillData.AllowDeadmansApparel)
+            {
+                // We want to filter out corpse worn apparel
+                nonDeadmansApparelFilter = new SpecialThingFilterWorker_NonDeadmansApparel();
+                if (!nonDeadmansApparelFilter.CanEverMatch(productThingDef))
+                    // Not apparel, don't bother checking
+                    nonDeadmansApparelFilter = null;
+            }
+
+            if (nonDeadmansApparelFilter == null && !extendedBillData.IsAnyFilteringRequired())
+                return true;
+
+            __result = 0;
             if (productThingDef.Minifiable)
             {
                 var minifiedThings = bill.Map.listerThings.ThingsInGroup(ThingRequestGroup.MinifiedThing);
@@ -42,16 +55,6 @@ namespace ImprovedWorkbenches
                 }
 
                 return false;
-            }
-
-            SpecialThingFilterWorker_NonDeadmansApparel nonDeadmansApparelFilter = null;
-            if (!extendedBillData.AllowDeadmansApparel)
-            {
-                // We want to filter out corpse worn apparel
-                nonDeadmansApparelFilter = new SpecialThingFilterWorker_NonDeadmansApparel();
-                if (!nonDeadmansApparelFilter.CanEverMatch(productThingDef))
-                    // Not apparel, don't bother checking
-                    nonDeadmansApparelFilter = null;
             }
 
             var thingList = bill.Map.listerThings.ThingsOfDef(productThingDef);
