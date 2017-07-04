@@ -15,12 +15,25 @@ namespace ImprovedWorkbenches
         private static readonly FieldInfo BillGetter = typeof(Dialog_BillConfig).GetField("bill",
             BindingFlags.NonPublic | BindingFlags.Instance);
 
+        [HarmonyPrefix]
+        public static bool Prefix(Dialog_BillConfig __instance)
+        {
+            if (!(BillGetter.GetValue(__instance) is Bill_Production))
+                return true;
+
+            Main.Instance.IsRootBillFilterBeingDrawn = true;
+
+            return true;
+        }
+
         [HarmonyPostfix]
         public static void DrawFilters(Dialog_BillConfig __instance, Rect inRect)
         {
             var billRaw = (Bill_Production)BillGetter.GetValue(__instance);
             if (billRaw == null)
                 return;
+
+            Main.Instance.IsRootBillFilterBeingDrawn = false;
 
             var extendedBillDataStorage = Main.Instance.GetExtendedBillDataStorage();
             extendedBillDataStorage.MirrorBillToLinkedBills(billRaw);

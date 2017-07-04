@@ -44,6 +44,8 @@ namespace ImprovedWorkbenches
 
         public readonly BillCopyPaste BillCopyPasteHandler = new BillCopyPaste();
 
+        public bool IsRootBillFilterBeingDrawn = false;
+
         public override string ModIdentifier => "ImprovedWorkbenches";
 
         private SettingHandle<bool> _expandBillsTab;
