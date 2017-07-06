@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Harmony;
+using ImprovedWorkbenches.Filtering;
 using RimWorld;
 using Verse;
 
@@ -35,7 +36,9 @@ namespace ImprovedWorkbenches
                     nonDeadmansApparelFilter = null;
             }
 
-            if (nonDeadmansApparelFilter == null && !extendedBillData.IsAnyFilteringRequired())
+            var statFilterWrapper = new StatFilterWrapper(extendedBillData);
+
+            if (nonDeadmansApparelFilter == null && !statFilterWrapper.IsAnyFilteringNeeded())
                 return true;
 
             __result = 0;
@@ -47,8 +50,8 @@ namespace ImprovedWorkbenches
                     var minifiedThing = (MinifiedThing)thing;
                     var innerThing = minifiedThing.InnerThing;
                     if (innerThing.def == productThingDef &&
-                        DoesThingMatchFilter(bill, extendedBillData, innerThing) &&
-                        DoesThingMatchFilter(bill, extendedBillData, minifiedThing))
+                        statFilterWrapper.DoesThingMatchFilter(bill, innerThing) &&
+                        statFilterWrapper.DoesThingMatchFilter(bill, minifiedThing))
                     {
                         __result++;
                     }
@@ -61,7 +64,7 @@ namespace ImprovedWorkbenches
 
             foreach (var thing in thingList)
             {
-                if (!DoesThingMatchFilter(bill, extendedBillData, thing))
+                if (!statFilterWrapper.DoesThingMatchFilter(bill, thing))
                     continue;
 
                 if (nonDeadmansApparelFilter != null && !nonDeadmansApparelFilter.Matches(thing))
@@ -71,36 +74,6 @@ namespace ImprovedWorkbenches
             }
 
             return false;
-        }
-
-        private static bool DoesThingMatchFilter(Bill_Production bill, 
-            ExtendedBillData extendedBillData, Thing thing)
-        {
-            if (extendedBillData.UseInputFilter && thing.Stuff != null)
-            {
-                if (bill.ingredientFilter != null)
-                {
-                    if (!bill.ingredientFilter.Allows(thing.Stuff))
-                        return false;
-                }
-            }
-
-            var filter = extendedBillData.OutputFilter;
-            QualityCategory quality;
-            if (filter.allowedQualitiesConfigurable && thing.TryGetQuality(out quality))
-            {
-                if (!filter.AllowedQualityLevels.Includes(quality))
-                {
-                    return false;
-                }
-            }
-
-            if (!filter.allowedHitPointsConfigurable)
-                return true;
-
-            var thingHitPointsPercent = (float)thing.HitPoints / thing.MaxHitPoints;
-
-            return filter.AllowedHitPointsPercents.IncludesEpsilon(thingHitPointsPercent);
         }
     }
 }

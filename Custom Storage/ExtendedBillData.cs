@@ -50,24 +50,16 @@ namespace ImprovedWorkbenches
             OutputFilter.SetAllow(thingDef, true);
         }
 
-        public bool IsAnyFilteringRequired()
+        public bool IsHitpointsFilteringNeeded()
         {
-            if (UseInputFilter)
-                return true;
+            return OutputFilter.allowedHitPointsConfigurable &&
+                   OutputFilter.AllowedHitPointsPercents != FloatRange.ZeroToOne;
+        }
 
-            if (OutputFilter.allowedHitPointsConfigurable &&
-                OutputFilter.AllowedHitPointsPercents != FloatRange.ZeroToOne)
-            {
-                return true;
-            }
-
-            if (OutputFilter.allowedQualitiesConfigurable &&
-                OutputFilter.AllowedQualityLevels != QualityRange.All)
-            {
-                return true;
-            }
-
-            return false;
+        public bool IsQualityFilteringNeeded()
+        {
+            return OutputFilter.allowedQualitiesConfigurable &&
+                   OutputFilter.AllowedQualityLevels != QualityRange.All;
         }
 
         public void ExposeData()
