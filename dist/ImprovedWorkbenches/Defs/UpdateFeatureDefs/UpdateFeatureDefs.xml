@@ -27,6 +27,6 @@
     <HugsLib.UpdateFeatureDef ParentName="UpdateFeatureBase">
         <defName>ImprovedWorkbenches_17_5_0</defName>
         <assemblyVersion>17.5.0</assemblyVersion>
-        <content>* Added ability to copy and paste ingredient filter configurations between compatible bills. Buttons will appear below filter where available.|* Bills that are set to resume production when stock falls to a certain level now show that level in brackets on the workbench overview.|* Navigation arrows added at the top right of bill details window to navigate between bills in that workbench.</content>
+        <content>* Added ability to copy and paste ingredient filter configurations between compatible bills. Buttons will appear below filter where available.|* Ingredients filter in bill details windows now shows current stock level of that ingredient. This can be disabled in the mod settings.|* Bills that are set to resume production when stock falls to a certain level now show that level in brackets on the workbench overview.|* Navigation arrows added at the top right of bill details window to navigate between bills in that workbench.</content>
     </HugsLib.UpdateFeatureDef>
 </Defs>
