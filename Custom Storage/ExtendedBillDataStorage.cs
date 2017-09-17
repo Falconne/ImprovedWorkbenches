@@ -164,23 +164,16 @@ namespace ImprovedWorkbenches
 
         }
 
-        // Figure out if output of bill produces a "thing" with quality or hit-points
+        // Figure out if output of bill produces a "thing" we care about
         public static bool CanOutputBeFiltered(Bill_Production bill)
         {
             return CanOutputBeFiltered(bill.recipe);
         }
 
-        // Figure out if output of recipe produces a "thing" with quality or hit-points
+        // Figure out if output of recipe produces a "thing" we care about
         private static bool CanOutputBeFiltered(RecipeDef recipe)
         {
-            if (recipe.products == null || recipe.products.Count == 0)
-                return false;
-
-            var thingDef = recipe.products.First().thingDef;
-            if (thingDef.BaseMarketValue <= 0)
-                return false;
-
-            return !thingDef.CountAsResource;
+            return recipe.products != null && recipe.products.Count > 0;
         }
 
         private int GetBillId(Bill_Production bill)

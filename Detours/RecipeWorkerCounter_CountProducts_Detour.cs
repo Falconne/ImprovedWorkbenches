@@ -14,20 +14,19 @@ namespace ImprovedWorkbenches
         static bool Prefix(ref Bill_Production bill, ref int __result)
         {
             if (!ExtendedBillDataStorage.CanOutputBeFiltered(bill))
-            {
-                // Counting a Thing that is a resource or a bill we don't control.
-                // Defer back to vanilla counting function.
                 return true;
-            }
 
             var extendedBillData = Main.Instance.GetExtendedBillDataStorage().GetExtendedDataFor(bill);
             if (extendedBillData == null)
                 return true;
 
             var productThingDef = bill.recipe.products.First().thingDef;
+            var isThingAResource = productThingDef.CountAsResource;
+            if (isThingAResource && !extendedBillData.UsesCountingStockpile())
+                return true;
 
             SpecialThingFilterWorker_NonDeadmansApparel nonDeadmansApparelFilter = null;
-            if (!extendedBillData.AllowDeadmansApparel)
+            if (!extendedBillData.AllowDeadmansApparel && !isThingAResource)
             {
                 // We want to filter out corpse worn apparel
                 nonDeadmansApparelFilter = new SpecialThingFilterWorker_NonDeadmansApparel();

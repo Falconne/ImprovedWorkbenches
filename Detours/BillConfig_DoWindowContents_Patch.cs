@@ -38,6 +38,9 @@ namespace ImprovedWorkbenches
 
             Main.Instance.IsRootBillFilterBeingDrawn = false;
 
+            if (!ExtendedBillDataStorage.CanOutputBeFiltered(billRaw))
+                return;
+
             var extendedBillDataStorage = Main.Instance.GetExtendedBillDataStorage();
             extendedBillDataStorage.MirrorBillToLinkedBills(billRaw);
 
@@ -74,7 +77,6 @@ namespace ImprovedWorkbenches
 
             // Allowed worker filter
             var potentialWorkers = GetAllowedWorkersWithSkillLevel(billRaw);
-
             if (potentialWorkers != null)
             {
                 Widgets.Label(rect, "Restrict to:");
@@ -159,8 +161,7 @@ namespace ImprovedWorkbenches
 
                 Text.Font = oldFont;
             }
-
-
+            
             if (billRaw.repeatMode != BillRepeatModeDefOf.TargetCount)
                 return;
 
@@ -191,7 +192,53 @@ namespace ImprovedWorkbenches
                 }
             }
 
-            if (!ExtendedBillDataStorage.CanOutputBeFiltered(billRaw))
+            // Restrict counting to specific stockpile
+            {
+                y += 33;
+                var subRect = new Rect(0f, y, columnWidth, gap);
+                Widgets.Label(subRect, "Count in stockpile:");
+                y += 33;
+                subRect = new Rect(0f, y, columnWidth, gap);
+                var currentCountingStockpileLabel =
+                    extendedBillData.CurrentCountingStockpileLabel();
+
+                var map = Find.VisibleMap;
+                var allStockpiles =
+                    map.zoneManager.AllZones.OfType<Zone_Stockpile>().ToList();
+
+                if (Widgets.ButtonText(subRect, currentCountingStockpileLabel))
+                {
+                    var potentialStockpileList = new List<FloatMenuOption>
+                    {
+                        new FloatMenuOption(
+                            "Any", delegate { extendedBillData.RemoveCountingStockpile(); })
+                    };
+
+                    foreach (var stockpile in allStockpiles)
+                    {
+                        var stockpileName = stockpile.label;
+                        var menuOption = new FloatMenuOption(
+                            stockpileName,
+                            delegate { extendedBillData.SetCountingStockpile(stockpile); });
+
+                        potentialStockpileList.Add(menuOption);
+                    }
+
+                    Find.WindowStack.Add(new FloatMenu(potentialStockpileList));
+                }
+            }
+
+            var thingDef = billRaw.recipe.products.First().thingDef;
+            // Use input ingredients for counted items filter
+            if (billRaw.ingredientFilter != null && thingDef.MadeFromStuff)
+            {
+                y += 33;
+                var subRect = new Rect(0f, y, columnWidth, gap);
+                Widgets.CheckboxLabeled(subRect, "Match input ingredients",
+                    ref extendedBillData.UseInputFilter);
+            }
+
+            if (thingDef.CountAsResource)
                 return;
 
             // Counted items filter
@@ -218,54 +265,6 @@ namespace ImprovedWorkbenches
             var allowedQualityLevels = filter.AllowedQualityLevels;
             Widgets.QualityRange(rect2, 11, ref allowedQualityLevels);
             filter.AllowedQualityLevels = allowedQualityLevels;
-
-            // Restrict counting to specific stockpile
-            {
-                y += 33;
-                var subRect = new Rect(0f, y, columnWidth, gap);
-                Widgets.Label(subRect, "Count in stockpile:");
-                y += 33;
-                subRect = new Rect(0f, y, columnWidth, gap);
-                var currentCountingStockpileLabel = 
-                    extendedBillData.CurrentCountingStockpileLabel();
-
-                var map = Find.VisibleMap;
-                var allStockpiles = 
-                    map.zoneManager.AllZones.OfType<Zone_Stockpile>().ToList();
-
-                if (Widgets.ButtonText(subRect, currentCountingStockpileLabel))
-                {
-                    var potentialStockpileList = new List<FloatMenuOption>
-                    {
-                        new FloatMenuOption(
-                            "Any", delegate { extendedBillData.RemoveCountingStockpile(); })
-                    };
-
-                    foreach (var stockpile in allStockpiles)
-                    {
-                        var stockpileName = stockpile.label;
-                        var menuOption = new FloatMenuOption(
-                            stockpileName,
-                            delegate { extendedBillData.SetCountingStockpile(stockpile); });
-
-                        potentialStockpileList.Add(menuOption);
-                    }
-
-                    Find.WindowStack.Add(new FloatMenu(potentialStockpileList));
-                }
-
-            }
-
-            var thingDef = billRaw.recipe.products.First().thingDef;
-            // Use input ingredients for counted items filter
-            if (billRaw.ingredientFilter != null && thingDef.MadeFromStuff)
-            {
-                y += 35;
-                var subRect = new Rect(0f, y, columnWidth, gap);
-                Widgets.CheckboxLabeled(subRect, "Match input ingredients",
-                    ref extendedBillData.UseInputFilter);
-            }
-
 
             // Deadmans clothing count filter
             var nonDeadmansApparelFilter = new SpecialThingFilterWorker_NonDeadmansApparel();
