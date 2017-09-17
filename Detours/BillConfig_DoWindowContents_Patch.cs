@@ -69,7 +69,7 @@ namespace ImprovedWorkbenches
 
             const float columnWidth = 180f;
             const float gap = 26f;
-            var rect = new Rect(0f, inRect.height - 211f, columnWidth, 40f);
+            var rect = new Rect(0f, inRect.height - 320f, columnWidth, 40f);
             var y = rect.yMin + Text.LineHeight - 1;
 
             // Allowed worker filter
@@ -219,6 +219,42 @@ namespace ImprovedWorkbenches
             Widgets.QualityRange(rect2, 11, ref allowedQualityLevels);
             filter.AllowedQualityLevels = allowedQualityLevels;
 
+            // Restrict counting to specific stockpile
+            {
+                y += 33;
+                var subRect = new Rect(0f, y, columnWidth, gap);
+                Widgets.Label(subRect, "Count in stockpile:");
+                y += 33;
+                subRect = new Rect(0f, y, columnWidth, gap);
+                var currentCountingStockpileLabel = 
+                    extendedBillData.CurrentCountingStockpileLabel();
+
+                var map = Find.VisibleMap;
+                var allStockpiles = 
+                    map.zoneManager.AllZones.OfType<Zone_Stockpile>().ToList();
+
+                if (Widgets.ButtonText(subRect, currentCountingStockpileLabel))
+                {
+                    var potentialStockpileList = new List<FloatMenuOption>
+                    {
+                        new FloatMenuOption(
+                            "Any", delegate { extendedBillData.RemoveCountingStockpile(); })
+                    };
+
+                    foreach (var stockpile in allStockpiles)
+                    {
+                        var stockpileName = stockpile.label;
+                        var menuOption = new FloatMenuOption(
+                            stockpileName,
+                            delegate { extendedBillData.SetCountingStockpile(stockpile); });
+
+                        potentialStockpileList.Add(menuOption);
+                    }
+
+                    Find.WindowStack.Add(new FloatMenu(potentialStockpileList));
+                }
+
+            }
 
             var thingDef = billRaw.recipe.products.First().thingDef;
             // Use input ingredients for counted items filter

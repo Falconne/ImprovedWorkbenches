@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using RimWorld;
 using Verse;
 
@@ -11,6 +12,9 @@ namespace ImprovedWorkbenches
         public bool UseInputFilter;
         public Pawn Worker;
         public string Name;
+
+        private Zone_Stockpile _countingStockpile;
+        private string _countingStockpileName;
 
         public ExtendedBillData()
         {
@@ -33,6 +37,36 @@ namespace ImprovedWorkbenches
             AllowDeadmansApparel = billWithThingFilter.GetAllowDeadmansApparel();
             UseInputFilter = billWithThingFilter.GetUseInputFilter();
         }
+
+        #region Counting Stopiles
+
+        public bool UsesCountingStockpile()
+        {
+            // TODO detect deleted zones
+            return _countingStockpile != null;
+        }
+
+        public void RemoveCountingStockpile()
+        {
+            _countingStockpile = null;
+        }
+
+        public void SetCountingStockpile(Zone_Stockpile stockpile)
+        {
+            _countingStockpile = stockpile;
+        }
+
+        public string CurrentCountingStockpileLabel()
+        {
+            return UsesCountingStockpile() ? _countingStockpile.label : "Any";
+        }
+
+        public IEnumerable<Thing> GetThingsInCountingStockpile()
+        {
+            return _countingStockpile?.GetSlotGroup()?.HeldThings;
+        }
+
+        #endregion
 
         public void CloneFrom(ExtendedBillData other)
         {
@@ -69,6 +103,28 @@ namespace ImprovedWorkbenches
             Scribe_Values.Look(ref UseInputFilter, "useInputFilter", false);
             Scribe_References.Look(ref Worker, "worker");
             Scribe_Values.Look(ref Name, "name", null);
+
+            // Stockpiles need special treatment; they cannot be referenced.
+            if (Scribe.mode == LoadSaveMode.Saving)
+            {
+                _countingStockpileName = _countingStockpile?.label ?? "null";
+                Main.Instance.Logger.Message($"Saving counting stockpile as {_countingStockpileName}");
+            }
+            Scribe_Values.Look(ref _countingStockpileName, "countingStockpile", "null");
+
+            if (Scribe.mode == LoadSaveMode.PostLoadInit)
+            {
+                _countingStockpile =
+                    Find.VisibleMap.zoneManager.AllZones.FirstOrDefault(z =>
+                        z is Zone_Stockpile && z.label == _countingStockpileName)
+                        as Zone_Stockpile;
+
+                if (_countingStockpile != null)
+                {
+                    Main.Instance.Logger.Message(
+                        $"Loaded counting stockpile {_countingStockpile.label}");
+                }
+            }
         }
     }
 }
