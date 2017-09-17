@@ -109,7 +109,6 @@ namespace ImprovedWorkbenches
             if (Scribe.mode == LoadSaveMode.Saving)
             {
                 _countingStockpileName = _countingStockpile?.label ?? "null";
-                Main.Instance.Logger.Message($"Saving counting stockpile as {_countingStockpileName}");
             }
             Scribe_Values.Look(ref _countingStockpileName, "countingStockpile", "null");
 
@@ -119,12 +118,6 @@ namespace ImprovedWorkbenches
                     Find.VisibleMap.zoneManager.AllZones.FirstOrDefault(z =>
                         z is Zone_Stockpile && z.label == _countingStockpileName)
                         as Zone_Stockpile;
-
-                if (_countingStockpile != null)
-                {
-                    Main.Instance.Logger.Message(
-                        $"Loaded counting stockpile {_countingStockpile.label}");
-                }
             }
         }
     }
