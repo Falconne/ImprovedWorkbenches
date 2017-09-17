@@ -75,6 +75,7 @@ namespace ImprovedWorkbenches
             UseInputFilter = other.UseInputFilter;
             Worker = other.Worker;
             Name = other.Name;
+            _countingStockpile = other._countingStockpile;
         }
 
         public void SetDefaultFilter(Bill_Production bill)

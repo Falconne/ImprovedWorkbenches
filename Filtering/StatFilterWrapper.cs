@@ -21,7 +21,10 @@ namespace ImprovedWorkbenches.Filtering
 
         public bool IsAnyFilteringNeeded()
         {
-            return _extendedBillData.UseInputFilter || _isHitpointsFilterNeeded || _isQualityFilterNeeded;
+            return _extendedBillData.UseInputFilter
+                || _isHitpointsFilterNeeded
+                || _isQualityFilterNeeded
+                || _extendedBillData.UsesCountingStockpile();
         }
 
         public bool DoesThingMatchFilter(Bill_Production bill, Thing thing)
