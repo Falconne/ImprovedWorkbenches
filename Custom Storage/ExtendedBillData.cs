@@ -38,6 +38,8 @@ namespace ImprovedWorkbenches
             UseInputFilter = billWithThingFilter.GetUseInputFilter();
         }
 
+        public Zone_Stockpile CountingStockpile => _countingStockpile;
+
         #region Counting Stopiles
 
         public bool UsesCountingStockpile()

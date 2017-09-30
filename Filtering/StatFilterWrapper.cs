@@ -1,4 +1,6 @@
-﻿using RimWorld;
+﻿using System.Collections.Generic;
+using System.Linq;
+using RimWorld;
 using Verse;
 
 namespace ImprovedWorkbenches.Filtering
@@ -29,6 +31,9 @@ namespace ImprovedWorkbenches.Filtering
 
         public bool DoesThingMatchFilter(Bill_Production bill, Thing thing)
         {
+            if (!IsThingInAppropriateStockpile(thing))
+                return false;
+
             if (_extendedBillData.UseInputFilter
                 && thing.Stuff != null
                 && bill.ingredientFilter != null)
@@ -57,6 +62,14 @@ namespace ImprovedWorkbenches.Filtering
 
             return filter.AllowedHitPointsPercents.IncludesEpsilon(thingHitPointsPercent);
 
+        }
+
+        private bool IsThingInAppropriateStockpile(Thing thing)
+        {
+            if (!_extendedBillData.UsesCountingStockpile())
+                return true;
+
+            return _extendedBillData.CountingStockpile.slotGroup.HeldThings.Any(heldThing => heldThing == thing);
         }
     }
 }
