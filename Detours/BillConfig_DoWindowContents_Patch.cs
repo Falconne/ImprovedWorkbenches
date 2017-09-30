@@ -72,7 +72,7 @@ namespace ImprovedWorkbenches
 
             const float columnWidth = 180f;
             const float gap = 26f;
-            var rect = new Rect(0f, inRect.height - 320f, columnWidth, 40f);
+            var rect = new Rect(0f, inRect.height - 266f, columnWidth, 40f);
             var y = rect.yMin + Text.LineHeight - 1;
 
             // Allowed worker filter
@@ -161,7 +161,7 @@ namespace ImprovedWorkbenches
 
                 Text.Font = oldFont;
             }
-            
+
             if (billRaw.repeatMode != BillRepeatModeDefOf.TargetCount)
                 return;
 
@@ -197,7 +197,7 @@ namespace ImprovedWorkbenches
                 y += 33;
                 var subRect = new Rect(0f, y, columnWidth, gap);
                 Widgets.Label(subRect, "Count in stockpile:");
-                y += 33;
+                y = subRect.yMin + Text.LineHeight - 1;
                 subRect = new Rect(0f, y, columnWidth, gap);
                 var currentCountingStockpileLabel =
                     extendedBillData.CurrentCountingStockpileLabel();
