@@ -69,7 +69,7 @@ namespace ImprovedWorkbenches.Filtering
             if (!_extendedBillData.UsesCountingStockpile())
                 return true;
 
-            return _extendedBillData.CountingStockpile.slotGroup.HeldThings.Any(heldThing => heldThing == thing);
+            return _extendedBillData.GetThingsInCountingStockpile().Any(heldThing => heldThing == thing);
         }
     }
 }

@@ -41,9 +41,6 @@ namespace ImprovedWorkbenches
             UseInputFilter = billWithThingFilter.GetUseInputFilter();
         }
 
-        public Zone_Stockpile CountingStockpile => _countingStockpile;
-
-        #region Counting Stopiles
 
         public bool UsesCountingStockpile()
         {
@@ -70,8 +67,6 @@ namespace ImprovedWorkbenches
         {
             return _countingStockpile?.GetSlotGroup()?.HeldThings;
         }
-
-        #endregion
 
         public void CloneFrom(ExtendedBillData other)
         {

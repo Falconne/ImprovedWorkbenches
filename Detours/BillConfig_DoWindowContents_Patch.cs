@@ -71,33 +71,36 @@ namespace ImprovedWorkbenches
             }
 
             const float columnWidth = 180f;
-            var middleColumn = columnWidth + 34f;
+            const float middleColumn = columnWidth + 34f;
+            const float buttonHeight = 26f;
 
+            if (billRaw.storeMode == BillStoreModeDefOf.BestStockpile)
             {
-                // Store mode override
-                var storeRect = new Rect(middleColumn + 3f, inRect.xMin + 114f, 180f, 30f);
+                // Specific storage stockpile
+                var storeLabelRect = new Rect(0f, inRect.height - 322f, columnWidth, buttonHeight);
+                Widgets.Label(storeLabelRect, "Store in stockpile:");
+                var storeRect = new Rect(0f, storeLabelRect.yMin + Text.LineHeight - 1, columnWidth, buttonHeight);
                 if (Widgets.ButtonText(storeRect, "X"))
                 {
                     var storeOptionList = new List<FloatMenuOption>
                     {
                         new FloatMenuOption(
-                            "Anywhere", delegate { extendedBillData.Worker = null; })
+                            "Anywhere", delegate { extendedBillData.stor = null; })
                     };
 
                    Find.WindowStack.Add(new FloatMenu(storeOptionList));
                 }
             }
 
-            const float gap = 26f;
-            var rect = new Rect(0f, inRect.height - 266f, columnWidth, 40f);
+            var rect = new Rect(0f, inRect.height - 266f, columnWidth, buttonHeight);
             var y = rect.yMin + Text.LineHeight - 1;
 
             // Allowed worker filter
             var potentialWorkers = GetAllowedWorkersWithSkillLevel(billRaw);
             if (potentialWorkers != null)
             {
-                Widgets.Label(rect, "Restrict to:");
-                var workerButtonRect = new Rect(0f, y, columnWidth, gap);
+                Widgets.Label(rect, "Restrict to colonist:");
+                var workerButtonRect = new Rect(0f, y, columnWidth, buttonHeight);
 
                 var currentWorkerLabel =
                     extendedBillData.Worker?.NameStringShort.CapitalizeFirst() ??
@@ -186,8 +189,8 @@ namespace ImprovedWorkbenches
             if (billRaw.pauseWhenSatisfied)
             {
                 var buttonWidth = 42f;
-                var buttonHeight = 24f;
-                var minusOneRect = new Rect(middleColumn, inRect.height - 70, buttonWidth, buttonHeight);
+                var smallButtonHeight = 24f;
+                var minusOneRect = new Rect(middleColumn, inRect.height - 70, buttonWidth, smallButtonHeight);
                 if (Widgets.ButtonText(minusOneRect, "-1"))
                 {
                     if (billRaw.unpauseWhenYouHave > 0)
@@ -211,10 +214,10 @@ namespace ImprovedWorkbenches
             // Restrict counting to specific stockpile
             {
                 y += 33;
-                var subRect = new Rect(0f, y, columnWidth, gap);
+                var subRect = new Rect(0f, y, columnWidth, buttonHeight);
                 Widgets.Label(subRect, "Count in stockpile:");
                 y = subRect.yMin + Text.LineHeight - 1;
-                subRect = new Rect(0f, y, columnWidth, gap);
+                subRect = new Rect(0f, y, columnWidth, buttonHeight);
                 var currentCountingStockpileLabel =
                     extendedBillData.CurrentCountingStockpileLabel();
 
@@ -249,7 +252,7 @@ namespace ImprovedWorkbenches
             if (billRaw.ingredientFilter != null && thingDef.MadeFromStuff)
             {
                 y += 33;
-                var subRect = new Rect(0f, y, columnWidth, gap);
+                var subRect = new Rect(0f, y, columnWidth, buttonHeight);
                 Widgets.CheckboxLabeled(subRect, "Match input ingredients",
                     ref extendedBillData.UseInputFilter);
             }
@@ -259,7 +262,7 @@ namespace ImprovedWorkbenches
 
             // Counted items filter
             y += 33;
-            var countedLabelRect = new Rect(0f, y, columnWidth, gap);
+            var countedLabelRect = new Rect(0f, y, columnWidth, buttonHeight);
             Widgets.Label(countedLabelRect, "Counted items filter:");
             y += Text.LineHeight;
 
@@ -267,7 +270,7 @@ namespace ImprovedWorkbenches
             if (filter.allowedHitPointsConfigurable)
             {
                 var allowedHitPointsPercents = filter.AllowedHitPointsPercents;
-                var rect1 = new Rect(0f, y, columnWidth, gap);
+                var rect1 = new Rect(0f, y, columnWidth, buttonHeight);
                 Widgets.FloatRange(rect1, 10, ref allowedHitPointsPercents, 0f, 1f,
                     "HitPoints", ToStringStyle.PercentZero);
                 filter.AllowedHitPointsPercents = allowedHitPointsPercents;
@@ -277,7 +280,7 @@ namespace ImprovedWorkbenches
                 return;
 
             y += 33;
-            var rect2 = new Rect(0f, y, columnWidth, gap);
+            var rect2 = new Rect(0f, y, columnWidth, buttonHeight);
             var allowedQualityLevels = filter.AllowedQualityLevels;
             Widgets.QualityRange(rect2, 11, ref allowedQualityLevels);
             filter.AllowedQualityLevels = allowedQualityLevels;
@@ -290,7 +293,7 @@ namespace ImprovedWorkbenches
                 return;
             }
             y += 35;
-            var rect3 = new Rect(0f, y, columnWidth, gap);
+            var rect3 = new Rect(0f, y, columnWidth, buttonHeight);
             Widgets.CheckboxLabeled(rect3, "Count corpse clothes",
                 ref extendedBillData.AllowDeadmansApparel);
         }
