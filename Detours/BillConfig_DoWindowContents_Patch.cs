@@ -80,15 +80,25 @@ namespace ImprovedWorkbenches
                 var storeLabelRect = new Rect(0f, inRect.height - 322f, columnWidth, buttonHeight);
                 Widgets.Label(storeLabelRect, "Store in stockpile:");
                 var storeRect = new Rect(0f, storeLabelRect.yMin + Text.LineHeight - 1, columnWidth, buttonHeight);
-                if (Widgets.ButtonText(storeRect, "X"))
+                var allStockpiles = Find.VisibleMap.zoneManager.AllZones.OfType<Zone_Stockpile>();
+
+                if (Widgets.ButtonText(storeRect, extendedBillData.CurrentTakeToStockpileLabel()))
                 {
                     var storeOptionList = new List<FloatMenuOption>
                     {
                         new FloatMenuOption(
-                            "Anywhere", delegate { extendedBillData.stor = null; })
+                            "Best", delegate { extendedBillData.RemoveTakeToStockpile(); })
                     };
 
-                   Find.WindowStack.Add(new FloatMenu(storeOptionList));
+                    foreach (Zone_Stockpile stockpile in allStockpiles)
+                    {
+                        var option = new FloatMenuOption(
+                            stockpile.label, delegate { extendedBillData.SetTakeToStockpile(stockpile); });
+
+                        storeOptionList.Add(option);
+                    }
+
+                    Find.WindowStack.Add(new FloatMenu(storeOptionList));
                 }
             }
 

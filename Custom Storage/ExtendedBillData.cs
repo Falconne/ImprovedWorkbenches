@@ -41,6 +41,25 @@ namespace ImprovedWorkbenches
             UseInputFilter = billWithThingFilter.GetUseInputFilter();
         }
 
+        public bool UsesTakeToStockpile()
+        {
+            return _takeToStockpile != null;
+        }
+
+        public string CurrentTakeToStockpileLabel()
+        {
+            return UsesTakeToStockpile() ? _takeToStockpile.label : "Best";
+        }
+
+        public void RemoveTakeToStockpile()
+        {
+            _takeToStockpile = null;
+        }
+
+        public void SetTakeToStockpile(Zone_Stockpile stockpile)
+        {
+            _takeToStockpile = stockpile;
+        }
 
         public bool UsesCountingStockpile()
         {
