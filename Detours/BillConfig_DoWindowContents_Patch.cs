@@ -71,6 +71,23 @@ namespace ImprovedWorkbenches
             }
 
             const float columnWidth = 180f;
+            var middleColumn = columnWidth + 34f;
+
+            {
+                // Store mode override
+                var storeRect = new Rect(middleColumn + 3f, inRect.xMin + 114f, 180f, 30f);
+                if (Widgets.ButtonText(storeRect, "X"))
+                {
+                    var storeOptionList = new List<FloatMenuOption>
+                    {
+                        new FloatMenuOption(
+                            "Anywhere", delegate { extendedBillData.Worker = null; })
+                    };
+
+                   Find.WindowStack.Add(new FloatMenu(storeOptionList));
+                }
+            }
+
             const float gap = 26f;
             var rect = new Rect(0f, inRect.height - 266f, columnWidth, 40f);
             var y = rect.yMin + Text.LineHeight - 1;
@@ -168,10 +185,9 @@ namespace ImprovedWorkbenches
             // "Unpause when" level adjustment buttons
             if (billRaw.pauseWhenSatisfied)
             {
-                var sectionLeft = columnWidth + 34f;
                 var buttonWidth = 42f;
                 var buttonHeight = 24f;
-                var minusOneRect = new Rect(sectionLeft, inRect.height - 70, buttonWidth, buttonHeight);
+                var minusOneRect = new Rect(middleColumn, inRect.height - 70, buttonWidth, buttonHeight);
                 if (Widgets.ButtonText(minusOneRect, "-1"))
                 {
                     if (billRaw.unpauseWhenYouHave > 0)

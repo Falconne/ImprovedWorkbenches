@@ -14,7 +14,10 @@ namespace ImprovedWorkbenches
         public string Name;
 
         private Zone_Stockpile _countingStockpile;
-        private string _countingStockpileName;
+        private string _countingStockpileName = "null";
+
+        private Zone_Stockpile _takeToStockpile;
+        private string _takeToStockpileName = "null";
 
         public ExtendedBillData()
         {
@@ -78,6 +81,7 @@ namespace ImprovedWorkbenches
             Worker = other.Worker;
             Name = other.Name;
             _countingStockpile = other._countingStockpile;
+            _takeToStockpile = other._takeToStockpile;
         }
 
         public void SetDefaultFilter(Bill_Production bill)
@@ -111,14 +115,24 @@ namespace ImprovedWorkbenches
             if (Scribe.mode == LoadSaveMode.Saving)
             {
                 _countingStockpileName = _countingStockpile?.label ?? "null";
+                _takeToStockpileName = _takeToStockpile?.label ?? "null";
             }
+
             Scribe_Values.Look(ref _countingStockpileName, "countingStockpile", "null");
+            Scribe_Values.Look(ref _takeToStockpileName, "takeToStockpile", "null");
 
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {
-                _countingStockpile =
-                    Find.VisibleMap.zoneManager.AllZones.FirstOrDefault(z =>
+                _countingStockpile = _countingStockpileName == "null"
+                    ? null
+                    : Find.VisibleMap.zoneManager.AllZones.FirstOrDefault(z =>
                         z is Zone_Stockpile && z.label == _countingStockpileName)
+                        as Zone_Stockpile;
+
+                _takeToStockpile = _takeToStockpileName == "null"
+                    ? null
+                    : Find.VisibleMap.zoneManager.AllZones.FirstOrDefault(z =>
+                            z is Zone_Stockpile && z.label == _takeToStockpileName)
                         as Zone_Stockpile;
             }
         }
