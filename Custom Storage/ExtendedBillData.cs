@@ -61,6 +61,11 @@ namespace ImprovedWorkbenches
             _takeToStockpile = stockpile;
         }
 
+        public Zone_Stockpile GetTakeToStockpile()
+        {
+            return _takeToStockpile;
+        }
+
         public bool UsesCountingStockpile()
         {
             // TODO detect deleted zones
