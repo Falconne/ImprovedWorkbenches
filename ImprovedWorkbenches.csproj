@@ -53,6 +53,7 @@
     <Compile Include="Detours\Bill_Production_RepeatInfoText_Detour.cs" />
     <Compile Include="Detours\Listing_TreeThingFilter_DoThingDef_Detour.cs" />
     <Compile Include="Detours\StoreUtility_TryFindBestBetterStoreCellFor_Patch.cs" />
+    <Compile Include="Detours\ZoneManager_DeregisterZone_Patch.cs" />
     <Compile Include="Filtering\StatFilterWrapper.cs" />
     <Compile Include="Legacy Support\Bill_ProductionWithFilters.cs" />
     <Compile Include="Custom Storage\ExtendedBillData.cs" />

@@ -164,12 +164,31 @@ namespace ImprovedWorkbenches
 
         }
 
+        public void OnStockpileDeteled(Zone_Stockpile stockpile)
+        {
+            foreach (var extendedBillData in _store.Values)
+            {
+                if (extendedBillData.UsesCountingStockpile() 
+                    && extendedBillData.GetCountingStockpile() == stockpile)
+                {
+                    extendedBillData.RemoveCountingStockpile();
+                }
+
+                if (extendedBillData.UsesTakeToStockpile()
+                    && extendedBillData.GetTakeToStockpile() == stockpile)
+                {
+                    extendedBillData.RemoveTakeToStockpile();
+                }
+            }
+        }
+
         // Figure out if output of bill produces a "thing" we care about
         public static bool CanOutputBeFiltered(Bill_Production bill)
         {
             return CanOutputBeFiltered(bill.recipe);
         }
 
+        
         // Figure out if output of recipe produces a "thing" we care about
         private static bool CanOutputBeFiltered(RecipeDef recipe)
         {

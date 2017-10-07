@@ -68,7 +68,6 @@ namespace ImprovedWorkbenches
 
         public bool UsesCountingStockpile()
         {
-            // TODO detect deleted zones
             return _countingStockpile != null;
         }
 
@@ -80,6 +79,11 @@ namespace ImprovedWorkbenches
         public void SetCountingStockpile(Zone_Stockpile stockpile)
         {
             _countingStockpile = stockpile;
+        }
+
+        public Zone_Stockpile GetCountingStockpile()
+        {
+            return _countingStockpile;
         }
 
         public string CurrentCountingStockpileLabel()
