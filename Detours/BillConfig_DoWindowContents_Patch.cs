@@ -100,6 +100,8 @@ namespace ImprovedWorkbenches
 
                     Find.WindowStack.Add(new FloatMenu(storeOptionList));
                 }
+                TooltipHandler.TipRegion(storeRect, 
+                    "Crafter will take final product to specified stockpile");
             }
 
             var rect = new Rect(0f, inRect.height - 266f, columnWidth, buttonHeight);
@@ -157,6 +159,7 @@ namespace ImprovedWorkbenches
 
                     Find.WindowStack.Add(new FloatMenu(potentialWorkerList));
                 }
+                TooltipHandler.TipRegion(workerButtonRect, "Restrict job to specific colonist");
             }
 
             // Filter copy/paste buttons
@@ -284,6 +287,8 @@ namespace ImprovedWorkbenches
 
                     Find.WindowStack.Add(new FloatMenu(potentialStockpileList));
                 }
+                TooltipHandler.TipRegion(subRect, 
+                    "Only items in specified stockpile will count towards target");
             }
 
             var thingDef = billRaw.recipe.products.First().thingDef;
@@ -294,6 +299,9 @@ namespace ImprovedWorkbenches
                 var subRect = new Rect(0f, y, columnWidth, buttonHeight);
                 Widgets.CheckboxLabeled(subRect, "Match input ingredients",
                     ref extendedBillData.UseInputFilter);
+
+                TooltipHandler.TipRegion(subRect,
+                    "Only items made from ingredients in input ingredients filter (on rightmost column) will count towards target");
             }
 
             if (thingDef.CountAsResource)
@@ -312,6 +320,9 @@ namespace ImprovedWorkbenches
                 var rect1 = new Rect(0f, y, columnWidth, buttonHeight);
                 Widgets.FloatRange(rect1, 10, ref allowedHitPointsPercents, 0f, 1f,
                     "HitPoints", ToStringStyle.PercentZero);
+
+                TooltipHandler.TipRegion(rect1,
+                    "Only items with given hitpoints range will count towards target");
                 filter.AllowedHitPointsPercents = allowedHitPointsPercents;
             }
 
@@ -322,6 +333,8 @@ namespace ImprovedWorkbenches
             var rect2 = new Rect(0f, y, columnWidth, buttonHeight);
             var allowedQualityLevels = filter.AllowedQualityLevels;
             Widgets.QualityRange(rect2, 11, ref allowedQualityLevels);
+            TooltipHandler.TipRegion(rect2,
+                "Only items of given quality range will count towards target");
             filter.AllowedQualityLevels = allowedQualityLevels;
 
             // Deadmans clothing count filter
@@ -335,6 +348,8 @@ namespace ImprovedWorkbenches
             var rect3 = new Rect(0f, y, columnWidth, buttonHeight);
             Widgets.CheckboxLabeled(rect3, "Count corpse clothes",
                 ref extendedBillData.AllowDeadmansApparel);
+            TooltipHandler.TipRegion(rect3,
+                "Enable to include dead man's clothing in item count");
         }
 
         private static void DrawWorkTableNavigation(Dialog_BillConfig dialog, Bill_Production bill, Rect inRect)
