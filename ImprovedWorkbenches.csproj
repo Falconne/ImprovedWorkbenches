@@ -55,6 +55,7 @@
     <Compile Include="Detours\StoreUtility_TryFindBestBetterStoreCellFor_Patch.cs" />
     <Compile Include="Detours\ZoneManager_DeregisterZone_Patch.cs" />
     <Compile Include="Filtering\StatFilterWrapper.cs" />
+    <Compile Include="Keyboard Entry\Dialog_NumericEntry.cs" />
     <Compile Include="Legacy Support\Bill_ProductionWithFilters.cs" />
     <Compile Include="Custom Storage\ExtendedBillData.cs" />
     <Compile Include="Custom Storage\ExtendedBillDataStorage.cs" />

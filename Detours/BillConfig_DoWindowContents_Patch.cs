@@ -219,6 +219,15 @@ namespace ImprovedWorkbenches
                         billRaw.unpauseWhenYouHave++;
                     }
                 }
+
+                var keyboardRect = new Rect(plusOneRect.xMax + 2f, plusOneRect.yMin, 24f, 24f);
+                if (Widgets.ButtonImage(keyboardRect, Resources.Rename))
+                {
+                    Find.WindowStack.Add(new Dialog_NumericEntry(
+                        i => i < billRaw.targetCount,
+                        i => billRaw.unpauseWhenYouHave = i));
+                }
+                TooltipHandler.TipRegion(keyboardRect, "Click to enter a value using keyboard");
             }
 
             // Restrict counting to specific stockpile
