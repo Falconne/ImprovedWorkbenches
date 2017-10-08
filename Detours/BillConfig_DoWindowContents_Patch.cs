@@ -338,18 +338,22 @@ namespace ImprovedWorkbenches
             filter.AllowedQualityLevels = allowedQualityLevels;
 
             // Deadmans clothing count filter
-            var nonDeadmansApparelFilter = new SpecialThingFilterWorker_NonDeadmansApparel();
-            if (!nonDeadmansApparelFilter.CanEverMatch(thingDef))
+            if (thingDef.IsApparel)
             {
-                // Not apparel, so deadman check is not needed.
-                return;
+                var nonDeadmansApparelFilter = new SpecialThingFilterWorker_NonDeadmansApparel();
+                if (!nonDeadmansApparelFilter.CanEverMatch(thingDef))
+                {
+                    // Thing can't be worn.
+                    return;
+                }
+
+                y += 35;
+                var rect3 = new Rect(0f, y, columnWidth, buttonHeight);
+                Widgets.CheckboxLabeled(rect3, "Count corpse clothes",
+                    ref extendedBillData.AllowDeadmansApparel);
+                TooltipHandler.TipRegion(rect3,
+                    "Enable to include dead man's clothing in item count");
             }
-            y += 35;
-            var rect3 = new Rect(0f, y, columnWidth, buttonHeight);
-            Widgets.CheckboxLabeled(rect3, "Count corpse clothes",
-                ref extendedBillData.AllowDeadmansApparel);
-            TooltipHandler.TipRegion(rect3,
-                "Enable to include dead man's clothing in item count");
         }
 
         private static void DrawWorkTableNavigation(Dialog_BillConfig dialog, Bill_Production bill, Rect inRect)

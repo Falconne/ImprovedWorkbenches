@@ -26,7 +26,7 @@ namespace ImprovedWorkbenches
                 return true;
 
             SpecialThingFilterWorker_NonDeadmansApparel nonDeadmansApparelFilter = null;
-            if (!extendedBillData.AllowDeadmansApparel && !isThingAResource)
+            if (!extendedBillData.AllowDeadmansApparel && productThingDef.IsApparel)
             {
                 // We want to filter out corpse worn apparel
                 nonDeadmansApparelFilter = new SpecialThingFilterWorker_NonDeadmansApparel();
