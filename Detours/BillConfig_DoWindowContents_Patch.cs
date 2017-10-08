@@ -195,6 +195,25 @@ namespace ImprovedWorkbenches
             if (billRaw.repeatMode != BillRepeatModeDefOf.TargetCount)
                 return;
 
+            {
+                var keyboardRect = new Rect(middleColumn + 90f, inRect.yMin + 208f, 24f, 24f);
+                void TargetCountSetter(int i)
+                {
+                    billRaw.targetCount = i;
+                    if (billRaw.unpauseWhenYouHave >= billRaw.targetCount)
+                        billRaw.unpauseWhenYouHave = billRaw.targetCount - 1;
+                }
+
+                if (Widgets.ButtonImage(keyboardRect, Resources.Rename))
+                {
+                    Find.WindowStack.Add(new Dialog_NumericEntry(
+                        billRaw.targetCount,
+                        i => i > 0,
+                        TargetCountSetter));
+                }
+                TooltipHandler.TipRegion(keyboardRect, "Click to enter a value using keyboard");
+            }
+
             // "Unpause when" level adjustment buttons
             if (billRaw.pauseWhenSatisfied)
             {
@@ -224,6 +243,7 @@ namespace ImprovedWorkbenches
                 if (Widgets.ButtonImage(keyboardRect, Resources.Rename))
                 {
                     Find.WindowStack.Add(new Dialog_NumericEntry(
+                        billRaw.unpauseWhenYouHave,
                         i => i < billRaw.targetCount,
                         i => billRaw.unpauseWhenYouHave = i));
                 }

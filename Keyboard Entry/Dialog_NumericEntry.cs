@@ -8,10 +8,11 @@ namespace ImprovedWorkbenches
         private readonly Predicate<int> _validator;
         private readonly Action<int> _setter;
 
-        public Dialog_NumericEntry(Predicate<int> validator, Action<int> setter)
+        public Dialog_NumericEntry(int currentValue, Predicate<int> validator, Action<int> setter)
         {
             _validator = validator;
             _setter = setter;
+            curName = currentValue.ToString();
         }
 
         protected override void SetName(string name)
