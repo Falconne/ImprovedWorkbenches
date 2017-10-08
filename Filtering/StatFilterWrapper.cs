@@ -21,24 +21,31 @@ namespace ImprovedWorkbenches.Filtering
             _isQualityFilterNeeded = _extendedBillData.IsQualityFilteringNeeded();
         }
 
-        public bool IsAnyFilteringNeeded()
+        public bool IsAnyFilteringNeeded(ThingDef thingDef)
         {
             return _extendedBillData.UseInputFilter
                 || _isHitpointsFilterNeeded
                 || _isQualityFilterNeeded
-                || _extendedBillData.UsesCountingStockpile();
+                || _extendedBillData.UsesCountingStockpile()
+                || ShouldCheckWornClothes(thingDef)
+                || (thingDef.IsApparel && !_extendedBillData.AllowDeadmansApparel);
         }
 
-        public bool DoesThingMatchFilter(Bill_Production bill, Thing thing)
+        public bool ShouldCheckWornClothes(ThingDef thingDef)
+        {
+            return _extendedBillData.CountWornApparel && thingDef.IsApparel;
+        }
+
+        public bool DoesThingMatchFilter(ThingFilter ingredientFilter, Thing thing)
         {
             if (!IsThingInAppropriateStockpile(thing))
                 return false;
 
             if (_extendedBillData.UseInputFilter
                 && thing.Stuff != null
-                && bill.ingredientFilter != null)
+                && ingredientFilter != null)
             {
-                if (!bill.ingredientFilter.Allows(thing.Stuff))
+                if (!ingredientFilter.Allows(thing.Stuff))
                     return false;
             }
 

@@ -73,11 +73,12 @@ namespace ImprovedWorkbenches
             const float columnWidth = 180f;
             const float middleColumn = columnWidth + 34f;
             const float buttonHeight = 26f;
+            var y = inRect.height - 340f;
 
             if (billRaw.storeMode == BillStoreModeDefOf.BestStockpile)
             {
                 // Specific storage stockpile
-                var storeLabelRect = new Rect(0f, inRect.height - 322f, columnWidth, buttonHeight);
+                var storeLabelRect = new Rect(0f, y, columnWidth, buttonHeight);
                 Widgets.Label(storeLabelRect, "Store in stockpile:");
                 var storeRect = new Rect(0f, storeLabelRect.yMin + Text.LineHeight - 1, columnWidth, buttonHeight);
                 var allStockpiles = Find.VisibleMap.zoneManager.AllZones.OfType<Zone_Stockpile>();
@@ -104,8 +105,9 @@ namespace ImprovedWorkbenches
                     "Crafter will take final product to specified stockpile");
             }
 
-            var rect = new Rect(0f, inRect.height - 266f, columnWidth, buttonHeight);
-            var y = rect.yMin + Text.LineHeight - 1;
+            y += 52f;
+            var rect = new Rect(0f, y, columnWidth, buttonHeight);
+            y += Text.LineHeight - 1;
 
             // Allowed worker filter
             var potentialWorkers = GetAllowedWorkersWithSkillLevel(billRaw);
@@ -353,6 +355,13 @@ namespace ImprovedWorkbenches
                     ref extendedBillData.AllowDeadmansApparel);
                 TooltipHandler.TipRegion(rect3,
                     "Enable to include dead man's clothing in item count");
+
+                y += 26;
+                var rect4 = new Rect(0f, y, columnWidth, buttonHeight);
+                Widgets.CheckboxLabeled(rect4, "Count equipped clothes",
+                    ref extendedBillData.CountWornApparel);
+                TooltipHandler.TipRegion(rect4,
+                    "Counts clothes worn by colonists");
             }
         }
 

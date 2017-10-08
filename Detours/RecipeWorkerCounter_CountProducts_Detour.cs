@@ -25,6 +25,11 @@ namespace ImprovedWorkbenches
             if (isThingAResource && !extendedBillData.UsesCountingStockpile())
                 return true;
 
+            var statFilterWrapper = new StatFilterWrapper(extendedBillData);
+
+            if (!statFilterWrapper.IsAnyFilteringNeeded(productThingDef))
+                return true;
+
             SpecialThingFilterWorker_NonDeadmansApparel nonDeadmansApparelFilter = null;
             if (!extendedBillData.AllowDeadmansApparel && productThingDef.IsApparel)
             {
@@ -35,10 +40,6 @@ namespace ImprovedWorkbenches
                     nonDeadmansApparelFilter = null;
             }
 
-            var statFilterWrapper = new StatFilterWrapper(extendedBillData);
-
-            if (nonDeadmansApparelFilter == null && !statFilterWrapper.IsAnyFilteringNeeded())
-                return true;
 
             __result = 0;
             if (productThingDef.Minifiable)
@@ -49,8 +50,8 @@ namespace ImprovedWorkbenches
                     var minifiedThing = (MinifiedThing)thing;
                     var innerThing = minifiedThing.InnerThing;
                     if (innerThing.def == productThingDef &&
-                        statFilterWrapper.DoesThingMatchFilter(bill, innerThing) &&
-                        statFilterWrapper.DoesThingMatchFilter(bill, minifiedThing))
+                        statFilterWrapper.DoesThingMatchFilter(bill.ingredientFilter, innerThing) &&
+                        statFilterWrapper.DoesThingMatchFilter(bill.ingredientFilter, minifiedThing))
                     {
                         __result++;
                     }
@@ -59,11 +60,24 @@ namespace ImprovedWorkbenches
                 return false;
             }
 
-            var thingList = bill.Map.listerThings.ThingsOfDef(productThingDef);
+            var thingList = bill.Map.listerThings.ThingsOfDef(productThingDef).ToList();
+            if (statFilterWrapper.ShouldCheckWornClothes(productThingDef))
+            {
+                foreach (var colonist in Find.VisibleMap.mapPawns.FreeColonists)
+                {
+                    foreach (var apparel in colonist.apparel.WornApparel)
+                    {
+                        if (apparel.def == productThingDef)
+                        {
+                            thingList.Add(apparel);
+                        }
+                    }
+                }
+            }
 
             foreach (var thing in thingList)
             {
-                if (!statFilterWrapper.DoesThingMatchFilter(bill, thing))
+                if (!statFilterWrapper.DoesThingMatchFilter(bill.ingredientFilter, thing))
                     continue;
 
                 if (nonDeadmansApparelFilter != null && !nonDeadmansApparelFilter.Matches(thing))
