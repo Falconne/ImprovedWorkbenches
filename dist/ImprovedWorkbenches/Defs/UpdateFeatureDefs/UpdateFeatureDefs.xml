@@ -29,4 +29,10 @@
         <assemblyVersion>17.5.0</assemblyVersion>
         <content>* Added ability to copy and paste ingredient filter configurations between compatible bills. Buttons will appear below filter where available.|* Ingredients filter in bill details windows now shows current stock level of that ingredient. This can be disabled in the mod settings.|* Bills that are set to resume production when stock falls to a certain level now show that level in brackets on the workbench overview. The "Do until you have X" button label has been shortened to "Do until X" to fit.|* Navigation arrows added at the top right of bill details window to navigate between bills in that workbench.</content>
     </HugsLib.UpdateFeatureDef>
+
+    <HugsLib.UpdateFeatureDef ParentName="UpdateFeatureBase">
+        <defName>ImprovedWorkbenches_17_7_0</defName>
+        <assemblyVersion>17.7.0</assemblyVersion>
+        <content>* Added a "Drop on Floor" / "Take to Stockpile" toggle to each bill entry on the workbench overview panel, like Enhanced Crafting has.|* When bill store mode is set to "Take to Best Stockpile", you can now select a specific stockpile to be used. This can be selected from a new drop down on the left column.|* When bill target mode is set to "Do Until X", you can now specify that only products in a specific stockpile are counted.|* For clothing bills set to "Do Until X", you can now specify that clothing worn by colonists should also be counted.|* Added buttons near the "Target Count" and "Pause Until" sliders that let you enter values in via the keyboard.</content>
+    </HugsLib.UpdateFeatureDef>
 </Defs>
