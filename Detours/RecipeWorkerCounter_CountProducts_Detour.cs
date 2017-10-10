@@ -50,8 +50,8 @@ namespace ImprovedWorkbenches
                     var minifiedThing = (MinifiedThing)thing;
                     var innerThing = minifiedThing.InnerThing;
                     if (innerThing.def == productThingDef &&
-                        statFilterWrapper.DoesThingMatchFilter(bill.ingredientFilter, innerThing) &&
-                        statFilterWrapper.DoesThingMatchFilter(bill.ingredientFilter, minifiedThing))
+                        statFilterWrapper.DoesThingOnMapMatchFilter(bill.ingredientFilter, innerThing) &&
+                        statFilterWrapper.DoesThingOnMapMatchFilter(bill.ingredientFilter, minifiedThing))
                     {
                         __result++;
                     }
@@ -61,29 +61,30 @@ namespace ImprovedWorkbenches
             }
 
             var thingList = bill.Map.listerThings.ThingsOfDef(productThingDef).ToList();
-            if (statFilterWrapper.ShouldCheckWornClothes(productThingDef))
-            {
-                foreach (var colonist in Find.VisibleMap.mapPawns.FreeColonists)
-                {
-                    foreach (var apparel in colonist.apparel.WornApparel)
-                    {
-                        if (apparel.def == productThingDef)
-                        {
-                            thingList.Add(apparel);
-                        }
-                    }
-                }
-            }
-
             foreach (var thing in thingList)
             {
-                if (!statFilterWrapper.DoesThingMatchFilter(bill.ingredientFilter, thing))
+                if (!statFilterWrapper.DoesThingOnMapMatchFilter(bill.ingredientFilter, thing))
                     continue;
 
                 if (nonDeadmansApparelFilter != null && !nonDeadmansApparelFilter.Matches(thing))
                     continue;
 
                 __result += thing.stackCount;
+            }
+
+            if (!statFilterWrapper.ShouldCheckWornClothes(productThingDef))
+                return false;
+
+            foreach (var colonist in Find.VisibleMap.mapPawns.FreeColonists)
+            {
+                foreach (var apparel in colonist.apparel.WornApparel)
+                {
+                    if (apparel.def != productThingDef)
+                        continue;
+
+                    if (statFilterWrapper.DoesThingMatchFilter(bill.ingredientFilter, apparel))
+                        __result++;
+                }
             }
 
             return false;

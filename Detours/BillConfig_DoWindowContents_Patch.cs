@@ -351,10 +351,10 @@ namespace ImprovedWorkbenches
 
                 y += 35;
                 var rect3 = new Rect(0f, y, columnWidth, buttonHeight);
-                Widgets.CheckboxLabeled(rect3, "Count corpse clothes",
+                Widgets.CheckboxLabeled(rect3, "Count deadman's clothes",
                     ref extendedBillData.AllowDeadmansApparel);
                 TooltipHandler.TipRegion(rect3,
-                    "Enable to include dead man's clothing in item count");
+                    "Include corpse worn clothing in item count");
 
                 y += 26;
                 var rect4 = new Rect(0f, y, columnWidth, buttonHeight);

@@ -36,11 +36,13 @@ namespace ImprovedWorkbenches.Filtering
             return _extendedBillData.CountWornApparel && thingDef.IsApparel;
         }
 
+        public bool DoesThingOnMapMatchFilter(ThingFilter ingredientFilter, Thing thing)
+        {
+            return IsThingInAppropriateStockpile(thing) && DoesThingMatchFilter(ingredientFilter, thing);
+        }
+
         public bool DoesThingMatchFilter(ThingFilter ingredientFilter, Thing thing)
         {
-            if (!IsThingInAppropriateStockpile(thing))
-                return false;
-
             if (_extendedBillData.UseInputFilter
                 && thing.Stuff != null
                 && ingredientFilter != null)
