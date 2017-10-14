@@ -37,9 +37,9 @@ namespace ImprovedWorkbenches
             return _expandBillsTab;
         }
 
-        public bool ShouldShowIngredientCount()
+        public void OnProductionDialogBeingShown()
         {
-            return _showIngredientCount;
+            IsRootBillFilterBeingDrawn = _showIngredientCount;
         }
 
         public ExtendedBillDataStorage GetExtendedBillDataStorage()

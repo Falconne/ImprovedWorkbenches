@@ -24,10 +24,13 @@ namespace ImprovedWorkbenches
                 nextStoreMode = BillStoreModeDefOf.BestStockpile;
             }
 
+            var extendedBillDataStorage = Main.Instance.GetExtendedBillDataStorage();
             var storeModeRect = new Rect(baseRect.xMax - 80f, baseRect.y, 24f, 24f);
             if (Widgets.ButtonImage(storeModeRect, storeModeImage, baseColor))
             {
                 __instance.storeMode = nextStoreMode;
+                var extendedBillData = extendedBillDataStorage.GetExtendedDataFor(__instance);
+                extendedBillData?.RemoveTakeToStockpile();
             }
 
             var copyBillRect = new Rect(storeModeRect.xMin - 28f, baseRect.y, 24f, 24f);
@@ -37,7 +40,6 @@ namespace ImprovedWorkbenches
             }
 			TooltipHandler.TipRegion(copyBillRect, "Copy just this bill");
 
-            var extendedBillDataStorage = Main.Instance.GetExtendedBillDataStorage();
             if (!extendedBillDataStorage.IsLinkedBill(__instance))
                 return;
 

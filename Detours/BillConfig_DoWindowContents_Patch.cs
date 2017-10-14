@@ -16,17 +16,79 @@ namespace ImprovedWorkbenches
             BindingFlags.NonPublic | BindingFlags.Instance);
 
         [HarmonyPrefix]
-        public static bool Prefix(Dialog_BillConfig __instance)
+        public static bool Prefix(Dialog_BillConfig __instance, Rect inRect)
         {
-            if (!Main.Instance.ShouldShowIngredientCount())
+            if (!(BillGetter.GetValue(__instance) is Bill_Production billRaw))
                 return true;
 
-            if (!(BillGetter.GetValue(__instance) is Bill_Production))
-                return true;
+            ShowCustomTakeToStockpileMenu(billRaw, inRect);
 
-            Main.Instance.IsRootBillFilterBeingDrawn = true;
+            Main.Instance.OnProductionDialogBeingShown();
 
             return true;
+        }
+
+        // Specific storage stockpile
+        private static void ShowCustomTakeToStockpileMenu(Bill_Production billRaw, Rect inRect)
+        {
+            if (!ExtendedBillDataStorage.CanOutputBeFiltered(billRaw))
+                return;
+
+            var extendedBillDataStorage = Main.Instance.GetExtendedBillDataStorage();
+            var extendedBillData = extendedBillDataStorage.GetExtendedDataFor(billRaw);
+            if (extendedBillData == null)
+                return;
+
+            const float columnWidth = 180f;
+            const float middleColumn = columnWidth + 34f;
+            const float buttonHeight = 30f;
+
+            var storeRect = new Rect(middleColumn + 3f, inRect.yMin + 114f,
+                columnWidth, buttonHeight);
+            var allStockpiles = Find.VisibleMap.zoneManager.AllZones.OfType<Zone_Stockpile>();
+
+            if (Widgets.ButtonText(storeRect, "null"))
+            {
+                var storeOptionList = new List<FloatMenuOption>();
+
+                var builtInStoremodesQry =
+                    from bsm in DefDatabase<BillStoreModeDef>.AllDefs
+                    orderby bsm.listOrder
+                    select bsm;
+
+                foreach (var storeModeDef in builtInStoremodesQry)
+                {
+                    var smLocal = storeModeDef;
+                    var smLabel = ("BillStoreMode_" + storeModeDef).Translate();
+                    storeOptionList.Add(
+                        new FloatMenuOption(
+                            smLabel,
+                            delegate
+                            {
+                                billRaw.storeMode = smLocal;
+                                extendedBillData.RemoveTakeToStockpile();
+                            }
+                        )
+                    );
+                }
+
+                foreach (Zone_Stockpile stockpile in allStockpiles)
+                {
+                    var label = "Take to " + stockpile.label;
+                    var option = new FloatMenuOption(
+                        label,
+                        delegate
+                        {
+                            extendedBillData.SetTakeToStockpile(stockpile);
+                            billRaw.storeMode = BillStoreModeDefOf.BestStockpile;
+                        }
+                    );
+
+                    storeOptionList.Add(option);
+                }
+
+                Find.WindowStack.Add(new FloatMenu(storeOptionList));
+            }
         }
 
         [HarmonyPostfix]
@@ -73,37 +135,8 @@ namespace ImprovedWorkbenches
             const float columnWidth = 180f;
             const float middleColumn = columnWidth + 34f;
             const float buttonHeight = 26f;
+            var smallButtonHeight = 24f;
             var y = inRect.height - 340f;
-
-            if (billRaw.storeMode == BillStoreModeDefOf.BestStockpile)
-            {
-                // Specific storage stockpile
-                var storeLabelRect = new Rect(0f, y, columnWidth, buttonHeight);
-                Widgets.Label(storeLabelRect, "Store in stockpile:");
-                var storeRect = new Rect(0f, storeLabelRect.yMin + Text.LineHeight - 1, columnWidth, buttonHeight);
-                var allStockpiles = Find.VisibleMap.zoneManager.AllZones.OfType<Zone_Stockpile>();
-
-                if (Widgets.ButtonText(storeRect, extendedBillData.CurrentTakeToStockpileLabel()))
-                {
-                    var storeOptionList = new List<FloatMenuOption>
-                    {
-                        new FloatMenuOption(
-                            "Best", delegate { extendedBillData.RemoveTakeToStockpile(); })
-                    };
-
-                    foreach (Zone_Stockpile stockpile in allStockpiles)
-                    {
-                        var option = new FloatMenuOption(
-                            stockpile.label, delegate { extendedBillData.SetTakeToStockpile(stockpile); });
-
-                        storeOptionList.Add(option);
-                    }
-
-                    Find.WindowStack.Add(new FloatMenu(storeOptionList));
-                }
-                TooltipHandler.TipRegion(storeRect, 
-                    "Crafter will take final product to specified stockpile");
-            }
 
             y += 52f;
             var rect = new Rect(0f, y, columnWidth, buttonHeight);
@@ -162,6 +195,20 @@ namespace ImprovedWorkbenches
                     Find.WindowStack.Add(new FloatMenu(potentialWorkerList));
                 }
                 TooltipHandler.TipRegion(workerButtonRect, "Restrict job to specific colonist");
+            }
+
+            // Custom take to stockpile, overlay dummy button
+            {
+                var storeRect = new Rect(middleColumn + 3f, inRect.yMin + 114f,
+                    columnWidth, 30f);
+
+                var label = extendedBillData.UsesTakeToStockpile()
+                    ? extendedBillData.CurrentTakeToStockpileLabel()
+                    : ("BillStoreMode_" + billRaw.storeMode).Translate();
+
+                Widgets.ButtonText(storeRect, label);
+                TooltipHandler.TipRegion(storeRect,
+                    "Crafter will take final product to specified stockpile");
             }
 
             // Filter copy/paste buttons
@@ -223,7 +270,6 @@ namespace ImprovedWorkbenches
             if (billRaw.pauseWhenSatisfied)
             {
                 var buttonWidth = 42f;
-                var smallButtonHeight = 24f;
                 var minusOneRect = new Rect(middleColumn, inRect.height - 70, buttonWidth, smallButtonHeight);
                 if (Widgets.ButtonText(minusOneRect, "-1"))
                 {
@@ -289,7 +335,7 @@ namespace ImprovedWorkbenches
 
                     Find.WindowStack.Add(new FloatMenu(potentialStockpileList));
                 }
-                TooltipHandler.TipRegion(subRect, 
+                TooltipHandler.TipRegion(subRect,
                     "Only items in specified stockpile will count towards target");
             }
 

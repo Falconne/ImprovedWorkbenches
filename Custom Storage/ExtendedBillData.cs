@@ -49,7 +49,7 @@ namespace ImprovedWorkbenches
 
         public string CurrentTakeToStockpileLabel()
         {
-            return UsesTakeToStockpile() ? _takeToStockpile.label : "Best";
+            return UsesTakeToStockpile() ? "Take to " + _takeToStockpile.label : "Best";
         }
 
         public void RemoveTakeToStockpile()
