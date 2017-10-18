@@ -87,11 +87,6 @@ namespace ImprovedWorkbenches
             return _countingStockpile;
         }
 
-        public string CurrentCountingStockpileLabel()
-        {
-            return UsesCountingStockpile() ? _countingStockpile.label : "Any";
-        }
-
         public IEnumerable<Thing> GetThingsInCountingStockpile()
         {
             return _countingStockpile?.GetSlotGroup()?.HeldThings;

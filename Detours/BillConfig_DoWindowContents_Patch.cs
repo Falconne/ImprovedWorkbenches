@@ -136,29 +136,26 @@ namespace ImprovedWorkbenches
             const float middleColumn = columnWidth + 34f;
             const float buttonHeight = 26f;
             var smallButtonHeight = 24f;
-            var y = inRect.height - 340f;
-
-            y += 52f;
-            var rect = new Rect(0f, y, columnWidth, buttonHeight);
-            y += Text.LineHeight - 1;
+            var y = inRect.height - 259f + Text.LineHeight;
 
             // Allowed worker filter
             var potentialWorkers = GetAllowedWorkersWithSkillLevel(billRaw);
             if (potentialWorkers != null)
             {
-                Widgets.Label(rect, "Restrict to colonist:");
+                var anyoneText = "No colonist restriction";
                 var workerButtonRect = new Rect(0f, y, columnWidth, buttonHeight);
 
                 var currentWorkerLabel =
-                    extendedBillData.Worker?.NameStringShort.CapitalizeFirst() ??
-                    "Anybody";
+                    extendedBillData.Worker != null
+                    ? "Restrict to " + extendedBillData.Worker.NameStringShort.CapitalizeFirst()
+                    : anyoneText;
 
                 if (Widgets.ButtonText(workerButtonRect, currentWorkerLabel))
                 {
                     var potentialWorkerList = new List<FloatMenuOption>
                     {
                         new FloatMenuOption(
-                            "Anybody", delegate { extendedBillData.Worker = null; })
+                            anyoneText, delegate { extendedBillData.Worker = null; })
                     };
 
                     foreach (var allowedWorkerAndTheirSkill in potentialWorkers)
@@ -184,7 +181,7 @@ namespace ImprovedWorkbenches
                             }
                             skillPrefix = $"[{level}{passion}] ";
                         }
-                        var nameWithSkill = $"{skillPrefix}{allowedWorker}";
+                        var nameWithSkill = $"{skillPrefix} Restrict to {allowedWorker}";
 
                         var workerMenuItem = new FloatMenuOption(nameWithSkill,
                             delegate { extendedBillData.Worker = allowedWorker; });
@@ -305,11 +302,10 @@ namespace ImprovedWorkbenches
             {
                 y += 33;
                 var subRect = new Rect(0f, y, columnWidth, buttonHeight);
-                Widgets.Label(subRect, "Count in stockpile:");
-                y = subRect.yMin + Text.LineHeight - 1;
-                subRect = new Rect(0f, y, columnWidth, buttonHeight);
-                var currentCountingStockpileLabel =
-                    extendedBillData.CurrentCountingStockpileLabel();
+                var anyStockpileText = "Count in all stockpiles";
+                var currentCountingStockpileLabel = extendedBillData.UsesCountingStockpile()
+                    ? "Count in " + extendedBillData.GetCountingStockpile().label
+                    : anyStockpileText;
 
                 var map = Find.VisibleMap;
                 var allStockpiles =
@@ -320,12 +316,12 @@ namespace ImprovedWorkbenches
                     var potentialStockpileList = new List<FloatMenuOption>
                     {
                         new FloatMenuOption(
-                            "Any", delegate { extendedBillData.RemoveCountingStockpile(); })
+                            anyStockpileText, delegate { extendedBillData.RemoveCountingStockpile(); })
                     };
 
                     foreach (var stockpile in allStockpiles)
                     {
-                        var stockpileName = stockpile.label;
+                        var stockpileName = "Count in " + stockpile.label;
                         var menuOption = new FloatMenuOption(
                             stockpileName,
                             delegate { extendedBillData.SetCountingStockpile(stockpile); });
