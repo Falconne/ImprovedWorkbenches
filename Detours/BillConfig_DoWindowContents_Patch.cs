@@ -134,16 +134,14 @@ namespace ImprovedWorkbenches
 
             const float columnWidth = 180f;
             const float middleColumn = columnWidth + 34f;
-            const float buttonHeight = 26f;
-            var smallButtonHeight = 24f;
-            var y = inRect.height - 259f + Text.LineHeight;
 
             // Allowed worker filter
             var potentialWorkers = GetAllowedWorkersWithSkillLevel(billRaw);
             if (potentialWorkers != null)
             {
                 var anyoneText = "No colonist restriction";
-                var workerButtonRect = new Rect(0f, y, columnWidth, buttonHeight);
+                var workerButtonRect = new Rect(middleColumn + 3f, inRect.yMin + 18f,
+                    columnWidth, 30f);
 
                 var currentWorkerLabel =
                     extendedBillData.Worker != null
@@ -262,6 +260,10 @@ namespace ImprovedWorkbenches
                 }
                 TooltipHandler.TipRegion(keyboardRect, "Click to enter a value using keyboard");
             }
+
+            const float buttonHeight = 26f;
+            const float smallButtonHeight = 24f;
+            var y = inRect.height - 259f + Text.LineHeight;
 
             // "Unpause when" level adjustment buttons
             if (billRaw.pauseWhenSatisfied)
