@@ -263,7 +263,7 @@ namespace ImprovedWorkbenches
 
             const float buttonHeight = 26f;
             const float smallButtonHeight = 24f;
-            var y = inRect.height - 259f + Text.LineHeight;
+            var y = inRect.height - 248f + Text.LineHeight;
 
             // "Unpause when" level adjustment buttons
             if (billRaw.pauseWhenSatisfied)
@@ -338,6 +338,41 @@ namespace ImprovedWorkbenches
             }
 
             var thingDef = billRaw.recipe.products.First().thingDef;
+
+            if (!thingDef.CountAsResource)
+            {
+                // Counted items filter
+                y += 33;
+                var countedLabelRect = new Rect(0f, y, columnWidth, buttonHeight);
+                Widgets.Label(countedLabelRect, "Counted items filter:");
+                y += Text.LineHeight;
+
+                var filter = extendedBillData.OutputFilter;
+                if (filter.allowedHitPointsConfigurable)
+                {
+                    var allowedHitPointsPercents = filter.AllowedHitPointsPercents;
+                    var rect1 = new Rect(0f, y, columnWidth, buttonHeight);
+                    Widgets.FloatRange(rect1, 10, ref allowedHitPointsPercents, 0f, 1f,
+                        "HitPoints", ToStringStyle.PercentZero);
+
+                    TooltipHandler.TipRegion(rect1,
+                        "Only items with given hitpoints range will count towards target");
+                    filter.AllowedHitPointsPercents = allowedHitPointsPercents;
+                }
+
+                if (filter.allowedQualitiesConfigurable)
+                {
+                    y += 33;
+                    var rect2 = new Rect(0f, y, columnWidth, buttonHeight);
+                    var allowedQualityLevels = filter.AllowedQualityLevels;
+                    Widgets.QualityRange(rect2, 11, ref allowedQualityLevels);
+                    TooltipHandler.TipRegion(rect2,
+                        "Only items of given quality range will count towards target");
+                    filter.AllowedQualityLevels = allowedQualityLevels;
+                }
+                
+            }
+
             // Use input ingredients for counted items filter
             if (billRaw.ingredientFilter != null && thingDef.MadeFromStuff)
             {
@@ -350,38 +385,6 @@ namespace ImprovedWorkbenches
                     "Only items made from ingredients in input ingredients filter (on rightmost column) will count towards target");
             }
 
-            if (thingDef.CountAsResource)
-                return;
-
-            // Counted items filter
-            y += 33;
-            var countedLabelRect = new Rect(0f, y, columnWidth, buttonHeight);
-            Widgets.Label(countedLabelRect, "Counted items filter:");
-            y += Text.LineHeight;
-
-            var filter = extendedBillData.OutputFilter;
-            if (filter.allowedHitPointsConfigurable)
-            {
-                var allowedHitPointsPercents = filter.AllowedHitPointsPercents;
-                var rect1 = new Rect(0f, y, columnWidth, buttonHeight);
-                Widgets.FloatRange(rect1, 10, ref allowedHitPointsPercents, 0f, 1f,
-                    "HitPoints", ToStringStyle.PercentZero);
-
-                TooltipHandler.TipRegion(rect1,
-                    "Only items with given hitpoints range will count towards target");
-                filter.AllowedHitPointsPercents = allowedHitPointsPercents;
-            }
-
-            if (!filter.allowedQualitiesConfigurable)
-                return;
-
-            y += 33;
-            var rect2 = new Rect(0f, y, columnWidth, buttonHeight);
-            var allowedQualityLevels = filter.AllowedQualityLevels;
-            Widgets.QualityRange(rect2, 11, ref allowedQualityLevels);
-            TooltipHandler.TipRegion(rect2,
-                "Only items of given quality range will count towards target");
-            filter.AllowedQualityLevels = allowedQualityLevels;
 
             // Deadmans clothing count filter
             if (thingDef.IsApparel)
@@ -393,7 +396,7 @@ namespace ImprovedWorkbenches
                     return;
                 }
 
-                y += 35;
+                y += 26;
                 var rect3 = new Rect(0f, y, columnWidth, buttonHeight);
                 Widgets.CheckboxLabeled(rect3, "Count corpse clothes",
                     ref extendedBillData.AllowDeadmansApparel);
@@ -405,7 +408,7 @@ namespace ImprovedWorkbenches
                 Widgets.CheckboxLabeled(rect4, "Count equipped clothes",
                     ref extendedBillData.CountWornApparel);
                 TooltipHandler.TipRegion(rect4,
-                    "Counts clothes worn by colonists");
+                    "Also count clothes currently worn by colonists");
             }
         }
 
