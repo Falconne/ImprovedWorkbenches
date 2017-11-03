@@ -18,10 +18,12 @@ namespace ImprovedWorkbenches
         {
             var storeModeImage = Resources.BestStockpile;
             var nextStoreMode = BillStoreModeDefOf.DropOnFloor;
+            var tip = "Currently taking output to stockpile. Click to drop on floor.";
             if (__instance.storeMode == BillStoreModeDefOf.DropOnFloor)
             {
                 storeModeImage = Resources.DropOnFloor;
                 nextStoreMode = BillStoreModeDefOf.BestStockpile;
+                tip = "Currently dropping output on floor. Click to take to stockpile.";
             }
 
             var extendedBillDataStorage = Main.Instance.GetExtendedBillDataStorage();
@@ -32,6 +34,7 @@ namespace ImprovedWorkbenches
                 var extendedBillData = extendedBillDataStorage.GetExtendedDataFor(__instance);
                 extendedBillData?.RemoveTakeToStockpile();
             }
+            TooltipHandler.TipRegion(storeModeRect, tip);
 
             var copyBillRect = new Rect(storeModeRect.xMin - 28f, baseRect.y, 24f, 24f);
             if (Widgets.ButtonImage(copyBillRect, Resources.CopyButton, baseColor))
