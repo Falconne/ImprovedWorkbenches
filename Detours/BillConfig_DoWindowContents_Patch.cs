@@ -31,9 +31,6 @@ namespace ImprovedWorkbenches
         // Specific storage stockpile
         private static void ShowCustomTakeToStockpileMenu(Bill_Production billRaw, Rect inRect)
         {
-            if (!ExtendedBillDataStorage.CanOutputBeFiltered(billRaw))
-                return;
-
             var extendedBillDataStorage = Main.Instance.GetExtendedBillDataStorage();
             var extendedBillData = extendedBillDataStorage.GetExtendedDataFor(billRaw);
             if (extendedBillData == null)
@@ -100,9 +97,6 @@ namespace ImprovedWorkbenches
 
             Main.Instance.IsRootBillFilterBeingDrawn = false;
 
-            if (!ExtendedBillDataStorage.CanOutputBeFiltered(billRaw))
-                return;
-
             var extendedBillDataStorage = Main.Instance.GetExtendedBillDataStorage();
             extendedBillDataStorage.MirrorBillToLinkedBills(billRaw);
 
@@ -110,6 +104,7 @@ namespace ImprovedWorkbenches
             if (extendedBillData == null)
                 return;
 
+            // Bill navigation buttons
             DrawWorkTableNavigation(__instance, billRaw, inRect);
 
             // Linked bill handling
@@ -123,6 +118,7 @@ namespace ImprovedWorkbenches
                 TooltipHandler.TipRegion(unlinkRect, "Break link to other bills");
             }
 
+            // Bill renaming
             {
                 var renameRect = new Rect(inRect.xMax - 75f, inRect.yMin + 4f, 24f, 24f);
                 if (Widgets.ButtonImage(renameRect, Resources.Rename))
@@ -238,6 +234,9 @@ namespace ImprovedWorkbenches
 
                 Text.Font = oldFont;
             }
+
+            if (!ExtendedBillDataStorage.CanOutputBeFiltered(billRaw))
+                return;
 
             if (billRaw.repeatMode != BillRepeatModeDefOf.TargetCount)
                 return;
