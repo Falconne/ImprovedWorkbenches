@@ -79,6 +79,7 @@ copy /y $(TargetPath) "%25ProgramFiles(x86)%25\Steam\SteamApps\common\RimWorld\M
   <PropertyGroup>
     <PreBuildEvent>if not exist $(ProjectDir)ThirdParty mkdir  $(ProjectDir)ThirdParty
 copy /y "%25ProgramFiles(x86)%25\Steam\SteamApps\common\RimWorld\RimWorldWin_Data\Managed\UnityEngine.dll"  $(ProjectDir)ThirdParty
-copy /y "%25ProgramFiles(x86)%25\Steam\SteamApps\common\RimWorld\RimWorldWin_Data\Managed\Assembly-CSharp.dll"  $(ProjectDir)ThirdParty</PreBuildEvent>
+copy /y "%25ProgramFiles(x86)%25\Steam\SteamApps\common\RimWorld\RimWorldWin_Data\Managed\Assembly-CSharp.dll"  $(ProjectDir)ThirdParty
+copy /y "%25ProgramFiles(x86)%25\Steam\SteamApps\workshop\content\294100\818773962\Assemblies\*.dll" $(ProjectDir)ThirdParty</PreBuildEvent>
   </PropertyGroup>
 </Project>

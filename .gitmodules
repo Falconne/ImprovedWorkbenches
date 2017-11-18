@@ -1,0 +1,4 @@
+[submodule "RimworldHugsLibChecker"]
+	path = RimworldHugsLibChecker
+	url = https://github.com/UnlimitedHugs/RimworldHugsLibChecker.git
+	branch = master
