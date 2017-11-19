@@ -24,12 +24,12 @@ namespace ImprovedWorkbenches
         public override void DefsLoaded()
         {
             _expandBillsTab = Settings.GetHandle(
-                "expandBillsTab", "Automatically open bills tab", 
-                "When a workbench is selected, its Bills tab will be opened immediately", true);
+                "expandBillsTab", "IW.AutoOpenBillTabLabel".Translate(),
+                "IW.AutoOpenBillTabDesc".Translate(), true);
 
             _showIngredientCount = Settings.GetHandle(
-                "showIngredientCount", "Show item count in filter",
-                "Shows item counts in ingredients tab in bill details", true);
+                "showIngredientCount", "IW.ShowItemCountInFilterLabel".Translate(),
+                "IW.ShowItemCountInFilterDesc".Translate(), true);
         }
 
         public bool ShouldExpandBillsTab()

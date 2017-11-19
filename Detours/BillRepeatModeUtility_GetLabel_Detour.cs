@@ -1,5 +1,6 @@
 ﻿using Harmony;
 using RimWorld;
+using Verse;
 
 namespace ImprovedWorkbenches
 {
@@ -10,8 +11,7 @@ namespace ImprovedWorkbenches
         {
             if (brm != BillRepeatModeDefOf.TargetCount)
                 return true;
-
-            __result = "Do until X";
+            __result = "IW.DoUntilXText".Translate();
 
             return false;
         }

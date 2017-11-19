@@ -55,7 +55,7 @@ namespace ImprovedWorkbenches
             if (bill is IBillWithThingFilter)
             {
                 Main.Instance.Logger.Warning(
-                    $"Found old Bill ({bill.GetUniqueLoadID()}), migrating to new format");
+                    "IW.FoundOldBillText".Translate() + " " + $"({bill.GetUniqueLoadID()})" + ", " + "IW.MigratingToNewFormat".Translate());
 
                 newExtendedData = new ExtendedBillData(bill);
             }
