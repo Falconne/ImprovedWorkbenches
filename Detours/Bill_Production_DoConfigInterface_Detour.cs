@@ -18,12 +18,12 @@ namespace ImprovedWorkbenches
         {
             var storeModeImage = Resources.BestStockpile;
             var nextStoreMode = BillStoreModeDefOf.DropOnFloor;
-            var tip = "Currently taking output to stockpile. Click to drop on floor.";
+            var tip = "IW.ClickToDropTip".Translate();
             if (__instance.storeMode == BillStoreModeDefOf.DropOnFloor)
             {
                 storeModeImage = Resources.DropOnFloor;
                 nextStoreMode = BillStoreModeDefOf.BestStockpile;
-                tip = "Currently dropping output on floor. Click to take to stockpile.";
+                tip = "IW.ClickToTakeToStockpileTip".Translate();
             }
 
             var extendedBillDataStorage = Main.Instance.GetExtendedBillDataStorage();
@@ -41,7 +41,7 @@ namespace ImprovedWorkbenches
             {
                 Main.Instance.BillCopyPasteHandler.DoCopy(__instance);
             }
-			TooltipHandler.TipRegion(copyBillRect, "Copy just this bill");
+			TooltipHandler.TipRegion(copyBillRect, "IW.CopyJustBillsTip".Translate());
 
             if (!extendedBillDataStorage.IsLinkedBill(__instance))
                 return;
@@ -51,7 +51,7 @@ namespace ImprovedWorkbenches
             {
                 extendedBillDataStorage.RemoveBillFromLinkSets(__instance);
             }
-            TooltipHandler.TipRegion(breakLinkRect, "Break link to other bills");
+            TooltipHandler.TipRegion(breakLinkRect, "IW.BreakLinkToOtherBillsTip".Translate());
         }
     }
 }
