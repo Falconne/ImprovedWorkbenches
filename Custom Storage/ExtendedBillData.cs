@@ -15,10 +15,10 @@ namespace ImprovedWorkbenches
         public string Name;
 
         private Zone_Stockpile _countingStockpile;
-        private string _countingStockpileName = "IW.NullLabel".Translate();
+        private string _countingStockpileName = "null";
 
         private Zone_Stockpile _takeToStockpile;
-        private string _takeToStockpileName = "IW.NullLabel".Translate();
+        private string _takeToStockpileName = "null";
 
         public ExtendedBillData()
         {
@@ -135,22 +135,22 @@ namespace ImprovedWorkbenches
             // Stockpiles need special treatment; they cannot be referenced.
             if (Scribe.mode == LoadSaveMode.Saving)
             {
-                _countingStockpileName = _countingStockpile?.label ?? "IW.NullLabel".Translate();
-                _takeToStockpileName = _takeToStockpile?.label ?? "IW.NullLabel".Translate();
+                _countingStockpileName = _countingStockpile?.label ?? "null";
+                _takeToStockpileName = _takeToStockpile?.label ?? "null";
             }
 
-            Scribe_Values.Look(ref _countingStockpileName, "countingStockpile", "IW.NullLabel".Translate());
-            Scribe_Values.Look(ref _takeToStockpileName, "takeToStockpile", "IW.NullLabel".Translate());
+            Scribe_Values.Look(ref _countingStockpileName, "countingStockpile", "null");
+            Scribe_Values.Look(ref _takeToStockpileName, "takeToStockpile", "null");
 
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {
-                _countingStockpile = _countingStockpileName == "IW.NullLabel".Translate()
+                _countingStockpile = _countingStockpileName == "null"
                     ? null
                     : Find.VisibleMap.zoneManager.AllZones.FirstOrDefault(z =>
                         z is Zone_Stockpile && z.label == _countingStockpileName)
                         as Zone_Stockpile;
 
-                _takeToStockpile = _takeToStockpileName == "IW.NullLabel".Translate()
+                _takeToStockpile = _takeToStockpileName == "null"
                     ? null
                     : Find.VisibleMap.zoneManager.AllZones.FirstOrDefault(z =>
                             z is Zone_Stockpile && z.label == _takeToStockpileName)

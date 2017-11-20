@@ -12,7 +12,7 @@ namespace ImprovedWorkbenches
 
         public void ExposeData()
         {
-            Scribe_Collections.Look(ref _bills, "IW.BillsLabel".Translate(), LookMode.Reference);
+            Scribe_Collections.Look(ref _bills, "Bills", LookMode.Reference);
 
             if (Scribe.mode == LoadSaveMode.LoadingVars && _bills == null)
             {
