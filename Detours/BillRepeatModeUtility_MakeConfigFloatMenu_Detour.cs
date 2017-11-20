@@ -19,7 +19,7 @@ namespace ImprovedWorkbenches
 
             var list = new List<FloatMenuOption>
             {
-                new FloatMenuOption("Use Details to change linked bill mode", delegate { })
+                new FloatMenuOption("IW.ChangeLinkedBillModeText".Translate(), delegate { })
             };
             Find.WindowStack.Add(new FloatMenu(list));
 

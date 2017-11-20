@@ -71,7 +71,7 @@ namespace ImprovedWorkbenches
 
                 foreach (Zone_Stockpile stockpile in allStockpiles)
                 {
-                    var label = "Take to " + stockpile.label;
+                    var label = "IW.TakeToLabel".Translate() + " " + stockpile.label;
                     var option = new FloatMenuOption(
                         label,
                         delegate
@@ -115,7 +115,7 @@ namespace ImprovedWorkbenches
                 {
                     extendedBillDataStorage.RemoveBillFromLinkSets(billRaw);
                 }
-                TooltipHandler.TipRegion(unlinkRect, "Break link to other bills");
+                TooltipHandler.TipRegion(unlinkRect, "IW.BreakLinkToOtherBillsTip".Translate());
             }
 
             // Bill renaming
@@ -125,7 +125,7 @@ namespace ImprovedWorkbenches
                 {
                     Find.WindowStack.Add(new Dialog_RenameBill(extendedBillData, billRaw.LabelCap));
                 }
-                TooltipHandler.TipRegion(renameRect, "Rename bill (use empty string to reset)");
+                TooltipHandler.TipRegion(renameRect, "IW.RenameBillTip".Translate());
             }
 
             const float columnWidth = 180f;
@@ -135,13 +135,13 @@ namespace ImprovedWorkbenches
             var potentialWorkers = GetAllowedWorkersWithSkillLevel(billRaw);
             if (potentialWorkers != null)
             {
-                var anyoneText = "No colonist restriction";
+                var anyoneText = "IW.NoColRestrictionLabel".Translate();
                 var workerButtonRect = new Rect(middleColumn + 3f, inRect.yMin + 18f,
                     columnWidth, 30f);
 
                 var currentWorkerLabel =
                     extendedBillData.Worker != null
-                    ? "Restrict to " + extendedBillData.Worker.NameStringShort.CapitalizeFirst()
+                    ? "IW.RestrictToLabel".Translate() + " " + extendedBillData.Worker.NameStringShort.CapitalizeFirst()
                     : anyoneText;
 
                 if (Widgets.ButtonText(workerButtonRect, currentWorkerLabel))
@@ -175,7 +175,7 @@ namespace ImprovedWorkbenches
                             }
                             skillPrefix = $"[{level}{passion}] ";
                         }
-                        var nameWithSkill = $"{skillPrefix} Restrict to {allowedWorker}";
+                        var nameWithSkill = $"{skillPrefix}" + "IW.RestrictToLabel".Translate() + " " + $"{allowedWorker}";
 
                         var workerMenuItem = new FloatMenuOption(nameWithSkill,
                             delegate { extendedBillData.Worker = allowedWorker; });
@@ -185,7 +185,7 @@ namespace ImprovedWorkbenches
 
                     Find.WindowStack.Add(new FloatMenu(potentialWorkerList));
                 }
-                TooltipHandler.TipRegion(workerButtonRect, "Restrict job to specific colonist");
+                TooltipHandler.TipRegion(workerButtonRect, "IW.RestrictJobToSpecificColonistTip".Translate());
             }
 
             // Custom take to stockpile, overlay dummy button
@@ -199,7 +199,7 @@ namespace ImprovedWorkbenches
 
                 Widgets.ButtonText(storeRect, label);
                 TooltipHandler.TipRegion(storeRect,
-                    "Crafter will take final product to specified stockpile");
+                    "IW.CrafterWillToSpecificStockpileTip".Translate());
             }
 
             // Filter copy/paste buttons
@@ -215,18 +215,18 @@ namespace ImprovedWorkbenches
                     filterButtonWidth, filterButtonHeight);
 
                 var parentFilter = billRaw.recipe?.fixedIngredientFilter;
-                if (Widgets.ButtonText(copyButtonRect, "Copy Filter"))
+                if (Widgets.ButtonText(copyButtonRect, "IW.CopyFilterButton".Translate()))
                 {
                     copyPasteHandler.CopyFilter(billRaw.ingredientFilter, parentFilter);
                 }
-                TooltipHandler.TipRegion(copyButtonRect, "Copy ingredients filter settings, for pasting into a matching filter");
+                TooltipHandler.TipRegion(copyButtonRect, "IW.CopyFilterTip".Translate());
 
                 if (copyPasteHandler.IsMatchingFilterCopied(parentFilter))
                 {
                     var pasteButtonRect = new Rect(copyButtonRect);
                     pasteButtonRect.xMin += filterButtonWidth + 4f;
                     pasteButtonRect.xMax += filterButtonWidth + 4f;
-                    if (Widgets.ButtonText(pasteButtonRect, "Paste Filter"))
+                    if (Widgets.ButtonText(pasteButtonRect, "IW.PasteFilterButton".Translate()))
                     {
                         copyPasteHandler.PasteCopiedFilterInto(billRaw.ingredientFilter);
                     }
@@ -257,7 +257,7 @@ namespace ImprovedWorkbenches
                         i => i > 0,
                         TargetCountSetter));
                 }
-                TooltipHandler.TipRegion(keyboardRect, "Click to enter a value using keyboard");
+                TooltipHandler.TipRegion(keyboardRect, "IW.RenameTip".Translate());
             }
 
             const float buttonHeight = 26f;
@@ -296,14 +296,14 @@ namespace ImprovedWorkbenches
                         i => i < billRaw.targetCount,
                         i => billRaw.unpauseWhenYouHave = i));
                 }
-                TooltipHandler.TipRegion(keyboardRect, "Click to enter a value using keyboard");
+                TooltipHandler.TipRegion(keyboardRect, "IW.RenameTip".Translate());
             }
 
             // Restrict counting to specific stockpile
             {
                 y += 33;
                 var subRect = new Rect(0f, y, columnWidth, buttonHeight);
-                var anyStockpileText = "Count in all stockpiles";
+                var anyStockpileText = "IW.CountOnStockpilesText".Translate();
                 var currentCountingStockpileLabel = extendedBillData.UsesCountingStockpile()
                     ? "Count in " + extendedBillData.GetCountingStockpile().label
                     : anyStockpileText;
@@ -322,7 +322,7 @@ namespace ImprovedWorkbenches
 
                     foreach (var stockpile in allStockpiles)
                     {
-                        var stockpileName = "Count in " + stockpile.label;
+                        var stockpileName = "IW.CountInText".Translate() + " " + stockpile.label;
                         var menuOption = new FloatMenuOption(
                             stockpileName,
                             delegate { extendedBillData.SetCountingStockpile(stockpile); });
@@ -333,7 +333,7 @@ namespace ImprovedWorkbenches
                     Find.WindowStack.Add(new FloatMenu(potentialStockpileList));
                 }
                 TooltipHandler.TipRegion(subRect,
-                    "Only items in specified stockpile will count towards target");
+                    "IW.WillCountTowardsTargetTip".Translate());
             }
 
             var thingDef = billRaw.recipe.products.First().thingDef;
@@ -343,7 +343,7 @@ namespace ImprovedWorkbenches
                 // Counted items filter
                 y += 33;
                 var countedLabelRect = new Rect(0f, y, columnWidth, buttonHeight);
-                Widgets.Label(countedLabelRect, "Counted items filter:");
+                Widgets.Label(countedLabelRect, "IW.CountedItemsFilter".Translate());
                 y += Text.LineHeight;
 
                 var filter = extendedBillData.OutputFilter;
@@ -355,7 +355,7 @@ namespace ImprovedWorkbenches
                         "HitPoints", ToStringStyle.PercentZero);
 
                     TooltipHandler.TipRegion(rect1,
-                        "Only items with given hitpoints range will count towards target");
+                        "IW.HitPointsTip".Translate());
                     filter.AllowedHitPointsPercents = allowedHitPointsPercents;
                 }
 
@@ -366,7 +366,7 @@ namespace ImprovedWorkbenches
                     var allowedQualityLevels = filter.AllowedQualityLevels;
                     Widgets.QualityRange(rect2, 11, ref allowedQualityLevels);
                     TooltipHandler.TipRegion(rect2,
-                        "Only items of given quality range will count towards target");
+                        "IW.QualityTip".Translate());
                     filter.AllowedQualityLevels = allowedQualityLevels;
                 }
                 
@@ -377,11 +377,11 @@ namespace ImprovedWorkbenches
             {
                 y += 33;
                 var subRect = new Rect(0f, y, columnWidth, buttonHeight);
-                Widgets.CheckboxLabeled(subRect, "Match input ingredients",
+                Widgets.CheckboxLabeled(subRect, "IW.MatchInputIngredientsText".Translate(),
                     ref extendedBillData.UseInputFilter);
 
                 TooltipHandler.TipRegion(subRect,
-                    "Only items made from ingredients in input ingredients filter (on rightmost column) will count towards target");
+                    "IW.IngredientsTip".Translate());
             }
 
 
@@ -397,17 +397,17 @@ namespace ImprovedWorkbenches
 
                 y += 26;
                 var rect3 = new Rect(0f, y, columnWidth, buttonHeight);
-                Widgets.CheckboxLabeled(rect3, "Count corpse clothes",
+                Widgets.CheckboxLabeled(rect3, "IW.CountCorpseClothesLabel".Translate(),
                     ref extendedBillData.AllowDeadmansApparel);
                 TooltipHandler.TipRegion(rect3,
-                    "Include corpse worn clothing in item count");
+                    "IW.CountCorpseClothesDesc".Translate());
 
                 y += 26;
                 var rect4 = new Rect(0f, y, columnWidth, buttonHeight);
-                Widgets.CheckboxLabeled(rect4, "Count equipped clothes",
+                Widgets.CheckboxLabeled(rect4, "IW.CountEquippedClothesLabel".Translate(),
                     ref extendedBillData.CountWornApparel);
                 TooltipHandler.TipRegion(rect4,
-                    "Also count clothes currently worn by colonists");
+                    "IW.CountEquippedClothesDesc".Translate());
             }
         }
 
@@ -436,7 +436,7 @@ namespace ImprovedWorkbenches
                 {
                     mover(-1);
                 }
-                TooltipHandler.TipRegion(leftRect, "Open previous bill in workbench");
+                TooltipHandler.TipRegion(leftRect, "IW.OpenPreviousBillTip".Translate());
             }
 
             if (thisBillIndexInWorkTable < billStack.Count - 1)
@@ -448,7 +448,7 @@ namespace ImprovedWorkbenches
                 {
                     mover(1);
                 }
-                TooltipHandler.TipRegion(rightRect, "Open next bill in workbench");
+                TooltipHandler.TipRegion(rightRect, "IW.OpenNextBillTip".Translate());
             }
         }
 
