@@ -56,7 +56,7 @@ namespace ImprovedWorkbenches
                 foreach (var storeModeDef in builtInStoremodesQry)
                 {
                     var smLocal = storeModeDef;
-                    var smLabel = ("BillStoreMode_" + storeModeDef).Translate();
+                    var smLabel = storeModeDef.LabelCap;
                     storeOptionList.Add(
                         new FloatMenuOption(
                             smLabel,
@@ -195,7 +195,7 @@ namespace ImprovedWorkbenches
 
                 var label = extendedBillData.UsesTakeToStockpile()
                     ? extendedBillData.CurrentTakeToStockpileLabel()
-                    : ("BillStoreMode_" + billRaw.storeMode).Translate();
+                    : billRaw.storeMode.LabelCap;
 
                 Widgets.ButtonText(storeRect, label);
                 TooltipHandler.TipRegion(storeRect,
