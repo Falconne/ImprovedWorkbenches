@@ -5,9 +5,9 @@
 	<IW.ClickToTakeToStockpileTip>当前设置为放在地上，点击这里设置为放置到存储区。</IW.ClickToTakeToStockpileTip>
 	<IW.CopyJustBillsTip>仅复制当前任务清单</IW.CopyJustBillsTip>
 	<IW.BreakLinkToOtherBillsTip>切断到其他清单的链接</IW.BreakLinkToOtherBillsTip>
-	<IW.TakeToLabel>放置到（校对）</IW.TakeToLabel>
-	<IW.BestLabel>最佳（校对）</IW.BestLabel>
-	<IW.NullLabel>无（校对）</IW.NullLabel>
+	<IW.TakeToLabel>放置到</IW.TakeToLabel>
+	<IW.BestLabel>最佳</IW.BestLabel>
+	<IW.NullLabel>无</IW.NullLabel>
 	<IW.RenameBillTip>重命名任务清单（需要重置请留空）</IW.RenameBillTip>
 	
 	<IW.BillsLabel>任务清单</IW.BillsLabel>
@@ -19,28 +19,28 @@
 	<IW.RestrictJobToSpecificColonistTip>限制工作仅允许某位殖民者进行</IW.RestrictJobToSpecificColonistTip>
 
 	<IW.CrafterWillToSpecificStockpileTip>制作者将会把产品放置到指定的存储区</IW.CrafterWillToSpecificStockpileTip>
-	<IW.CopyFilterButton>筛选复制</IW.CopyFilterButton>
+	<IW.CopyFilterButton>复制筛选设置</IW.CopyFilterButton>
 
 	<IW.CopyFilterTip>复制原料筛选设置，从而粘贴到对应的筛选设置中</IW.CopyFilterTip>
-	<IW.PasteFilterButton>筛选粘贴</IW.PasteFilterButton>
+	<IW.PasteFilterButton>粘贴筛选设置</IW.PasteFilterButton>
 
 	<IW.RenameTip>点击这里手动输入数值</IW.RenameTip>
-	<IW.CountOnStockpilesText>从所有存储区取用（校对）</IW.CountOnStockpilesText>
+	<IW.CountOnStockpilesText>计算所有存储区内的物品</IW.CountOnStockpilesText>
 
-	<IW.CountInText>计数设置（校对）</IW.CountInText>
-	<IW.WillCountTowardsTargetTip>仅计入指定的存储区内的物品。（校对）</IW.WillCountTowardsTargetTip>
+	<IW.CountInText>仅计算</IW.CountInText>
+	<IW.WillCountTowardsTargetTip>仅计算指定的存储区内的物品。</IW.WillCountTowardsTargetTip>
 
-	<IW.CountedItemsFilter>取用物品限制（校对）</IW.CountedItemsFilter>
-	<IW.HitPointsTip>只有指定耐久度范围内的物品会被计入（校对）</IW.HitPointsTip>
+	<IW.CountedItemsFilter>计算物品限制</IW.CountedItemsFilter>
+	<IW.HitPointsTip>只有指定耐久度范围内的物品会被计入</IW.HitPointsTip>
 
-	<IW.QualityTip>只有指定质量范围内的物品会被计入（校对）</IW.QualityTip>
+	<IW.QualityTip>只有指定质量范围内的物品会被计入</IW.QualityTip>
 	
-	<IW.MatchInputIngredientsText>匹配原料成分（校对）</IW.MatchInputIngredientsText>
+	<IW.MatchInputIngredientsText>匹配原料成分</IW.MatchInputIngredientsText>
 
-	<IW.IngredientsTip>只有使用指定原料制成的物品才会被计入（校对）</IW.IngredientsTip>
+	<IW.IngredientsTip>只有使用指定原料制成的物品才会被计入</IW.IngredientsTip>
 	
-	<IW.CountCorpseClothesLabel>计入尸体的衣物（校对）</IW.CountCorpseClothesLabel>
-	<IW.CountCorpseClothesDesc>从尸体上扒下来衣物也会被计入（校对）</IW.CountCorpseClothesDesc>
+	<IW.CountCorpseClothesLabel>计入尸体的衣物</IW.CountCorpseClothesLabel>
+	<IW.CountCorpseClothesDesc>从尸体上扒下来衣物也会被计入</IW.CountCorpseClothesDesc>
 	
 	<IW.CountEquippedClothesLabel>计入已装备的衣物（校对）</IW.CountEquippedClothesLabel>
 	<IW.CountEquippedClothesDesc>已经被殖民者装备的衣物也会被计入</IW.CountEquippedClothesDesc>
@@ -63,7 +63,7 @@
 	<IW.PasteLinkTip>粘贴复制的任务清单并链接到被复制的任务清单，任何对清单的改动将会连带更改所有链接的清单，</IW.PasteLinkTip>
 	
 	<IW.FoundOldBillText>找到旧清单（校对</IW.FoundOldBillText>
-	<IW.MigratingToNewFormat>更新到新格式（校对</IW.MigratingToNewFormat>
+	<IW.MigratingToNewFormat>更新到新格式</IW.MigratingToNewFormat>
 	
 	<IW.AutoOpenBillTabLabel>自动打开任务清单栏</IW.AutoOpenBillTabLabel>
 	<IW.AutoOpenBillTabDesc>当工作台被选择的时候自动打开任务清单栏</IW.AutoOpenBillTabDesc>
