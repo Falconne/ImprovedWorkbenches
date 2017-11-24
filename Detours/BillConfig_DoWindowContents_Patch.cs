@@ -305,7 +305,7 @@ namespace ImprovedWorkbenches
                 var subRect = new Rect(0f, y, columnWidth, buttonHeight);
                 var anyStockpileText = "IW.CountOnStockpilesText".Translate();
                 var currentCountingStockpileLabel = extendedBillData.UsesCountingStockpile()
-                    ? "Count in " + extendedBillData.GetCountingStockpile().label
+                    ? "IW.CountInText".Translate() + extendedBillData.GetCountingStockpile().label
                     : anyStockpileText;
 
                 var map = Find.VisibleMap;
