@@ -8,6 +8,28 @@ namespace ImprovedWorkbenches
     [HarmonyPatch(typeof(BillStack), "DoListing")]
     public class BillStack_DoListing_Detour
     {
+        public static int ReorderableGroup { get; private set; }
+
+        static bool Prefix(BillStack __instance)
+        {
+            if (!(__instance.billGiver is Building_WorkTable))
+                return true;
+
+            ReorderableGroup = ReorderableWidget.NewGroup(delegate (int from, int to)
+            {
+                ReorderBillInStack(__instance, from, to);
+            });
+
+            return true;
+        }
+
+        static void ReorderBillInStack(BillStack stack, int from, int to)
+        {
+            var bill = stack[from];
+            var offset = to - from;
+            stack.Reorder(bill, offset);
+        }
+
         [HarmonyPostfix]
         public static void Postfix(ref BillStack __instance, ref Rect rect)
         {
