@@ -4,7 +4,7 @@ using RimWorld;
 namespace ImprovedWorkbenches
 {
     [HarmonyPatch(typeof(BillStack), "Delete")]
-    public static class BillStack_Detour
+    public static class BillStack_Delete_Detour
     {
         [HarmonyPrefix]
         public static bool Prefix(Bill bill)

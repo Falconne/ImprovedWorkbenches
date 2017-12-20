@@ -45,7 +45,7 @@
     <Compile Include="Detours\BillRepeatModeUtility_MakeConfigFloatMenu_Detour.cs" />
     <Compile Include="Detours\BillConfig_DoWindowContents_Patch.cs" />
     <Compile Include="CopyPasteLink\BillCopyPaste.cs" />
-    <Compile Include="Detours\BillStack_Detour.cs" />
+    <Compile Include="Detours\BillStack_Delete_Detour.cs" />
     <Compile Include="Detours\Bill_LabelCap_Detour.cs" />
     <Compile Include="Detours\Bill_Production_DoConfigInterface_Detour.cs" />
     <Compile Include="Detours\Bill_PawnAllowedToStartAnew_Detour.cs" />
