@@ -8,6 +8,13 @@ namespace ImprovedWorkbenches
     [HarmonyPatch(typeof(Bill), "DoInterface")]
     public class Bill_DoInterface_Detour
     {
+        static bool Prefix(Bill __instance)
+        {
+            BillStack_DoListing_Detour.BlockButtonDraw = __instance is Bill_Production;
+
+            return true;
+        }
+
         public static void Postfix(ref Bill __instance, float x, float y, float width, int index)
         {
             var billProduction = __instance as Bill_Production;

@@ -10,6 +10,8 @@ namespace ImprovedWorkbenches
     {
         public static int ReorderableGroup { get; private set; }
 
+        public static bool BlockButtonDraw = false;
+
         static bool Prefix(BillStack __instance)
         {
             if (!(__instance.billGiver is Building_WorkTable))

@@ -16,6 +16,7 @@ namespace ImprovedWorkbenches
         [HarmonyPostfix]
         public static void Postfix(Bill_Production __instance, Rect baseRect, Color baseColor)
         {
+            BillStack_DoListing_Detour.BlockButtonDraw = false;
             var storeModeImage = Resources.BestStockpile;
             var nextStoreMode = BillStoreModeDefOf.DropOnFloor;
             var tip = "IW.ClickToDropTip".Translate();
