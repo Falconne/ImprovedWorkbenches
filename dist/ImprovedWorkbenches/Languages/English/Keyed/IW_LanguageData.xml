@@ -71,4 +71,6 @@
 	<IW.ShowItemCountInFilterLabel>Show item count in filter</IW.ShowItemCountInFilterLabel>
 	<IW.ShowItemCountInFilterDesc>Shows item counts in ingredients tab in bill details</IW.ShowItemCountInFilterDesc>
 
+    <IW.EnableDragToReorder>Drag to reorder bills</IW.EnableDragToReorder>
+    <IW.EnableDragToReorderDesc>If you find it conflicting with other mods, you can disable the 'drag to reorder bills' functionality in workbench overview</IW.EnableDragToReorderDesc>
 </LanguageData>

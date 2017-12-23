@@ -14,6 +14,9 @@ namespace ImprovedWorkbenches
 
         static bool Prefix(BillStack __instance)
         {
+            if (!Main.Instance.ShouldAllowDragToReorder())
+                return true;
+
             if (!(__instance.billGiver is Building_WorkTable))
                 return true;
 

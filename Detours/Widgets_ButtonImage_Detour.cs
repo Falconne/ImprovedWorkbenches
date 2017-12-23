@@ -26,6 +26,9 @@ namespace ImprovedWorkbenches
 
         static bool Prefix(ref bool __result, Rect butRect, Texture2D tex, Color baseColor)
         {
+            if (!Main.Instance.ShouldAllowDragToReorder())
+                return true;
+
             if (BillStack_DoListing_Detour.BlockButtonDraw)
             {
                 __result = false;

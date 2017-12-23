@@ -30,11 +30,20 @@ namespace ImprovedWorkbenches
             _showIngredientCount = Settings.GetHandle(
                 "showIngredientCount", "IW.ShowItemCountInFilterLabel".Translate(),
                 "IW.ShowItemCountInFilterDesc".Translate(), true);
+
+            _enableDragToReorder = Settings.GetHandle(
+                "enableDragToReorder", "IW.EnableDragToReorder".Translate(),
+                "IW.EnableDragToReorderDesc".Translate(), true);
         }
 
         public bool ShouldExpandBillsTab()
         {
             return _expandBillsTab;
+        }
+
+        public bool ShouldAllowDragToReorder()
+        {
+            return _enableDragToReorder;
         }
 
         public void OnProductionDialogBeingShown()
@@ -60,6 +69,8 @@ namespace ImprovedWorkbenches
         private SettingHandle<bool> _expandBillsTab;
 
         private SettingHandle<bool> _showIngredientCount;
+
+        private SettingHandle<bool> _enableDragToReorder;
 
         private ExtendedBillDataStorage _extendedBillDataStorage;
     }

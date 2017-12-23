@@ -14,6 +14,9 @@ namespace ImprovedWorkbenches
 
         static bool Prefix(Bill __instance)
         {
+            if (!Main.Instance.ShouldAllowDragToReorder())
+                return true;
+
             BillStack_DoListing_Detour.BlockButtonDraw = __instance is Bill_Production;
 
             return true;
@@ -21,11 +24,13 @@ namespace ImprovedWorkbenches
 
         public static void Postfix(ref Bill __instance, float x, float y, float width, int index)
         {
-            var billProduction = __instance as Bill_Production;
-            if (billProduction == null)
+            if (!Main.Instance.ShouldAllowDragToReorder())
                 return;
 
-            Rect rect = new Rect(x, y, width, 53f);
+            if (!(__instance is Bill_Production billProduction))
+                return;
+
+            var rect = new Rect(x, y, width, 53f);
             if (billProduction.paused)
             {
                 var extraSize = !(bool) CanUnpauseGetter.Invoke(billProduction, new object[] {}) ? 0f : 24f;
