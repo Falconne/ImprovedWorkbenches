@@ -1,4 +1,5 @@
-﻿using HugsLib.Settings;
+﻿using System;
+using HugsLib.Settings;
 using HugsLib.Utils;
 using RimWorld;
 using UnityEngine;
@@ -34,6 +35,18 @@ namespace ImprovedWorkbenches
             _enableDragToReorder = Settings.GetHandle(
                 "enableDragToReorder", "IW.EnableDragToReorder".Translate(),
                 "IW.EnableDragToReorderDesc".Translate(), true);
+
+            try
+            {
+
+                _isOutfitterModLoaded = GenTypes.GetTypeInAnyAssembly("Outfitter.Controller") != null;
+            }
+            catch (Exception e)
+            {
+                Logger.Error("Exception while trying to detect Outfitter:");
+                Logger.Error(e.Message);
+                Logger.Error(e.StackTrace);
+            }
         }
 
         public bool ShouldExpandBillsTab()
@@ -43,6 +56,9 @@ namespace ImprovedWorkbenches
 
         public bool ShouldAllowDragToReorder()
         {
+            if (_isOutfitterModLoaded)
+                return false;
+
             return _enableDragToReorder;
         }
 
@@ -71,6 +87,8 @@ namespace ImprovedWorkbenches
         private SettingHandle<bool> _showIngredientCount;
 
         private SettingHandle<bool> _enableDragToReorder;
+
+        private bool _isOutfitterModLoaded;
 
         private ExtendedBillDataStorage _extendedBillDataStorage;
     }
