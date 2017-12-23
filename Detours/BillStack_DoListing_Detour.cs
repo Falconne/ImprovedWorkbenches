@@ -12,17 +12,17 @@ namespace ImprovedWorkbenches
 
         public static bool BlockButtonDraw = false;
 
-        static bool Prefix(BillStack __instance)
+        public static bool Prefix()
         {
             if (!Main.Instance.ShouldAllowDragToReorder())
                 return true;
 
-            if (!(__instance.billGiver is Building_WorkTable))
+            if (!(Find.Selector.SingleSelectedThing is Building_WorkTable workTable))
                 return true;
 
             ReorderableGroup = ReorderableWidget.NewGroup(delegate (int from, int to)
             {
-                ReorderBillInStack(__instance, from, to);
+                ReorderBillInStack(workTable.BillStack, from, to);
             });
 
             return true;
@@ -35,13 +35,10 @@ namespace ImprovedWorkbenches
             stack.Reorder(bill, offset);
         }
 
-        [HarmonyPostfix]
-        public static void Postfix(ref BillStack __instance, ref Rect rect)
+        public static void Postfix(ref Rect rect)
         {
-            var workTable = __instance.billGiver as Building_WorkTable;
-            if (workTable == null)
+            if (!(Find.Selector.SingleSelectedThing is Building_WorkTable workTable))
                 return;
-
 
             var gap = 4f;
             var buttonWidth = 70f;

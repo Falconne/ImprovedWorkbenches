@@ -1,4 +1,5 @@
 ﻿using System;
+using Harmony;
 using HugsLib.Settings;
 using HugsLib.Utils;
 using RimWorld;
@@ -39,7 +40,15 @@ namespace ImprovedWorkbenches
             try
             {
 
-                _isOutfitterModLoaded = GenTypes.GetTypeInAnyAssembly("Outfitter.Controller") != null;
+                var outfitterBillsPatcher = GenTypes.GetTypeInAnyAssembly("Outfitter.TabPatch.ITab_Bills_Patch");
+                if (outfitterBillsPatcher == null)
+                    return;
+
+                Logger.Message("Adding support for Outfitter");
+                var outfitterPatchedMethod = outfitterBillsPatcher.GetMethod("DoListing");
+                var ourPrefix = typeof(BillStack_DoListing_Detour).GetMethod("Prefix");
+                var ourPostfix = typeof(BillStack_DoListing_Detour).GetMethod("Postfix");
+                HarmonyInst.Patch(outfitterPatchedMethod, new HarmonyMethod(ourPrefix), new HarmonyMethod(ourPostfix));
             }
             catch (Exception e)
             {
@@ -56,9 +65,6 @@ namespace ImprovedWorkbenches
 
         public bool ShouldAllowDragToReorder()
         {
-            if (_isOutfitterModLoaded)
-                return false;
-
             return _enableDragToReorder;
         }
 
@@ -87,8 +93,6 @@ namespace ImprovedWorkbenches
         private SettingHandle<bool> _showIngredientCount;
 
         private SettingHandle<bool> _enableDragToReorder;
-
-        private bool _isOutfitterModLoaded;
 
         private ExtendedBillDataStorage _extendedBillDataStorage;
     }
