@@ -71,4 +71,7 @@
   <IW.ShowItemCountInFilterLabel>材料に在庫数を表示</IW.ShowItemCountInFilterLabel>
   <IW.ShowItemCountInFilterDesc>加工命令の詳細に表示される原材料タブに、アイテムの在庫数を表示します</IW.ShowItemCountInFilterDesc>
 
+  <IW.EnableDragToReorder>ドラッグで加工順番変更</IW.EnableDragToReorder>
+  <IW.EnableDragToReorderDesc>もし、それが他のMODと衝突している場合は、ワークベンチの概要で「ドラッグで加工順番変更」を無効にすることができます。</IW.EnableDragToReorderDesc>
+
 </LanguageData>
