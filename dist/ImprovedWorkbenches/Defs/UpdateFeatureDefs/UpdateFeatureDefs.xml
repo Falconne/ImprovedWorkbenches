@@ -35,4 +35,10 @@
         <assemblyVersion>17.7.0</assemblyVersion>
         <content>* Added a "Drop on Floor" / "Take to Stockpile" toggle to each bill entry on the workbench overview panel, like Enhanced Crafting has.|* The button that lets you choose the bill store mode ("Take to Best Stockpile" and "Drop on Floor") now also lists all the individual stockpiles on the map. Choosing one makes the worker store the finished item in that specific stockpile (assuming that stockpile is set to allow that item).|* When bill target mode is set to "Do Until X", you can now specify that only products in a specific stockpile are counted.|* For clothing bills set to "Do Until X", you can now specify that clothing worn by colonists should also be counted.|* Added buttons near the "Target Count" and "Pause Until" sliders that let you enter values in via the keyboard.|* Mod's UI controls have been moved around in the dialog to fit them all without taking too much space in the recipe info column. The worker restriction button is now in the second column.</content>
     </HugsLib.UpdateFeatureDef>
+
+    <HugsLib.UpdateFeatureDef ParentName="UpdateFeatureBase">
+        <defName>ImprovedWorkbenches_18_2_0</defName>
+        <assemblyVersion>18.2.0</assemblyVersion>
+        <content>You can now drag to reorder bills in workbench overview, instead of having to use the up/down buttons. You can drag from anywhere in a bill's background or use the drag box that has replaced the buttons.</content>
+    </HugsLib.UpdateFeatureDef>
 </Defs>

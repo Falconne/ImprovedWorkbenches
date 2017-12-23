@@ -32,6 +32,10 @@ namespace ImprovedWorkbenches
                 rect.height += Mathf.Max(17f, extraSize);
             }
             ReorderableWidget.Reorderable(BillStack_DoListing_Detour.ReorderableGroup, rect);
+
+            var dragRect = new Rect(x, y + 12f, 24f, 24f);
+            TooltipHandler.TipRegion(dragRect, "DragToReorder".Translate());
+            GUI.DrawTexture(dragRect, Resources.DragHash);
         }
 
     }
