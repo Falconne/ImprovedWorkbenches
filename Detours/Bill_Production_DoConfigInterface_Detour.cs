@@ -13,10 +13,14 @@ namespace ImprovedWorkbenches
     [HarmonyPatch(typeof(Bill_Production), "DoConfigInterface")]
     public static class Bill_Production_DoConfigInterface_Detour
     {
-        [HarmonyPostfix]
-        public static void Postfix(Bill_Production __instance, Rect baseRect, Color baseColor)
+        public static bool Prefix()
         {
             BillStack_DoListing_Detour.BlockButtonDraw = false;
+            return true;
+        }
+
+        public static void Postfix(Bill_Production __instance, Rect baseRect, Color baseColor)
+        {
             var storeModeImage = Resources.BestStockpile;
             var nextStoreMode = BillStoreModeDefOf.DropOnFloor;
             var tip = "IW.ClickToDropTip".Translate();

@@ -1,4 +1,5 @@
-﻿using Harmony;
+﻿using System.Reflection;
+using Harmony;
 using RimWorld;
 using UnityEngine;
 using Verse;
@@ -8,6 +9,9 @@ namespace ImprovedWorkbenches
     [HarmonyPatch(typeof(Bill), "DoInterface")]
     public class Bill_DoInterface_Detour
     {
+        private static readonly MethodInfo CanUnpauseGetter = typeof(Bill_Production).GetMethod("CanUnpause",
+            BindingFlags.NonPublic | BindingFlags.Instance);
+
         static bool Prefix(Bill __instance)
         {
             BillStack_DoListing_Detour.BlockButtonDraw = __instance is Bill_Production;
@@ -24,7 +28,8 @@ namespace ImprovedWorkbenches
             Rect rect = new Rect(x, y, width, 53f);
             if (billProduction.paused)
             {
-                //rect.height += Mathf.Max(17f, __instance.StatusLineMinHeight);
+                var extraSize = !(bool) CanUnpauseGetter.Invoke(billProduction, new object[] {}) ? 0f : 24f;
+                rect.height += Mathf.Max(17f, extraSize);
             }
             ReorderableWidget.Reorderable(BillStack_DoListing_Detour.ReorderableGroup, rect);
         }
