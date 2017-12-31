@@ -142,7 +142,7 @@ namespace ImprovedWorkbenches
 
         public void MirrorBills(Bill_Production sourceBill, Bill_Production destinationBill)
         {
-            destinationBill.ingredientFilter.CopyAllowancesFrom(sourceBill.ingredientFilter);
+            destinationBill.ingredientFilter?.CopyAllowancesFrom(sourceBill.ingredientFilter);
             destinationBill.ingredientSearchRadius = sourceBill.ingredientSearchRadius;
             destinationBill.allowedSkillRange = sourceBill.allowedSkillRange;
             destinationBill.repeatMode = sourceBill.repeatMode;
