@@ -9,10 +9,11 @@ namespace ImprovedWorkbenches
         [HarmonyPrefix]
         public static bool Prefix(Bill bill)
         {
-            var billProduction = bill as Bill_Production;
-            if (billProduction == null)
-                return true;
-            Main.Instance.GetExtendedBillDataStorage().DeleteExtendedDataFor(billProduction);
+            if (bill is Bill_Production billProduction)
+            {
+                Main.Instance.OnBillDeleted(billProduction);
+            }
+
             return true;
         }
     }

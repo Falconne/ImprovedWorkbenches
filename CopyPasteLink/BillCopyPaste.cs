@@ -18,10 +18,15 @@ namespace ImprovedWorkbenches
             _copiedBills.Clear();
         }
 
-        public void DoCopy(Bill_Production billProduction)
+        public void RemoveBill(Bill_Production bill)
+        {
+            _copiedBills.Remove(bill);
+        }
+
+        public void DoCopy(Bill_Production bill)
         {
             _copiedBills.Clear();
-            _copiedBills.Add(billProduction);
+            _copiedBills.Add(bill);
         }
 
         public void DoCopy(Building_WorkTable workTable)

@@ -78,6 +78,12 @@ namespace ImprovedWorkbenches
             return _extendedBillDataStorage;
         }
 
+        public void OnBillDeleted(Bill_Production bill)
+        {
+            _extendedBillDataStorage?.DeleteExtendedDataFor(bill);
+            BillCopyPasteHandler.RemoveBill(bill);
+        }
+
         internal new ModLogger Logger => base.Logger;
 
         internal static Main Instance { get; private set; }
