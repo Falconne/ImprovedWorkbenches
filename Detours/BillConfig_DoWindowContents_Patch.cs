@@ -107,10 +107,40 @@ namespace ImprovedWorkbenches
             // Bill navigation buttons
             DrawWorkTableNavigation(__instance, billRaw, inRect);
 
+            var nextConfigButtonX = inRect.xMin + 28f;
+
+            // Copy bill button
+            {
+                var copyBillRect = new Rect(nextConfigButtonX, inRect.yMin + 50f, 24f, 24f);
+                if (Widgets.ButtonImage(copyBillRect, Resources.CopyButton))
+                {
+                    Main.Instance.BillCopyPasteHandler.DoCopy(billRaw);
+                }
+                TooltipHandler.TipRegion(copyBillRect, "IW.CopyJustBillsTip".Translate());
+                nextConfigButtonX += 28f;
+            }
+
+            // Paste into bill button
+            {
+                var pasteRect = new Rect(nextConfigButtonX, inRect.yMin + 50f, 24f, 24f);
+                var copyPasteHandler = Main.Instance.BillCopyPasteHandler;
+                if (copyPasteHandler.CanPasteInto(billRaw))
+                {
+                    if (Widgets.ButtonImage(pasteRect, Resources.PasteButton))
+                    {
+                        copyPasteHandler.DoPasteInto(billRaw);
+                    }
+                    TooltipHandler.TipRegion(pasteRect, "IW.PasteBillSettings".Translate());
+
+                    nextConfigButtonX += 28f;
+                }
+
+            }
+
             // Linked bill handling
             if (extendedBillDataStorage.IsLinkedBill(billRaw))
             {
-                var unlinkRect = new Rect(inRect.xMin + 28f, inRect.yMin + 50f, 24f, 24f);
+                var unlinkRect = new Rect(nextConfigButtonX, inRect.yMin + 50f, 24f, 24f);
                 if (Widgets.ButtonImage(unlinkRect, Resources.BreakLink))
                 {
                     extendedBillDataStorage.RemoveBillFromLinkSets(billRaw);
@@ -202,39 +232,6 @@ namespace ImprovedWorkbenches
                     "IW.CrafterWillToSpecificStockpileTip".Translate());
             }
 
-            // Filter copy/paste buttons
-            if (billRaw.ingredientFilter != null)
-            {
-                const float filterButtonWidth = 96f;
-                const float filterButtonHeight = 24f;
-                var oldFont = Text.Font;
-                Text.Font = GameFont.Tiny;
-
-                var copyPasteHandler = Main.Instance.BillCopyPasteHandler;
-                var copyButtonRect = new Rect(inRect.xMax - filterButtonWidth * 2 + 4f, inRect.yMax - 35f,
-                    filterButtonWidth, filterButtonHeight);
-
-                var parentFilter = billRaw.recipe?.fixedIngredientFilter;
-                if (Widgets.ButtonText(copyButtonRect, "IW.CopyFilterButton".Translate()))
-                {
-                    copyPasteHandler.CopyFilter(billRaw.ingredientFilter, parentFilter);
-                }
-                TooltipHandler.TipRegion(copyButtonRect, "IW.CopyFilterTip".Translate());
-
-                if (copyPasteHandler.IsMatchingFilterCopied(parentFilter))
-                {
-                    var pasteButtonRect = new Rect(copyButtonRect);
-                    pasteButtonRect.xMin += filterButtonWidth + 4f;
-                    pasteButtonRect.xMax += filterButtonWidth + 4f;
-                    if (Widgets.ButtonText(pasteButtonRect, "IW.PasteFilterButton".Translate()))
-                    {
-                        copyPasteHandler.PasteCopiedFilterInto(billRaw.ingredientFilter);
-                    }
-                }
-
-                Text.Font = oldFont;
-            }
-
             if (!ExtendedBillDataStorage.CanOutputBeFiltered(billRaw))
                 return;
 
@@ -305,7 +302,7 @@ namespace ImprovedWorkbenches
                 var subRect = new Rect(0f, y, columnWidth, buttonHeight);
                 var anyStockpileText = "IW.CountOnStockpilesText".Translate();
                 var currentCountingStockpileLabel = extendedBillData.UsesCountingStockpile()
-                    ? "IW.CountInText".Translate() + extendedBillData.GetCountingStockpile().label
+                    ? "IW.CountInText".Translate() + " " + extendedBillData.GetCountingStockpile().label
                     : anyStockpileText;
 
                 var map = Find.VisibleMap;
@@ -369,7 +366,7 @@ namespace ImprovedWorkbenches
                         "IW.QualityTip".Translate());
                     filter.AllowedQualityLevels = allowedQualityLevels;
                 }
-                
+
             }
 
             // Use input ingredients for counted items filter

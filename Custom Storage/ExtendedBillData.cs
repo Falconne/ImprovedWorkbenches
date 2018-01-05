@@ -92,16 +92,17 @@ namespace ImprovedWorkbenches
             return _countingStockpile?.GetSlotGroup()?.HeldThings;
         }
 
-        public void CloneFrom(ExtendedBillData other)
+        public void CloneFrom(ExtendedBillData other, bool cloneName)
         {
             OutputFilter.CopyAllowancesFrom(other.OutputFilter);
             AllowDeadmansApparel = other.AllowDeadmansApparel;
             CountWornApparel = other.CountWornApparel;
             UseInputFilter = other.UseInputFilter;
             Worker = other.Worker;
-            Name = other.Name;
             _countingStockpile = other._countingStockpile;
             _takeToStockpile = other._takeToStockpile;
+            if (cloneName)
+                Name = other.Name;
         }
 
         public void SetDefaultFilter(Bill_Production bill)

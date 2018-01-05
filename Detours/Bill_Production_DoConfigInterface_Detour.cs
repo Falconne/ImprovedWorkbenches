@@ -41,22 +41,41 @@ namespace ImprovedWorkbenches
             }
             TooltipHandler.TipRegion(storeModeRect, tip);
 
-            var copyBillRect = new Rect(storeModeRect.xMin - 28f, baseRect.y, 24f, 24f);
-            if (Widgets.ButtonImage(copyBillRect, Resources.CopyButton, baseColor))
+            var nextButtonX = storeModeRect.xMin - 28f;
+            var copyPasteHandler = Main.Instance.BillCopyPasteHandler;
+            if (copyPasteHandler.CanCopy(__instance))
             {
-                Main.Instance.BillCopyPasteHandler.DoCopy(__instance);
+                var copyBillRect = new Rect(nextButtonX, baseRect.y, 24f, 24f);
+                if (Widgets.ButtonImage(copyBillRect, Resources.CopyButton, baseColor))
+                {
+                    copyPasteHandler.DoCopy(__instance);
+                }
+                TooltipHandler.TipRegion(copyBillRect, "IW.CopyJustBillsTip".Translate());
+
+                nextButtonX -= 28f;
             }
-			TooltipHandler.TipRegion(copyBillRect, "IW.CopyJustBillsTip".Translate());
 
-            if (!extendedBillDataStorage.IsLinkedBill(__instance))
-                return;
-
-            var breakLinkRect = new Rect(copyBillRect.xMin - 28f, baseRect.y, 24f, 24f);
-            if (Widgets.ButtonImage(breakLinkRect, Resources.BreakLink, baseColor))
+            var pasteRect = new Rect(nextButtonX, baseRect.y, 24f, 24f);
+            if (copyPasteHandler.CanPasteInto(__instance))
             {
-                extendedBillDataStorage.RemoveBillFromLinkSets(__instance);
+                if (Widgets.ButtonImage(pasteRect, Resources.PasteButton, baseColor))
+                {
+                    copyPasteHandler.DoPasteInto(__instance);
+                }
+                TooltipHandler.TipRegion(pasteRect, "IW.PasteBillSettings".Translate());
+
+                nextButtonX -= 28f;
             }
-            TooltipHandler.TipRegion(breakLinkRect, "IW.BreakLinkToOtherBillsTip".Translate());
+
+            var breakLinkRect = new Rect(nextButtonX, baseRect.y, 24f, 24f);
+            if (extendedBillDataStorage.IsLinkedBill(__instance))
+            {
+                if (Widgets.ButtonImage(breakLinkRect, Resources.BreakLink, baseColor))
+                {
+                    extendedBillDataStorage.RemoveBillFromLinkSets(__instance);
+                }
+                TooltipHandler.TipRegion(breakLinkRect, "IW.BreakLinkToOtherBillsTip".Translate());
+            }
         }
     }
 }

@@ -133,25 +133,42 @@ namespace ImprovedWorkbenches
 
             foreach (var linkedBill in existingBillSet.Bills)
             {
+                if (linkedBill.DeletedOrDereferenced)
+                    continue;
+
                 if (linkedBill == sourceBill)
                     continue;
 
-                MirrorBills(sourceBill, linkedBill);
+                MirrorBills(sourceBill, linkedBill, false);
             }
         }
 
-        public void MirrorBills(Bill_Production sourceBill, Bill_Production destinationBill)
+        public void MirrorBills(Bill_Production sourceBill, Bill_Production destinationBill, bool preserveTargetProduct)
         {
-            destinationBill.ingredientFilter?.CopyAllowancesFrom(sourceBill.ingredientFilter);
+            if (!preserveTargetProduct || DoFiltersMatch(sourceBill.recipe?.fixedIngredientFilter,
+                destinationBill.recipe?.fixedIngredientFilter))
+            {
+                if (sourceBill.ingredientFilter != null)
+                    destinationBill.ingredientFilter?.CopyAllowancesFrom(sourceBill.ingredientFilter);
+            }
+
             destinationBill.ingredientSearchRadius = sourceBill.ingredientSearchRadius;
             destinationBill.allowedSkillRange = sourceBill.allowedSkillRange;
-            destinationBill.repeatMode = sourceBill.repeatMode;
-            destinationBill.repeatCount = sourceBill.repeatCount;
-            destinationBill.targetCount = sourceBill.targetCount;
             destinationBill.storeMode = sourceBill.storeMode;
-            destinationBill.pauseWhenSatisfied = sourceBill.pauseWhenSatisfied;
-            destinationBill.unpauseWhenYouHave = sourceBill.unpauseWhenYouHave;
             destinationBill.paused = sourceBill.paused;
+
+            if (CanOutputBeFiltered(destinationBill) || sourceBill.repeatMode != BillRepeatModeDefOf.TargetCount)
+            {
+                destinationBill.repeatMode = sourceBill.repeatMode;
+            }
+
+            if (CanOutputBeFiltered(destinationBill))
+            {
+                destinationBill.repeatCount = sourceBill.repeatCount;
+                destinationBill.targetCount = sourceBill.targetCount;
+                destinationBill.pauseWhenSatisfied = sourceBill.pauseWhenSatisfied;
+                destinationBill.unpauseWhenYouHave = sourceBill.unpauseWhenYouHave;
+            }
 
             var sourceExtendedData = GetExtendedDataFor(sourceBill);
 
@@ -160,8 +177,7 @@ namespace ImprovedWorkbenches
 
             var destinationExtendedData = GetExtendedDataFor(destinationBill);
 
-            destinationExtendedData?.CloneFrom(sourceExtendedData);
-
+            destinationExtendedData?.CloneFrom(sourceExtendedData, !preserveTargetProduct);
         }
 
         public void OnStockpileDeteled(Zone_Stockpile stockpile)
@@ -198,6 +214,27 @@ namespace ImprovedWorkbenches
         private int GetBillId(Bill_Production bill)
         {
             return (int)LoadIdGetter.GetValue(bill);
+        }
+
+        private bool DoFiltersMatch(ThingFilter first, ThingFilter second)
+        {
+            if (first == null || second == null)
+                return false;
+
+            // Only matching on allowed things for performance. May need to match
+            // other fields in the future;
+            if (first.AllowedDefCount != second.AllowedDefCount)
+                return false;
+
+            foreach (var thingDef in first.AllowedThingDefs)
+            {
+                if (first.Allows(thingDef) != second.Allows(thingDef))
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 }

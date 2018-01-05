@@ -8,6 +8,8 @@ namespace ImprovedWorkbenches
     {
         public static readonly Texture2D CopyButton = ContentFinder<Texture2D>.Get("UI/Buttons/Copy");
 
+        public static readonly Texture2D PasteButton = ContentFinder<Texture2D>.Get("UI/Buttons/Paste", true);
+
         public static readonly Texture2D DragHash = ContentFinder<Texture2D>.Get("UI/Buttons/DragHash", true);
 
         public static readonly Texture2D BreakLink = ContentFinder<Texture2D>.Get("BreakLink");

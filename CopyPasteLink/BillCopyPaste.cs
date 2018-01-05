@@ -9,10 +9,6 @@ namespace ImprovedWorkbenches
     {
         private readonly List<Bill_Production> _copiedBills = new List<Bill_Production>();
 
-        private ThingFilter _copiedFilter;
-
-        private ThingFilter _copiedFiltersParent;
-
         public void Clear()
         {
             _copiedBills.Clear();
@@ -45,6 +41,11 @@ namespace ImprovedWorkbenches
             }
         }
 
+        public bool CanCopy(Bill_Production bill)
+        {
+            return _copiedBills.Count != 1 || _copiedBills.First() != bill;
+        }
+
         public bool CanPasteInto(Building_WorkTable workTable)
         {
             if (_copiedBills.Count == 0)
@@ -62,6 +63,11 @@ namespace ImprovedWorkbenches
             }
 
             return false;
+        }
+
+        public bool CanPasteInto(Bill_Production targetBill)
+        {
+            return _copiedBills.Count == 1 && _copiedBills.First() != targetBill;
         }
 
         public bool IsMultipleBillsCopied()
@@ -82,7 +88,7 @@ namespace ImprovedWorkbenches
                 var newBill = (Bill_Production)sourceBill.recipe.MakeNewBill();
                 workTable.BillStack.AddBill(newBill);
 
-                Main.Instance.GetExtendedBillDataStorage().MirrorBills(sourceBill, newBill);
+                Main.Instance.GetExtendedBillDataStorage().MirrorBills(sourceBill, newBill, false);
 
                 if (link)
                 {
@@ -91,22 +97,15 @@ namespace ImprovedWorkbenches
             }
         }
 
-        public bool IsMatchingFilterCopied(ThingFilter parent)
+        public void DoPasteInto(Bill_Production targetBill)
         {
-            return _copiedFilter != null && DoFiltersMatch(_copiedFiltersParent, parent);
+            var sourceBill = _copiedBills.FirstOrDefault();
+            if (sourceBill == null || sourceBill.DeletedOrDereferenced)
+                return;
+
+            Main.Instance.GetExtendedBillDataStorage().MirrorBills(sourceBill, targetBill, true);
         }
 
-        public void CopyFilter(ThingFilter filter, ThingFilter parent)
-        {
-            _copiedFilter = new ThingFilter();
-            _copiedFilter.CopyAllowancesFrom(filter);
-            _copiedFiltersParent = parent;
-        }
-
-        public void PasteCopiedFilterInto(ThingFilter other)
-        {
-            other.CopyAllowancesFrom(_copiedFilter);
-        }
 
         private static bool CanWorkTableDoRecipeNow(Building_WorkTable workTable, RecipeDef recipe)
         {
@@ -114,30 +113,6 @@ namespace ImprovedWorkbenches
                 recipe.AvailableNow &&
                 workTable.def.AllRecipes != null &&
                 workTable.def.AllRecipes.Contains(recipe);
-        }
-
-        private bool DoFiltersMatch(ThingFilter first, ThingFilter second)
-        {
-            if (first == null && second == null)
-                return true;
-
-            if (first == null || second == null)
-                return false;
-
-            // Only matching on allowed things for performance. May need to match
-            // other fields in the future;
-            if (first.AllowedDefCount != second.AllowedDefCount)
-                return false;
-
-            foreach (var thingDef in first.AllowedThingDefs)
-            {
-                if (first.Allows(thingDef) != second.Allows(thingDef))
-                {
-                    return false;
-                }
-            }
-
-            return true;
         }
     }
 }
