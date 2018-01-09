@@ -75,4 +75,7 @@
   <IW.EnableDragToReorderDesc>If you find it conflicting with other mods, you can disable the 'drag to reorder bills' functionality in workbench overview</IW.EnableDragToReorderDesc>
 
   <IW.PasteBillSettings>Paste all settings (except output product) from copied bill into this one</IW.PasteBillSettings>
+
+  <IW.MirrorSuspendedStatus>Mirror suspended status</IW.MirrorSuspendedStatus>
+  <IW.MirrorSuspendedStatusDesc>If enabled, when a linked bill is suspended or unsuspended, all linked bills will take on the same status. (Note: Toggling this setting to True will trigger synchronisation on all linked jobs)</IW.MirrorSuspendedStatusDesc>
 </LanguageData>

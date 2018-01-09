@@ -95,6 +95,9 @@ namespace ImprovedWorkbenches
 
         public LinkedBillsSet GetBillSetContaining(Bill_Production bill)
         {
+            if (bill == null)
+                return null;
+
             foreach (var billsSet in _linkedBillsSets)
             {
                 if (billsSet.Bills.Contains(bill))
@@ -122,6 +125,14 @@ namespace ImprovedWorkbenches
             else
             {
                 existingBillSet.Bills.Remove(bill);
+            }
+        }
+
+        public void UpdateAllLinkedBills()
+        {
+            foreach (LinkedBillsSet linkedBillsSet in _linkedBillsSets)
+            {
+                MirrorBillToLinkedBills(linkedBillsSet.Bills.First());
             }
         }
 
@@ -156,6 +167,11 @@ namespace ImprovedWorkbenches
             destinationBill.allowedSkillRange = sourceBill.allowedSkillRange;
             destinationBill.storeMode = sourceBill.storeMode;
             destinationBill.paused = sourceBill.paused;
+
+            if (Main.Instance.ShouldMirrorSuspendedStatus())
+            {
+                destinationBill.suspended = sourceBill.suspended;
+            }
 
             if (CanOutputBeFiltered(destinationBill) || sourceBill.repeatMode != BillRepeatModeDefOf.TargetCount)
             {
