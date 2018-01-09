@@ -41,4 +41,10 @@
         <assemblyVersion>18.2.0</assemblyVersion>
         <content>You can now drag to reorder bills in workbench overview, instead of having to use the up/down buttons. You can drag from anywhere in a bill's background or use the drag box that has replaced the buttons.</content>
     </HugsLib.UpdateFeatureDef>
+
+  <HugsLib.UpdateFeatureDef ParentName="UpdateFeatureBase">
+    <defName>ImprovedWorkbenches_18_6_0</defName>
+    <assemblyVersion>18.6.0</assemblyVersion>
+    <content>* When a single bill is copied, a "Paste Into" button now appears on every other bill, in the bill details and workbench overview screen. This button will paste all compatible settings from the source bill into the target bill, except for the output product itself. For e.g., you can create a number of tailoring jobs for different items of clothing, adjust the production counts and material filters for one and paste these into all the others. Any job's settings can be pasted into another, but not all settings are compatible between all recipes; incompatible settings will not be copied.|* When a linked bill is suspended or unsuspended, now all linked bills will take on the same status (can be configured in Settings).</content>
+  </HugsLib.UpdateFeatureDef>
 </Defs>
