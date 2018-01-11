@@ -74,4 +74,9 @@
   <IW.EnableDragToReorder>ドラッグで加工順番変更</IW.EnableDragToReorder>
   <IW.EnableDragToReorderDesc>もし、それが他のMODと衝突している場合は、ワークベンチの概要で「ドラッグで加工順番変更」を無効にすることができます。</IW.EnableDragToReorderDesc>
 
+  <IW.PasteBillSettings>コピー元の指示からこの指示に対して(製品の生産数を除き)すべての設定を貼り付ける</IW.PasteBillSettings>
+
+  <IW.MirrorSuspendedStatus>一時停止状態も反映</IW.MirrorSuspendedStatus>
+  <IW.MirrorSuspendedStatusDesc>もし有効化すると、リンクされた指示命令が一時停止/再開されると、すべてのリンクされた請求書は同じ状態(一時停止または再開)になります。（注：この設定をTrueに切り替えると、すべてのリンクされた仕事でも同期条件のトリガーになります）</IW.MirrorSuspendedStatusDesc>
+
 </LanguageData>
