@@ -65,8 +65,8 @@
   <IW.FoundOldBillText>Found old Bill</IW.FoundOldBillText>
   <IW.MigratingToNewFormat>migrating to new format</IW.MigratingToNewFormat>
 
-  <IW.AutoOpenBillTabLabel>Automatically open bills tab</IW.AutoOpenBillTabLabel>
-  <IW.AutoOpenBillTabDesc>When a workbench is selected, its Bills tab will be opened immediately</IW.AutoOpenBillTabDesc>
+  <IW.AutoOpenBillTabLabel>Automatically open bills and storage tabs</IW.AutoOpenBillTabLabel>
+  <IW.AutoOpenBillTabDesc>When a workbench (or stockpile) is selected, its bills (or storage) tab will be opened immediately</IW.AutoOpenBillTabDesc>
 
   <IW.ShowItemCountInFilterLabel>Show item count in filter</IW.ShowItemCountInFilterLabel>
   <IW.ShowItemCountInFilterDesc>Shows item counts in ingredients tab in bill details</IW.ShowItemCountInFilterDesc>
