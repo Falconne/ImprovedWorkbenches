@@ -5,6 +5,8 @@ using Verse;
 
 namespace ImprovedWorkbenches
 {
+    // Automatically open main tab when a workbench or stockpile is selected
+
     [HarmonyPatch(typeof(MainTabWindow_Inspect), "ExtraOnGUI")]
     public static class MainTabWindow_Inspect_Detour
     {
@@ -15,24 +17,51 @@ namespace ImprovedWorkbenches
                 return;
 
             var tab = __instance.CurTabs?.FirstOrDefault();
+            var tabIsBills = false;
 
-            if (!(tab is ITab_Bills))
+            if (tab is ITab_Bills)
+            {
+                tabIsBills = true;
+            }
+            else if (!(tab is ITab_Storage))
+            {
+                // No workbench or stockpile selected
+                _lastSelectedThingId = null;
+                return;
+            }
+
+            // We must make sure we only open the tab once, or we'll keep reopening
+            // it even if the player wants to manually close it.
+            string selectedThingId = null;
+            if (tabIsBills)
+            {
+                // Workbench
+                var selectedThing = Find.Selector.SingleSelectedThing;
+                if (selectedThing != null)
+                {
+                    selectedThingId = selectedThing.ThingID;
+                }
+            }
+            else
+            {
+                // Stockpile
+                var selectedZone = Find.Selector.SelectedZone;
+                if (selectedZone != null)
+                {
+                    selectedThingId = selectedZone.GetHashCode().ToString();
+                }
+            }
+
+            if (selectedThingId == null)
             {
                 _lastSelectedThingId = null;
                 return;
             }
 
-            var selectedThing = Find.Selector.SingleSelectedThing;
-            if (selectedThing == null)
-            {
-                _lastSelectedThingId = null;
-                return;
-            }
-
-            if (_lastSelectedThingId != null && selectedThing.ThingID == _lastSelectedThingId)
+            if (_lastSelectedThingId != null && selectedThingId == _lastSelectedThingId)
                 return;
 
-            _lastSelectedThingId = selectedThing.ThingID;
+            _lastSelectedThingId = selectedThingId;
             if (__instance.OpenTabType != null && __instance.OpenTabType == tab.GetType())
                 return;
 
