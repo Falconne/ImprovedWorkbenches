@@ -45,6 +45,9 @@
   <IW.CountEquippedClothesLabel>Count equipped clothes</IW.CountEquippedClothesLabel>
   <IW.CountEquippedClothesDesc>Also count clothes currently worn by colonists</IW.CountEquippedClothesDesc>
 
+  <IW.CountEquippedWeaponsLabel>Count equipped weapons</IW.CountEquippedWeaponsLabel>
+  <IW.CountEquippedWeaponsDesc>Also count weapons currently equipped by colonists</IW.CountEquippedWeaponsDesc>
+
   <IW.OpenPreviousBillTip>Open previous bill in workbench</IW.OpenPreviousBillTip>
 
   <IW.OpenNextBillTip>Open next bill in workbench</IW.OpenNextBillTip>

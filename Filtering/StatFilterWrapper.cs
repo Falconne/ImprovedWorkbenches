@@ -28,12 +28,18 @@ namespace ImprovedWorkbenches.Filtering
                 || _isQualityFilterNeeded
                 || _extendedBillData.UsesCountingStockpile()
                 || ShouldCheckWornClothes(thingDef)
+                || ShouldCheckEquippedWeapons(thingDef)
                 || (thingDef.IsApparel && !_extendedBillData.AllowDeadmansApparel);
         }
 
         public bool ShouldCheckWornClothes(ThingDef thingDef)
         {
             return _extendedBillData.CountWornApparel && thingDef.IsApparel;
+        }
+
+        public bool ShouldCheckEquippedWeapons(ThingDef thingDef)
+        {
+            return _extendedBillData.CountEquippedWeapons && thingDef.IsWeapon;
         }
 
         public bool DoesThingOnMapMatchFilter(ThingFilter ingredientFilter, Thing thing)

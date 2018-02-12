@@ -72,18 +72,33 @@ namespace ImprovedWorkbenches
                 __result += thing.stackCount;
             }
 
-            if (!statFilterWrapper.ShouldCheckWornClothes(productThingDef))
-                return false;
-
-            foreach (var colonist in Find.VisibleMap.mapPawns.FreeColonists)
+            if (statFilterWrapper.ShouldCheckWornClothes(productThingDef))
             {
-                foreach (var apparel in colonist.apparel.WornApparel)
+                foreach (var colonist in Find.VisibleMap.mapPawns.FreeColonists)
                 {
-                    if (apparel.def != productThingDef)
-                        continue;
+                    foreach (var apparel in colonist.apparel.WornApparel)
+                    {
+                        if (apparel.def != productThingDef)
+                            continue;
 
-                    if (statFilterWrapper.DoesThingMatchFilter(bill.ingredientFilter, apparel))
-                        __result++;
+                        if (statFilterWrapper.DoesThingMatchFilter(bill.ingredientFilter, apparel))
+                            __result++;
+                    }
+                }
+            }
+
+            if (statFilterWrapper.ShouldCheckEquippedWeapons(productThingDef))
+            {
+                foreach (var colonist in Find.VisibleMap.mapPawns.FreeColonists)
+                {
+                    foreach (var weapon in colonist.equipment.AllEquipmentListForReading)
+                    {
+                        if (weapon.def != productThingDef)
+                            continue;
+
+                        if (statFilterWrapper.DoesThingMatchFilter(bill.ingredientFilter, weapon))
+                            __result++;
+                    }
                 }
             }
 
