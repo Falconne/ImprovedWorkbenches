@@ -406,6 +406,17 @@ namespace ImprovedWorkbenches
                 TooltipHandler.TipRegion(rect4,
                     "IW.CountEquippedClothesDesc".Translate());
             }
+
+            // Equippped weapon count filter
+            if (thingDef.IsWeapon)
+            {
+                y += 26;
+                var rect5 = new Rect(0f, y, columnWidth, buttonHeight);
+                Widgets.CheckboxLabeled(rect5, "IW.CountEquippedWeaponsLabel".Translate(),
+                    ref extendedBillData.CountEquippedWeapons);
+                TooltipHandler.TipRegion(rect5,
+                    "IW.CountEquippedWeaponsDesc".Translate());
+            }
         }
 
         private static void DrawWorkTableNavigation(Dialog_BillConfig dialog, Bill_Production bill, Rect inRect)
