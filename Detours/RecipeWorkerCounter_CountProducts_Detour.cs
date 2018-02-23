@@ -84,6 +84,14 @@ namespace ImprovedWorkbenches
                         if (statFilterWrapper.DoesThingMatchFilter(bill.ingredientFilter, apparel))
                             __result++;
                     }
+                    foreach (var apparel in colonist.inventory.innerContainer)
+                    {
+                        if (apparel.def != productThingDef)
+                            continue;
+
+                        if (statFilterWrapper.DoesThingMatchFilter(bill.ingredientFilter, apparel))
+                            __result++;
+                    }
                 }
             }
 
@@ -92,6 +100,14 @@ namespace ImprovedWorkbenches
                 foreach (var colonist in Find.VisibleMap.mapPawns.FreeColonists)
                 {
                     foreach (var weapon in colonist.equipment.AllEquipmentListForReading)
+                    {
+                        if (weapon.def != productThingDef)
+                            continue;
+
+                        if (statFilterWrapper.DoesThingMatchFilter(bill.ingredientFilter, weapon))
+                            __result++;
+                    }
+                    foreach (var weapon in colonist.inventory.innerContainer)
                     {
                         if (weapon.def != productThingDef)
                             continue;
