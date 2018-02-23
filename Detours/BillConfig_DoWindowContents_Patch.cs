@@ -386,19 +386,19 @@ namespace ImprovedWorkbenches
             if (thingDef.IsApparel)
             {
                 var nonDeadmansApparelFilter = new SpecialThingFilterWorker_NonDeadmansApparel();
-                if (!nonDeadmansApparelFilter.CanEverMatch(thingDef))
+                if (nonDeadmansApparelFilter.CanEverMatch(thingDef))
                 {
-                    // Thing can't be worn.
-                    return;
+                    y += 26;
+                    var rect3 = new Rect(0f, y, columnWidth, buttonHeight);
+                    Widgets.CheckboxLabeled(rect3, "IW.CountCorpseClothesLabel".Translate(),
+                        ref extendedBillData.AllowDeadmansApparel);
+                    TooltipHandler.TipRegion(rect3,
+                        "IW.CountCorpseClothesDesc".Translate());
                 }
-
-                y += 26;
-                var rect3 = new Rect(0f, y, columnWidth, buttonHeight);
-                Widgets.CheckboxLabeled(rect3, "IW.CountCorpseClothesLabel".Translate(),
-                    ref extendedBillData.AllowDeadmansApparel);
-                TooltipHandler.TipRegion(rect3,
-                    "IW.CountCorpseClothesDesc".Translate());
-
+            }
+            // Worn Apparel Filter (includes Shield Belts which cannot be Deadman)
+            if (thingDef.IsApparel || thingDef == ThingDefOf.Apparel_ShieldBelt)
+            { 
                 y += 26;
                 var rect4 = new Rect(0f, y, columnWidth, buttonHeight);
                 Widgets.CheckboxLabeled(rect4, "IW.CountEquippedClothesLabel".Translate(),
@@ -407,7 +407,7 @@ namespace ImprovedWorkbenches
                     "IW.CountEquippedClothesDesc".Translate());
             }
 
-            // Equippped weapon count filter
+            // Equipped weapon count filter
             if (thingDef.IsWeapon)
             {
                 y += 26;
