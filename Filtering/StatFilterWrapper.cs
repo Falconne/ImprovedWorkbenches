@@ -34,7 +34,7 @@ namespace ImprovedWorkbenches.Filtering
 
         public bool ShouldCheckWornClothes(ThingDef thingDef)
         {
-            return _extendedBillData.CountWornApparel && thingDef.IsApparel;
+            return _extendedBillData.CountWornApparel && (thingDef.IsApparel || thingDef == ThingDefOf.Apparel_ShieldBelt);
         }
 
         public bool ShouldCheckEquippedWeapons(ThingDef thingDef)
