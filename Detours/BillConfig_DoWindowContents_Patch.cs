@@ -369,10 +369,12 @@ namespace ImprovedWorkbenches
 
             }
 
+            y += 7;
+
             // Use input ingredients for counted items filter
             if (billRaw.ingredientFilter != null && thingDef.MadeFromStuff)
             {
-                y += 33;
+                y += 26;
                 var subRect = new Rect(0f, y, columnWidth, buttonHeight);
                 Widgets.CheckboxLabeled(subRect, "IW.MatchInputIngredientsText".Translate(),
                     ref extendedBillData.UseInputFilter);
@@ -396,6 +398,7 @@ namespace ImprovedWorkbenches
                         "IW.CountCorpseClothesDesc".Translate());
                 }
             }
+
             // Worn Apparel Filter (includes Shield Belts which cannot be Deadman)
             if (thingDef.IsApparel || thingDef == ThingDefOf.Apparel_ShieldBelt)
             { 
