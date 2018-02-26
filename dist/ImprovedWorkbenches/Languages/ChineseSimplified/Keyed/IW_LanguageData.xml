@@ -40,7 +40,7 @@
 	<IW.IngredientsTip>只有使用指定原料制成的物品才会被计入</IW.IngredientsTip>
 	
 	<IW.CountCorpseClothesLabel>计入尸体的衣物</IW.CountCorpseClothesLabel>
-	<IW.CountCorpseClothesDesc>从尸体上扒下来衣物也会被计入</IW.CountCorpseClothesDesc>
+	<IW.CountCorpseClothesDesc>从尸体上扒下来的衣物也会被计入</IW.CountCorpseClothesDesc>
 
 	<IW.CountInventoryLabel>计入已装备的衣物</IW.CountInventoryLabel>
 	<IW.CountInventoryDesc>已经被殖民者装备的衣物也会被计入</IW.CountInventoryDesc>

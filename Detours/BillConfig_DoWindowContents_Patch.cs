@@ -388,10 +388,8 @@ namespace ImprovedWorkbenches
 
             // Use input ingredients for counted items filter
             if (billRaw.ingredientFilter != null && thingDef.MadeFromStuff)
-            {
                 SimpleCheckBoxTip("IW.MatchInputIngredientsText", ref extendedBillData.UseInputFilter,
                     "IW.MatchInputIngredientsTip");
-            }
 
             //Installable filter
             if (thingDef.Minifiable)
