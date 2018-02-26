@@ -74,7 +74,7 @@ namespace ImprovedWorkbenches
             }
 
             //Who could have this Thing
-            IEnumerable<Pawn> pawns = Find.VisibleMap.mapPawns.SpawnedPawnsInFaction(Faction.OfPlayer).Where(
+            IEnumerable<Pawn> pawns = bill.Map.mapPawns.SpawnedPawnsInFaction(Faction.OfPlayer).Where(
                 p => p.IsFreeColonist || !p.IsColonist);    //Filter out prisoners, include animals (for inventory)
 
             //Gather the Things
