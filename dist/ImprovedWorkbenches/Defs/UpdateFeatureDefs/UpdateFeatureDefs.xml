@@ -53,4 +53,10 @@
     <assemblyVersion>18.7.0</assemblyVersion>
     <content>* When a stockpile is selected, its storage tab will now automatically be opened, the same way as a workbenche's bills tab is.</content>
   </HugsLib.UpdateFeatureDef>
+
+  <HugsLib.UpdateFeatureDef ParentName="UpdateFeatureBase">
+    <defName>ImprovedWorkbenches_18_8_0</defName>
+    <assemblyVersion>18.8.0</assemblyVersion>
+    <content>Feature added by @alextd: "Do Until X" bills can now also count any equipped weapons and shield belts, extending the existing "Count equipped clothing" functionality.</content>
+  </HugsLib.UpdateFeatureDef>
 </Defs>
