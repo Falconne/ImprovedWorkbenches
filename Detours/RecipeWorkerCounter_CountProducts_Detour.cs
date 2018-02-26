@@ -73,34 +73,34 @@ namespace ImprovedWorkbenches
                 }
             }
 
-            //Who could have this Thing
-            IEnumerable<Pawn> pawns = bill.Map.mapPawns.SpawnedPawnsInFaction(Faction.OfPlayer).Where(
-                p => p.IsFreeColonist || !p.IsColonist);    //Filter out prisoners, include animals (for inventory)
-
-            //Gather the Things
-            List<Thing> pawnThings = new List<Thing>();
-            foreach (var pawn in pawns)
+            if (statFilterWrapper.ShouldCheckInventory(productThingDef))
             {
-                if (statFilterWrapper.ShouldCheckEquippedWeapons(productThingDef) && pawn.equipment != null)
-                    pawnThings.AddRange(pawn.equipment.AllEquipmentListForReading.Cast<Thing>());
-                if (statFilterWrapper.ShouldCheckWornClothes(productThingDef) && pawn.apparel != null)
-                    pawnThings.AddRange(pawn.apparel.WornApparel.Cast<Thing>());
-                if (statFilterWrapper.ShouldCheckInventory(productThingDef))
+                //Who could have this Thing
+                IEnumerable<Pawn> pawns = bill.Map.mapPawns.SpawnedPawnsInFaction(Faction.OfPlayer).Where(
+                    p => p.IsFreeColonist || !p.IsColonist);    //Filter out prisoners, include animals (for inventory)
+
+                List<Thing> pawnThings = new List<Thing>();
+                //Gather the Things
+                foreach (var pawn in pawns)
                 {
+                    if (pawn.apparel != null)
+                        pawnThings.AddRange(pawn.apparel.WornApparel.Cast<Thing>());
+                    if (pawn.equipment != null)
+                        pawnThings.AddRange(pawn.equipment.AllEquipmentListForReading.Cast<Thing>());
                     if (pawn.inventory != null)
                         pawnThings.AddRange(pawn.inventory.innerContainer);
                     if (pawn.carryTracker != null)
                         pawnThings.AddRange(pawn.carryTracker.innerContainer);
                 }
-            }
 
-            //Count the Things
-            foreach (Thing i in pawnThings)
-            {
-                Thing item = MinifyUtility.GetInnerIfMinified(i);
-                if ((item.def == productThingDef && statFilterWrapper.DoesThingMatchFilter(bill.ingredientFilter, item)) &&
-                    (nonDeadmansApparelFilter?.Matches(item) ?? true))
-                    __result += item.stackCount;
+                //Count the Things
+                foreach (Thing i in pawnThings)
+                {
+                    Thing item = MinifyUtility.GetInnerIfMinified(i);
+                    if ((item.def == productThingDef && statFilterWrapper.DoesThingMatchFilter(bill.ingredientFilter, item)) &&
+                        (nonDeadmansApparelFilter?.Matches(item) ?? true))
+                        __result += item.stackCount;
+                }
             }
 
             return false;

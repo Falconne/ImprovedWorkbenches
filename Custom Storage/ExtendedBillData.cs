@@ -10,8 +10,6 @@ namespace ImprovedWorkbenches
         public ThingFilter OutputFilter = new ThingFilter();
         public bool AllowDeadmansApparel;
         public bool CountInventory;
-        public bool CountWornApparel;
-        public bool CountEquippedWeapons;
         public bool CountInstalled;
         public bool UseInputFilter;
         public Pawn Worker;
@@ -107,8 +105,6 @@ namespace ImprovedWorkbenches
             OutputFilter.CopyAllowancesFrom(other.OutputFilter);
             AllowDeadmansApparel = other.AllowDeadmansApparel;
             CountInventory = other.CountInventory;
-            CountWornApparel = other.CountWornApparel;
-            CountEquippedWeapons = other.CountEquippedWeapons;
             CountInstalled = other.CountInstalled;
             UseInputFilter = other.UseInputFilter;
             Worker = other.Worker;
@@ -147,12 +143,17 @@ namespace ImprovedWorkbenches
             Scribe_Deep.Look(ref OutputFilter, "outputFilter", new object[0]);
             Scribe_Values.Look(ref AllowDeadmansApparel, "allowDeadmansApparel", false);
             Scribe_Values.Look(ref CountInventory, "countInventory", false);
-            Scribe_Values.Look(ref CountWornApparel, "countWornApparel", false);
-            Scribe_Values.Look(ref CountEquippedWeapons, "countEquippedWeapons", false);
             Scribe_Values.Look(ref CountInstalled, "countInstalled", true);
             Scribe_Values.Look(ref UseInputFilter, "useInputFilter", false);
             Scribe_References.Look(ref Worker, "worker");
             Scribe_Values.Look(ref Name, "name", null);
+
+
+            // Backward compatibilty, combine all settings into inventory
+            bool CountWornApparel = false, CountEquippedWeapons = false;
+            Scribe_Values.Look(ref CountWornApparel, "countWornApparel", false);
+            Scribe_Values.Look(ref CountEquippedWeapons, "countEquippedWeapons", false);
+            CountInventory = CountInventory || CountWornApparel || CountEquippedWeapons;
 
             // Stockpiles need special treatment; they cannot be referenced.
             if (Scribe.mode == LoadSaveMode.Saving)

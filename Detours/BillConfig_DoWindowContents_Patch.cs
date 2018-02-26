@@ -6,6 +6,7 @@ using Harmony;
 using RimWorld;
 using UnityEngine;
 using Verse;
+using ImprovedWorkbenches.Filtering;
 
 namespace ImprovedWorkbenches
 {
@@ -404,16 +405,8 @@ namespace ImprovedWorkbenches
                     SimpleCheckBox("CountCorpseClothes", ref extendedBillData.AllowDeadmansApparel);
             }
 
-            // Worn Apparel Filter (includes Shield Belts which cannot be Deadman)
-            if (thingDef.IsApparel || thingDef == ThingDefOf.Apparel_ShieldBelt)
-                SimpleCheckBox("CountEquippedClothes", ref extendedBillData.CountWornApparel);
-
-            // Equipped weapon count filter
-            else if (thingDef.IsWeapon)
-                SimpleCheckBox("CountEquippedWeapons", ref extendedBillData.CountEquippedWeapons);
-
-            // Items in Inventory filter
-            else if(thingDef.EverHaulable || (thingDef.minifiedDef?.EverHaulable ?? false))
+            // Inventory Filter
+            if (StatFilterWrapper.GoesInInventory(thingDef))
                 SimpleCheckBox("CountInventory", ref extendedBillData.CountInventory);
         }
 

@@ -28,32 +28,26 @@ namespace ImprovedWorkbenches.Filtering
                 || _isQualityFilterNeeded
                 || _extendedBillData.UsesCountingStockpile()
                 || ShouldCheckInventory(thingDef)
-                || ShouldCheckWornClothes(thingDef)
-                || ShouldCheckEquippedWeapons(thingDef)
                 || ShouldCheckDeadman(thingDef)
                 || thingDef.Minifiable;
         }
 
         public bool ShouldCheckInventory(ThingDef thingDef)
         {
-            return (_extendedBillData.CountInventory && (thingDef.EverHaulable || (thingDef.minifiedDef?.EverHaulable ?? false)))
-                || ShouldCheckWornClothes(thingDef)
-                || ShouldCheckEquippedWeapons(thingDef);
+            return _extendedBillData.CountInventory && GoesInInventory(thingDef);
         }
-        
-        public bool ShouldCheckWornClothes(ThingDef thingDef)
+
+        public static bool GoesInInventory(ThingDef thingDef)
         {
-            return _extendedBillData.CountWornApparel && (thingDef.IsApparel || thingDef == ThingDefOf.Apparel_ShieldBelt);
+            // Probably redundant, but I'm sure something out there doesn't match O_o
+            return (thingDef.IsApparel || thingDef == ThingDefOf.Apparel_ShieldBelt ||
+                thingDef.IsWeapon ||
+                (thingDef.minifiedDef?.EverHaulable ?? thingDef.EverHaulable));
         }
 
         public bool ShouldCheckDeadman(ThingDef thingDef)
         {
             return !_extendedBillData.AllowDeadmansApparel && thingDef.IsApparel;
-        }
-
-        public bool ShouldCheckEquippedWeapons(ThingDef thingDef)
-        {
-            return _extendedBillData.CountEquippedWeapons && thingDef.IsWeapon;
         }
 
         public bool ShouldCheckMap(ThingDef thingDef)

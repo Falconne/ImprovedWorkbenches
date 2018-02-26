@@ -41,9 +41,9 @@
 	
 	<IW.CountCorpseClothesLabel>计入尸体的衣物</IW.CountCorpseClothesLabel>
 	<IW.CountCorpseClothesDesc>从尸体上扒下来衣物也会被计入</IW.CountCorpseClothesDesc>
-	
-	<IW.CountEquippedClothesLabel>计入已装备的衣物</IW.CountEquippedClothesLabel>
-	<IW.CountEquippedClothesDesc>已经被殖民者装备的衣物也会被计入</IW.CountEquippedClothesDesc>
+
+	<IW.CountInventoryLabel>计入已装备的衣物</IW.CountInventoryLabel>
+	<IW.CountInventoryDesc>已经被殖民者装备的衣物也会被计入</IW.CountInventoryDesc>
 
 	<IW.OpenPreviousBillTip>打开这个工作台的上一个任务清单</IW.OpenPreviousBillTip>
 	
