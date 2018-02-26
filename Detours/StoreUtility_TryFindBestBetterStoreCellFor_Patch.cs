@@ -29,7 +29,8 @@ namespace ImprovedWorkbenches
                 return true;
 
             var stockPile = extendedBillData.GetTakeToStockpile();
-            if (!stockPile.settings.AllowedToAccept(t))
+            if (!stockPile.settings.AllowedToAccept(t)
+                || stockPile.Map != carrier.Map)    //Linked bill to another map?
                 return true;
 
             var cellsList = stockPile.GetSlotGroup().CellsList;

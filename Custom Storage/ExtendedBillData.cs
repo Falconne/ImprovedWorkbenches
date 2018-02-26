@@ -17,6 +17,9 @@ namespace ImprovedWorkbenches
         public Pawn Worker;
         public string Name;
 
+        public Map Map;
+        private int MapId = -1;
+
         private Zone_Stockpile _countingStockpile;
         private string _countingStockpileName = "null";
 
@@ -30,6 +33,8 @@ namespace ImprovedWorkbenches
         // Constructor for migrating old data storage format to new method.
         public ExtendedBillData(Bill_Production bill)
         {
+            Map = bill.Map;
+
             var billWithWorkerFilter = bill as IBillWithWorkerFilter;
             Worker = billWithWorkerFilter.GetWorker();
 
@@ -62,6 +67,7 @@ namespace ImprovedWorkbenches
 
         public void SetTakeToStockpile(Zone_Stockpile stockpile)
         {
+            Map = stockpile.Map;
             _takeToStockpile = stockpile;
         }
 
@@ -82,6 +88,7 @@ namespace ImprovedWorkbenches
 
         public void SetCountingStockpile(Zone_Stockpile stockpile)
         {
+            Map = stockpile.Map;
             _countingStockpile = stockpile;
         }
 
@@ -105,14 +112,19 @@ namespace ImprovedWorkbenches
             CountInstalled = other.CountInstalled;
             UseInputFilter = other.UseInputFilter;
             Worker = other.Worker;
-            _countingStockpile = other._countingStockpile;
-            _takeToStockpile = other._takeToStockpile;
+            if (this.Map == other.Map)
+            {
+                _countingStockpile = other._countingStockpile;
+                _takeToStockpile = other._takeToStockpile;
+            }
             if (cloneName)
                 Name = other.Name;
         }
 
         public void SetDefaultFilter(Bill_Production bill)
         {
+            Map = bill.Map;
+
             var thingDef = bill.recipe.products.First().thingDef;
             OutputFilter.SetDisallowAll();
             OutputFilter.SetAllow(thingDef, true);
@@ -147,22 +159,26 @@ namespace ImprovedWorkbenches
             {
                 _countingStockpileName = _countingStockpile?.label ?? "null";
                 _takeToStockpileName = _takeToStockpile?.label ?? "null";
+                MapId = Map?.uniqueID ?? -1;
             }
 
             Scribe_Values.Look(ref _countingStockpileName, "countingStockpile", "null");
             Scribe_Values.Look(ref _takeToStockpileName, "takeToStockpile", "null");
+            Scribe_Values.Look(ref MapId, "MapId", -1);
 
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {
+                Map = Find.Maps.FirstOrDefault(m => m.uniqueID == MapId) ?? Find.VisibleMap;
+
                 _countingStockpile = _countingStockpileName == "null"
                     ? null
-                    : Find.VisibleMap.zoneManager.AllZones.FirstOrDefault(z =>
+                    : Map.zoneManager.AllZones.FirstOrDefault(z =>
                         z is Zone_Stockpile && z.label == _countingStockpileName)
                         as Zone_Stockpile;
 
                 _takeToStockpile = _takeToStockpileName == "null"
                     ? null
-                    : Find.VisibleMap.zoneManager.AllZones.FirstOrDefault(z =>
+                    : Map.zoneManager.AllZones.FirstOrDefault(z =>
                             z is Zone_Stockpile && z.label == _takeToStockpileName)
                         as Zone_Stockpile;
             }
