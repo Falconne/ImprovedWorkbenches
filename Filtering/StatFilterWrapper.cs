@@ -30,7 +30,8 @@ namespace ImprovedWorkbenches.Filtering
                 || ShouldCheckInventory(thingDef)
                 || ShouldCheckWornClothes(thingDef)
                 || ShouldCheckEquippedWeapons(thingDef)
-                || ShouldCheckDeadman(thingDef);
+                || ShouldCheckDeadman(thingDef)
+                || thingDef.Minifiable;
         }
 
         public bool ShouldCheckInventory(ThingDef thingDef)
@@ -53,6 +54,11 @@ namespace ImprovedWorkbenches.Filtering
         public bool ShouldCheckEquippedWeapons(ThingDef thingDef)
         {
             return _extendedBillData.CountEquippedWeapons && thingDef.IsWeapon;
+        }
+
+        public bool ShouldCheckMap(ThingDef thingDef)
+        {
+            return (_extendedBillData.CountInstalled && thingDef.Minifiable) || !thingDef.Minifiable;
         }
 
         public bool DoesThingOnMapMatchFilter(ThingFilter ingredientFilter, Thing thing)

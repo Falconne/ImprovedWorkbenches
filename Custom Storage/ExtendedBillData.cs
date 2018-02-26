@@ -12,6 +12,7 @@ namespace ImprovedWorkbenches
         public bool CountInventory;
         public bool CountWornApparel;
         public bool CountEquippedWeapons;
+        public bool CountInstalled;
         public bool UseInputFilter;
         public Pawn Worker;
         public string Name;
@@ -101,6 +102,7 @@ namespace ImprovedWorkbenches
             CountInventory = other.CountInventory;
             CountWornApparel = other.CountWornApparel;
             CountEquippedWeapons = other.CountEquippedWeapons;
+            CountInstalled = other.CountInstalled;
             UseInputFilter = other.UseInputFilter;
             Worker = other.Worker;
             _countingStockpile = other._countingStockpile;
@@ -135,6 +137,7 @@ namespace ImprovedWorkbenches
             Scribe_Values.Look(ref CountInventory, "countInventory", false);
             Scribe_Values.Look(ref CountWornApparel, "countWornApparel", false);
             Scribe_Values.Look(ref CountEquippedWeapons, "countEquippedWeapons", false);
+            Scribe_Values.Look(ref CountInstalled, "countInstalled", true);
             Scribe_Values.Look(ref UseInputFilter, "useInputFilter", false);
             Scribe_References.Look(ref Worker, "worker");
             Scribe_Values.Look(ref Name, "name", null);

@@ -46,8 +46,6 @@ namespace ImprovedWorkbenches
                         __result++;
                     }
                 }
-
-                return false;
             }
 
             SpecialThingFilterWorker_NonDeadmansApparel nonDeadmansApparelFilter = null;
@@ -60,17 +58,19 @@ namespace ImprovedWorkbenches
                     nonDeadmansApparelFilter = null;
             }
 
-
-            var thingList = bill.Map.listerThings.ThingsOfDef(productThingDef).ToList();
-            foreach (var thing in thingList)
+            if (statFilterWrapper.ShouldCheckMap(productThingDef))
             {
-                if (!statFilterWrapper.DoesThingOnMapMatchFilter(bill.ingredientFilter, thing))
-                    continue;
+                var thingList = bill.Map.listerThings.ThingsOfDef(productThingDef).ToList();
+                foreach (var thing in thingList)
+                {
+                    if (!statFilterWrapper.DoesThingOnMapMatchFilter(bill.ingredientFilter, thing))
+                        continue;
 
-                if (nonDeadmansApparelFilter != null && !nonDeadmansApparelFilter.Matches(thing))
-                    continue;
+                    if (nonDeadmansApparelFilter != null && !nonDeadmansApparelFilter.Matches(thing))
+                        continue;
 
-                __result += thing.stackCount;
+                    __result += thing.stackCount;
+                }
             }
 
             //Who could have this Thing
