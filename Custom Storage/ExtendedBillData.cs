@@ -9,6 +9,7 @@ namespace ImprovedWorkbenches
     {
         public ThingFilter OutputFilter = new ThingFilter();
         public bool AllowDeadmansApparel;
+        public bool CountInventory;
         public bool CountWornApparel;
         public bool CountEquippedWeapons;
         public bool UseInputFilter;
@@ -97,6 +98,7 @@ namespace ImprovedWorkbenches
         {
             OutputFilter.CopyAllowancesFrom(other.OutputFilter);
             AllowDeadmansApparel = other.AllowDeadmansApparel;
+            CountInventory = other.CountInventory;
             CountWornApparel = other.CountWornApparel;
             CountEquippedWeapons = other.CountEquippedWeapons;
             UseInputFilter = other.UseInputFilter;
@@ -130,6 +132,7 @@ namespace ImprovedWorkbenches
         {
             Scribe_Deep.Look(ref OutputFilter, "outputFilter", new object[0]);
             Scribe_Values.Look(ref AllowDeadmansApparel, "allowDeadmansApparel", false);
+            Scribe_Values.Look(ref CountInventory, "countInventory", false);
             Scribe_Values.Look(ref CountWornApparel, "countWornApparel", false);
             Scribe_Values.Look(ref CountEquippedWeapons, "countEquippedWeapons", false);
             Scribe_Values.Look(ref UseInputFilter, "useInputFilter", false);

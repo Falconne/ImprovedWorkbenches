@@ -408,7 +408,7 @@ namespace ImprovedWorkbenches
             }
 
             // Equipped weapon count filter
-            if (thingDef.IsWeapon)
+            else if (thingDef.IsWeapon)
             {
                 y += 26;
                 var rect5 = new Rect(0f, y, columnWidth, buttonHeight);
@@ -416,6 +416,16 @@ namespace ImprovedWorkbenches
                     ref extendedBillData.CountEquippedWeapons);
                 TooltipHandler.TipRegion(rect5,
                     "IW.CountEquippedWeaponsDesc".Translate());
+            }
+
+            else if(thingDef.EverHaulable || (thingDef.minifiedDef?.EverHaulable ?? false))
+            {
+                y += 26;
+                var rect6 = new Rect(0f, y, columnWidth, buttonHeight);
+                Widgets.CheckboxLabeled(rect6, "IW.CountInventoryLabel".Translate(),
+                    ref extendedBillData.CountInventory);
+                TooltipHandler.TipRegion(rect6,
+                    "IW.CountInventoryDesc".Translate());
             }
         }
 

@@ -27,14 +27,27 @@ namespace ImprovedWorkbenches.Filtering
                 || _isHitpointsFilterNeeded
                 || _isQualityFilterNeeded
                 || _extendedBillData.UsesCountingStockpile()
+                || ShouldCheckInventory(thingDef)
                 || ShouldCheckWornClothes(thingDef)
                 || ShouldCheckEquippedWeapons(thingDef)
-                || (thingDef.IsApparel && !_extendedBillData.AllowDeadmansApparel);
+                || ShouldCheckDeadman(thingDef);
         }
 
+        public bool ShouldCheckInventory(ThingDef thingDef)
+        {
+            return (_extendedBillData.CountInventory && (thingDef.EverHaulable || (thingDef.minifiedDef?.EverHaulable ?? false)))
+                || ShouldCheckWornClothes(thingDef)
+                || ShouldCheckEquippedWeapons(thingDef);
+        }
+        
         public bool ShouldCheckWornClothes(ThingDef thingDef)
         {
             return _extendedBillData.CountWornApparel && (thingDef.IsApparel || thingDef == ThingDefOf.Apparel_ShieldBelt);
+        }
+
+        public bool ShouldCheckDeadman(ThingDef thingDef)
+        {
+            return !_extendedBillData.AllowDeadmansApparel && thingDef.IsApparel;
         }
 
         public bool ShouldCheckEquippedWeapons(ThingDef thingDef)

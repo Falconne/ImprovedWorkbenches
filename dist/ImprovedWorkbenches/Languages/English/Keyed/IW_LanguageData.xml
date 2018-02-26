@@ -42,6 +42,9 @@
   <IW.CountCorpseClothesLabel>Count corpse clothes</IW.CountCorpseClothesLabel>
   <IW.CountCorpseClothesDesc>Include corpse worn clothing in item count</IW.CountCorpseClothesDesc>
 
+  <IW.CountInventoryLabel>Count carried items</IW.CountInventoryLabel>
+  <IW.CountInventoryDesc>Also count items inventories or being carried</IW.CountInventoryDesc>
+
   <IW.CountEquippedClothesLabel>Count equipped clothes</IW.CountEquippedClothesLabel>
   <IW.CountEquippedClothesDesc>Also count clothes currently worn by colonists</IW.CountEquippedClothesDesc>
 

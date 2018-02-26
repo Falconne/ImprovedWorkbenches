@@ -22,23 +22,13 @@ namespace ImprovedWorkbenches
 
             var productThingDef = bill.recipe.products.First().thingDef;
             var isThingAResource = productThingDef.CountAsResource;
-            if (isThingAResource && !extendedBillData.UsesCountingStockpile())
+            if (isThingAResource && !extendedBillData.UsesCountingStockpile() && !extendedBillData.CountInventory)
                 return true;
 
             var statFilterWrapper = new StatFilterWrapper(extendedBillData);
 
             if (!statFilterWrapper.IsAnyFilteringNeeded(productThingDef))
                 return true;
-
-            SpecialThingFilterWorker_NonDeadmansApparel nonDeadmansApparelFilter = null;
-            if (!extendedBillData.AllowDeadmansApparel && productThingDef.IsApparel)
-            {
-                // We want to filter out corpse worn apparel
-                nonDeadmansApparelFilter = new SpecialThingFilterWorker_NonDeadmansApparel();
-                if (!nonDeadmansApparelFilter.CanEverMatch(productThingDef))
-                    // Not apparel, don't bother checking
-                    nonDeadmansApparelFilter = null;
-            }
 
 
             __result = 0;
@@ -60,6 +50,17 @@ namespace ImprovedWorkbenches
                 return false;
             }
 
+            SpecialThingFilterWorker_NonDeadmansApparel nonDeadmansApparelFilter = null;
+            if (statFilterWrapper.ShouldCheckDeadman(productThingDef))
+            {
+                // We want to filter out corpse worn apparel
+                nonDeadmansApparelFilter = new SpecialThingFilterWorker_NonDeadmansApparel();
+                if (!nonDeadmansApparelFilter.CanEverMatch(productThingDef))
+                    // Not apparel, don't bother checking
+                    nonDeadmansApparelFilter = null;
+            }
+
+
             var thingList = bill.Map.listerThings.ThingsOfDef(productThingDef).ToList();
             foreach (var thing in thingList)
             {
@@ -72,50 +73,34 @@ namespace ImprovedWorkbenches
                 __result += thing.stackCount;
             }
 
-            if (statFilterWrapper.ShouldCheckWornClothes(productThingDef))
+            //Who could have this Thing
+            IEnumerable<Pawn> pawns = Find.VisibleMap.mapPawns.SpawnedPawnsInFaction(Faction.OfPlayer).Where(
+                p => p.IsFreeColonist || !p.IsColonist);    //Filter out prisoners, include animals (for inventory)
+
+            //Gather the Things
+            List<Thing> pawnThings = new List<Thing>();
+            foreach (var pawn in pawns)
             {
-                foreach (var colonist in Find.VisibleMap.mapPawns.FreeColonists)
+                if (statFilterWrapper.ShouldCheckEquippedWeapons(productThingDef) && pawn.equipment != null)
+                    pawnThings.AddRange(pawn.equipment.AllEquipmentListForReading.Cast<Thing>());
+                if (statFilterWrapper.ShouldCheckWornClothes(productThingDef) && pawn.apparel != null)
+                    pawnThings.AddRange(pawn.apparel.WornApparel.Cast<Thing>());
+                if (statFilterWrapper.ShouldCheckInventory(productThingDef))
                 {
-                    foreach (var apparel in colonist.apparel.WornApparel)
-                    {
-                        if (apparel.def != productThingDef)
-                            continue;
-
-                        if (statFilterWrapper.DoesThingMatchFilter(bill.ingredientFilter, apparel))
-                            __result++;
-                    }
-                    foreach (var apparel in colonist.inventory.innerContainer)
-                    {
-                        if (apparel.def != productThingDef)
-                            continue;
-
-                        if (statFilterWrapper.DoesThingMatchFilter(bill.ingredientFilter, apparel))
-                            __result++;
-                    }
+                    if (pawn.inventory != null)
+                        pawnThings.AddRange(pawn.inventory.innerContainer);
+                    if (pawn.carryTracker != null)
+                        pawnThings.AddRange(pawn.carryTracker.innerContainer);
                 }
             }
 
-            if (statFilterWrapper.ShouldCheckEquippedWeapons(productThingDef))
+            //Count the Things
+            foreach (Thing i in pawnThings)
             {
-                foreach (var colonist in Find.VisibleMap.mapPawns.FreeColonists)
-                {
-                    foreach (var weapon in colonist.equipment.AllEquipmentListForReading)
-                    {
-                        if (weapon.def != productThingDef)
-                            continue;
-
-                        if (statFilterWrapper.DoesThingMatchFilter(bill.ingredientFilter, weapon))
-                            __result++;
-                    }
-                    foreach (var weapon in colonist.inventory.innerContainer)
-                    {
-                        if (weapon.def != productThingDef)
-                            continue;
-
-                        if (statFilterWrapper.DoesThingMatchFilter(bill.ingredientFilter, weapon))
-                            __result++;
-                    }
-                }
+                Thing item = MinifyUtility.GetInnerIfMinified(i);
+                if ((item.def == productThingDef && statFilterWrapper.DoesThingMatchFilter(bill.ingredientFilter, item)) &&
+                    (nonDeadmansApparelFilter?.Matches(item) ?? true))
+                    __result += item.stackCount;
             }
 
             return false;
