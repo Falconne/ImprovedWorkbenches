@@ -45,6 +45,9 @@
   <IW.CountEquippedClothesLabel>装備中の衣服も含める</IW.CountEquippedClothesLabel>
   <IW.CountEquippedClothesDesc>入植者が現在着ている服も数えます</IW.CountEquippedClothesDesc>
 
+  <IW.CountEquippedWeaponsLabel>装備アイテムも含める</IW.CountEquippedWeaponsLabel>
+  <IW.CountEquippedWeaponsDesc>入植者が現在装備しているアイテムや武器も数えます</IW.CountEquippedWeaponsDesc>
+
   <IW.OpenPreviousBillTip>前の加工命令を開く</IW.OpenPreviousBillTip>
 
   <IW.OpenNextBillTip>次の加工命令を開く</IW.OpenNextBillTip>
@@ -65,8 +68,8 @@
   <IW.FoundOldBillText>古い加工命令を探す</IW.FoundOldBillText>
   <IW.MigratingToNewFormat>新しい加工命令形式に移行します</IW.MigratingToNewFormat>
 
-  <IW.AutoOpenBillTabLabel>自動的に加工タブを開く</IW.AutoOpenBillTabLabel>
-  <IW.AutoOpenBillTabDesc>作業台が選択されると、[加工命令]タブがすぐに開きます</IW.AutoOpenBillTabDesc>
+  <IW.AutoOpenBillTabLabel>自動的に加工と在庫タブを開く</IW.AutoOpenBillTabLabel>
+  <IW.AutoOpenBillTabDesc>作業台が選択されると、[加工命令](または在庫)タブがすぐに開きます</IW.AutoOpenBillTabDesc>
 
   <IW.ShowItemCountInFilterLabel>材料に在庫数を表示</IW.ShowItemCountInFilterLabel>
   <IW.ShowItemCountInFilterDesc>加工命令の詳細に表示される原材料タブに、アイテムの在庫数を表示します</IW.ShowItemCountInFilterDesc>
