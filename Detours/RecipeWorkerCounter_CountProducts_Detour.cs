@@ -31,10 +31,11 @@ namespace ImprovedWorkbenches
                 return true;
 
 
+            Map map = bill.Map;
             __result = 0;
             if (productThingDef.Minifiable)
             {
-                var minifiedThings = bill.Map.listerThings.ThingsInGroup(ThingRequestGroup.MinifiedThing);
+                var minifiedThings = map.listerThings.ThingsInGroup(ThingRequestGroup.MinifiedThing);
                 foreach (var thing in minifiedThings)
                 {
                     var minifiedThing = (MinifiedThing)thing;
@@ -60,7 +61,7 @@ namespace ImprovedWorkbenches
 
             if (statFilterWrapper.ShouldCheckMap(productThingDef))
             {
-                var thingList = bill.Map.listerThings.ThingsOfDef(productThingDef).ToList();
+                var thingList = map.listerThings.ThingsOfDef(productThingDef).ToList();
                 foreach (var thing in thingList)
                 {
                     if (!statFilterWrapper.DoesThingOnMapMatchFilter(bill.ingredientFilter, thing))
@@ -76,8 +77,31 @@ namespace ImprovedWorkbenches
             if (statFilterWrapper.ShouldCheckInventory(productThingDef))
             {
                 //Who could have this Thing
-                IEnumerable<Pawn> pawns = bill.Map.mapPawns.SpawnedPawnsInFaction(Faction.OfPlayer).Where(
-                    p => p.IsFreeColonist || !p.IsColonist);    //Filter out prisoners, include animals (for inventory)
+                List<Pawn> pawns = new List<Pawn>();
+
+                //Only this map, or a thorough global search
+                if (!statFilterWrapper.ShouldCheckAway(productThingDef))
+                {
+                    //Spawned only
+                    pawns.AddRange(map.mapPawns.SpawnedPawnsInFaction(Faction.OfPlayer)
+                        .Where(p => p.IsFreeColonist || !p.IsColonist));    //Filter out prisoners, include animals (for inventory)
+                }
+                else
+                {
+                    //Include unspawned (transport pods, cryptosleep, etc.)
+                    pawns.AddRange(map.mapPawns.PawnsInFaction(Faction.OfPlayer)
+                        .Where(p => p.IsFreeColonist || !p.IsColonist));
+
+                    // and caravans
+                    pawns.AddRange(Find.WorldPawns.AllPawnsAlive.Where(p => p.GetOriginMap() == map));
+
+                    // and at other maps (but who originated here)
+                    foreach (Map otherMap in Find.Maps.Where(m => m != map))
+                    {
+                        pawns.AddRange(otherMap.mapPawns.PawnsInFaction(Faction.OfPlayer)
+                            .Where(p => (p.IsFreeColonist || !p.IsColonist) && p.GetOriginMap() == map));
+                    }
+                }
 
                 List<Thing> pawnThings = new List<Thing>();
                 //Gather the Things

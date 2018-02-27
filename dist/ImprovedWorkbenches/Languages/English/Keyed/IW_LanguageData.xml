@@ -45,6 +45,9 @@
   <IW.CountInventoryLabel>Count colonist's items</IW.CountInventoryLabel>
   <IW.CountInventoryDesc>Also count items on any colonist or animal</IW.CountInventoryDesc>
 
+  <IW.CountAwayLabel>... Even when gone</IW.CountAwayLabel>
+  <IW.CountAwayDesc>Also count items on any colonist sent on a caravan, in transport pods, in cryptosleep chambers, or otherwise unavailable</IW.CountAwayDesc>
+
   <IW.CountInstalledLabel>Count installed items</IW.CountInstalledLabel>
   <IW.CountInstalledDesc>Also count items that have been installed as a building</IW.CountInstalledDesc>
 

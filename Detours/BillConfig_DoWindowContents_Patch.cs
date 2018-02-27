@@ -260,7 +260,6 @@ namespace ImprovedWorkbenches
 
             const float buttonHeight = 26f;
             const float smallButtonHeight = 24f;
-            var y = inRect.height - 248f + Text.LineHeight;
 
             // "Unpause when" level adjustment buttons
             if (billRaw.pauseWhenSatisfied)
@@ -297,9 +296,9 @@ namespace ImprovedWorkbenches
                 TooltipHandler.TipRegion(keyboardRect, "IW.RenameTip".Translate());
             }
 
+            var y = inRect.height - 245f + Text.LineHeight;
             // Restrict counting to specific stockpile
             {
-                y += 33;
                 var subRect = new Rect(0f, y, columnWidth, buttonHeight);
                 var anyStockpileText = "IW.CountOnStockpilesText".Translate();
                 var currentCountingStockpileLabel = extendedBillData.UsesCountingStockpile()
@@ -405,7 +404,11 @@ namespace ImprovedWorkbenches
 
             // Inventory Filter
             if (StatFilterWrapper.GoesInInventory(thingDef))
+            {
                 SimpleCheckBox("CountInventory", ref extendedBillData.CountInventory);
+                if (extendedBillData.CountInventory)
+                    SimpleCheckBox("CountAway", ref extendedBillData.CountAway);
+            }
         }
 
         private static void DrawWorkTableNavigation(Dialog_BillConfig dialog, Bill_Production bill, Rect inRect)

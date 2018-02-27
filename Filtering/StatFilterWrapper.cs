@@ -37,6 +37,11 @@ namespace ImprovedWorkbenches.Filtering
             return _extendedBillData.CountInventory && GoesInInventory(thingDef);
         }
 
+        public bool ShouldCheckAway(ThingDef thingDef)
+        {
+            return _extendedBillData.CountAway && GoesInInventory(thingDef);
+        }
+
         public static bool GoesInInventory(ThingDef thingDef)
         {
             // Probably redundant, but I'm sure something out there doesn't match O_o
