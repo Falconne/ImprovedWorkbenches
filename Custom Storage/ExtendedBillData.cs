@@ -16,7 +16,6 @@ namespace ImprovedWorkbenches
         public string Name;
 
         public Map Map;
-        private int MapId = -1;
 
         private Zone_Stockpile _countingStockpile;
         private string _countingStockpileName = "null";
@@ -160,17 +159,14 @@ namespace ImprovedWorkbenches
             {
                 _countingStockpileName = _countingStockpile?.label ?? "null";
                 _takeToStockpileName = _takeToStockpile?.label ?? "null";
-                MapId = Map?.uniqueID ?? -1;
             }
 
             Scribe_Values.Look(ref _countingStockpileName, "countingStockpile", "null");
             Scribe_Values.Look(ref _takeToStockpileName, "takeToStockpile", "null");
-            Scribe_Values.Look(ref MapId, "MapId", -1);
+            Scribe_References.Look(ref Map, "BillMap");
 
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {
-                Map = Find.Maps.FirstOrDefault(m => m.uniqueID == MapId) ?? Find.VisibleMap;
-
                 _countingStockpile = _countingStockpileName == "null"
                     ? null
                     : Map.zoneManager.AllZones.FirstOrDefault(z =>
