@@ -22,7 +22,7 @@ namespace ImprovedWorkbenches
 
             var productThingDef = bill.recipe.products.First().thingDef;
             var isThingAResource = productThingDef.CountAsResource;
-            if (isThingAResource && !extendedBillData.UsesCountingStockpile() && !extendedBillData.CountInventory)
+            if (isThingAResource && !extendedBillData.UsesCountingStockpile())
                 return true;
 
             var statFilterWrapper = new StatFilterWrapper(extendedBillData);
@@ -48,19 +48,11 @@ namespace ImprovedWorkbenches
                     }
                 }
             }
-
-            SpecialThingFilterWorker_NonDeadmansApparel nonDeadmansApparelFilter = null;
-            if (statFilterWrapper.ShouldCheckDeadman(productThingDef))
-            {
-                // We want to filter out corpse worn apparel
-                nonDeadmansApparelFilter = new SpecialThingFilterWorker_NonDeadmansApparel();
-                if (!nonDeadmansApparelFilter.CanEverMatch(productThingDef))
-                    // Not apparel, don't bother checking
-                    nonDeadmansApparelFilter = null;
-            }
-
             if (statFilterWrapper.ShouldCheckMap(productThingDef))
             {
+                SpecialThingFilterWorker_NonDeadmansApparel nonDeadmansApparelFilter =
+                    statFilterWrapper.TryGetDeadmanFilter(productThingDef);
+
                 var thingList = map.listerThings.ThingsOfDef(productThingDef).ToList();
                 foreach (var thing in thingList)
                 {
@@ -74,8 +66,26 @@ namespace ImprovedWorkbenches
                 }
             }
 
+            return false;
+        }
+
+        [HarmonyPostfix]
+        static void Postfix(ref Bill_Production bill, ref int __result)
+        {
+            var extendedBillData = Main.Instance.GetExtendedBillDataStorage().GetExtendedDataFor(bill);
+            if (extendedBillData == null)
+                return;
+
+            var statFilterWrapper = new StatFilterWrapper(extendedBillData);
+            var productThingDef = bill.recipe.products.First().thingDef;
+
+            if (!statFilterWrapper.IsAnyFilteringNeeded(productThingDef))
+                return;
+
             if (statFilterWrapper.ShouldCheckInventory(productThingDef))
             {
+                Map map = bill.Map;
+
                 //Who could have this Thing
                 List<Pawn> pawns = new List<Pawn>();
 
@@ -117,6 +127,9 @@ namespace ImprovedWorkbenches
                         pawnThings.AddRange(pawn.carryTracker.innerContainer);
                 }
 
+                SpecialThingFilterWorker_NonDeadmansApparel nonDeadmansApparelFilter =
+                    statFilterWrapper.TryGetDeadmanFilter(productThingDef);
+
                 //Count the Things
                 foreach (Thing i in pawnThings)
                 {
@@ -126,8 +139,6 @@ namespace ImprovedWorkbenches
                         __result += item.stackCount;
                 }
             }
-
-            return false;
         }
     }
 }

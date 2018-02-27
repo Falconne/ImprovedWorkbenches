@@ -50,6 +50,18 @@ namespace ImprovedWorkbenches.Filtering
                 (thingDef.minifiedDef?.EverHaulable ?? thingDef.EverHaulable));
         }
 
+        public SpecialThingFilterWorker_NonDeadmansApparel TryGetDeadmanFilter(ThingDef thingDef)
+        {
+            if (ShouldCheckDeadman(thingDef))
+            {
+                SpecialThingFilterWorker_NonDeadmansApparel nonDeadmansApparelFilter = new SpecialThingFilterWorker_NonDeadmansApparel();
+                if (nonDeadmansApparelFilter.CanEverMatch(thingDef))
+                    // Not apparel, don't bother checking
+                    return nonDeadmansApparelFilter;
+            }
+            return null;
+        }
+
         public bool ShouldCheckDeadman(ThingDef thingDef)
         {
             return !_extendedBillData.AllowDeadmansApparel && thingDef.IsApparel;
