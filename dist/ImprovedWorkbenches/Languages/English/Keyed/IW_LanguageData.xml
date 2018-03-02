@@ -42,11 +42,14 @@
   <IW.CountCorpseClothesLabel>Count corpse clothes</IW.CountCorpseClothesLabel>
   <IW.CountCorpseClothesDesc>Include corpse worn clothing in item count</IW.CountCorpseClothesDesc>
 
-  <IW.CountEquippedClothesLabel>Count equipped clothes</IW.CountEquippedClothesLabel>
-  <IW.CountEquippedClothesDesc>Also count clothes currently worn by colonists</IW.CountEquippedClothesDesc>
+  <IW.CountInventoryLabel>Count colonist's items</IW.CountInventoryLabel>
+  <IW.CountInventoryDesc>Also count items on any colonist or animal</IW.CountInventoryDesc>
 
-  <IW.CountEquippedWeaponsLabel>Count equipped items</IW.CountEquippedWeaponsLabel>
-  <IW.CountEquippedWeaponsDesc>Also count items/weapons currently equipped by colonists</IW.CountEquippedWeaponsDesc>
+  <IW.CountAwayLabel>... Even when gone</IW.CountAwayLabel>
+  <IW.CountAwayDesc>Also count items on any colonist sent on a caravan, in transport pods, in cryptosleep chambers, or otherwise unavailable</IW.CountAwayDesc>
+
+  <IW.CountInstalledLabel>Count installed items</IW.CountInstalledLabel>
+  <IW.CountInstalledDesc>Also count items that have been installed as a building</IW.CountInstalledDesc>
 
   <IW.OpenPreviousBillTip>Open previous bill in workbench</IW.OpenPreviousBillTip>
 

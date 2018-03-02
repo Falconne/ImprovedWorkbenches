@@ -41,9 +41,9 @@
 	
 	<IW.CountCorpseClothesLabel>Учитывать одежду с трупов</IW.CountCorpseClothesLabel>
 	<IW.CountCorpseClothesDesc>Включать одежду на трупах при учете предметов</IW.CountCorpseClothesDesc>
-	
-	<IW.CountEquippedClothesLabel>Учитывать одежду на колонистах</IW.CountEquippedClothesLabel>
-	<IW.CountEquippedClothesDesc>Учитывать предметы одежды, на данный момент, надетые на колонистов</IW.CountEquippedClothesDesc>
+
+	<IW.CountInventoryLabel>Учитывать одежду на колонистах</IW.CountInventoryLabel>
+	<IW.CountInventoryDesc>Учитывать предметы одежды, на данный момент, надетые на колонистов</IW.CountInventoryDesc>
 
 	<IW.OpenPreviousBillTip>Открыть предыдущий проект на верстаке</IW.OpenPreviousBillTip>
 	

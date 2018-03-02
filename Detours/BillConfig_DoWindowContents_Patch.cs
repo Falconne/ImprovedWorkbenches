@@ -6,6 +6,7 @@ using Harmony;
 using RimWorld;
 using UnityEngine;
 using Verse;
+using ImprovedWorkbenches.Filtering;
 
 namespace ImprovedWorkbenches
 {
@@ -259,7 +260,6 @@ namespace ImprovedWorkbenches
 
             const float buttonHeight = 26f;
             const float smallButtonHeight = 24f;
-            var y = inRect.height - 248f + Text.LineHeight;
 
             // "Unpause when" level adjustment buttons
             if (billRaw.pauseWhenSatisfied)
@@ -296,9 +296,9 @@ namespace ImprovedWorkbenches
                 TooltipHandler.TipRegion(keyboardRect, "IW.RenameTip".Translate());
             }
 
+            var y = inRect.height - 245f + Text.LineHeight;
             // Restrict counting to specific stockpile
             {
-                y += 33;
                 var subRect = new Rect(0f, y, columnWidth, buttonHeight);
                 var anyStockpileText = "IW.CountOnStockpilesText".Translate();
                 var currentCountingStockpileLabel = extendedBillData.UsesCountingStockpile()
@@ -347,11 +347,11 @@ namespace ImprovedWorkbenches
                 if (filter.allowedHitPointsConfigurable)
                 {
                     var allowedHitPointsPercents = filter.AllowedHitPointsPercents;
-                    var rect1 = new Rect(0f, y, columnWidth, buttonHeight);
-                    Widgets.FloatRange(rect1, 10, ref allowedHitPointsPercents, 0f, 1f,
+                    var subRect = new Rect(0f, y, columnWidth, buttonHeight);
+                    Widgets.FloatRange(subRect, 10, ref allowedHitPointsPercents, 0f, 1f,
                         "HitPoints", ToStringStyle.PercentZero);
 
-                    TooltipHandler.TipRegion(rect1,
+                    TooltipHandler.TipRegion(subRect,
                         "IW.HitPointsTip".Translate());
                     filter.AllowedHitPointsPercents = allowedHitPointsPercents;
                 }
@@ -359,10 +359,10 @@ namespace ImprovedWorkbenches
                 if (filter.allowedQualitiesConfigurable)
                 {
                     y += 33;
-                    var rect2 = new Rect(0f, y, columnWidth, buttonHeight);
+                    var subRect = new Rect(0f, y, columnWidth, buttonHeight);
                     var allowedQualityLevels = filter.AllowedQualityLevels;
-                    Widgets.QualityRange(rect2, 11, ref allowedQualityLevels);
-                    TooltipHandler.TipRegion(rect2,
+                    Widgets.QualityRange(subRect, 11, ref allowedQualityLevels);
+                    TooltipHandler.TipRegion(subRect,
                         "IW.QualityTip".Translate());
                     filter.AllowedQualityLevels = allowedQualityLevels;
                 }
@@ -371,54 +371,43 @@ namespace ImprovedWorkbenches
 
             y += 7;
 
-            // Use input ingredients for counted items filter
-            if (billRaw.ingredientFilter != null && thingDef.MadeFromStuff)
+            //Helper method for checkboxes
+            void SimpleCheckBoxTip(string label, ref bool setting, string tip)
             {
                 y += 26;
                 var subRect = new Rect(0f, y, columnWidth, buttonHeight);
-                Widgets.CheckboxLabeled(subRect, "IW.MatchInputIngredientsText".Translate(),
-                    ref extendedBillData.UseInputFilter);
+                Widgets.CheckboxLabeled(subRect, label.Translate(),
+                    ref setting);
 
-                TooltipHandler.TipRegion(subRect,
-                    "IW.IngredientsTip".Translate());
-            }
+                TooltipHandler.TipRegion(subRect, tip.Translate());
+            };
+            //Super helper method for string construction
+            void SimpleCheckBox(string label, ref bool setting)
+            { SimpleCheckBoxTip("IW." + label + "Label", ref setting, "IW." + label + "Desc"); }
 
+            // Use input ingredients for counted items filter
+            if (billRaw.ingredientFilter != null && thingDef.MadeFromStuff)
+                SimpleCheckBoxTip("IW.MatchInputIngredientsText", ref extendedBillData.UseInputFilter,
+                    "IW.MatchInputIngredientsTip");
+
+            //Installable filter
+            if (thingDef.Minifiable)
+                SimpleCheckBox("CountInstalled", ref extendedBillData.CountInstalled);
 
             // Deadmans clothing count filter
             if (thingDef.IsApparel)
             {
                 var nonDeadmansApparelFilter = new SpecialThingFilterWorker_NonDeadmansApparel();
                 if (nonDeadmansApparelFilter.CanEverMatch(thingDef))
-                {
-                    y += 26;
-                    var rect3 = new Rect(0f, y, columnWidth, buttonHeight);
-                    Widgets.CheckboxLabeled(rect3, "IW.CountCorpseClothesLabel".Translate(),
-                        ref extendedBillData.AllowDeadmansApparel);
-                    TooltipHandler.TipRegion(rect3,
-                        "IW.CountCorpseClothesDesc".Translate());
-                }
+                    SimpleCheckBox("CountCorpseClothes", ref extendedBillData.AllowDeadmansApparel);
             }
 
-            // Worn Apparel Filter (includes Shield Belts which cannot be Deadman)
-            if (thingDef.IsApparel || thingDef == ThingDefOf.Apparel_ShieldBelt)
-            { 
-                y += 26;
-                var rect4 = new Rect(0f, y, columnWidth, buttonHeight);
-                Widgets.CheckboxLabeled(rect4, "IW.CountEquippedClothesLabel".Translate(),
-                    ref extendedBillData.CountWornApparel);
-                TooltipHandler.TipRegion(rect4,
-                    "IW.CountEquippedClothesDesc".Translate());
-            }
-
-            // Equipped weapon count filter
-            if (thingDef.IsWeapon)
+            // Inventory Filter
+            if (StatFilterWrapper.GoesInInventory(thingDef))
             {
-                y += 26;
-                var rect5 = new Rect(0f, y, columnWidth, buttonHeight);
-                Widgets.CheckboxLabeled(rect5, "IW.CountEquippedWeaponsLabel".Translate(),
-                    ref extendedBillData.CountEquippedWeapons);
-                TooltipHandler.TipRegion(rect5,
-                    "IW.CountEquippedWeaponsDesc".Translate());
+                SimpleCheckBox("CountInventory", ref extendedBillData.CountInventory);
+                if (extendedBillData.CountInventory)
+                    SimpleCheckBox("CountAway", ref extendedBillData.CountAway);
             }
         }
 

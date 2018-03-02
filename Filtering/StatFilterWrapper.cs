@@ -27,19 +27,49 @@ namespace ImprovedWorkbenches.Filtering
                 || _isHitpointsFilterNeeded
                 || _isQualityFilterNeeded
                 || _extendedBillData.UsesCountingStockpile()
-                || ShouldCheckWornClothes(thingDef)
-                || ShouldCheckEquippedWeapons(thingDef)
-                || (thingDef.IsApparel && !_extendedBillData.AllowDeadmansApparel);
+                || ShouldCheckInventory(thingDef)
+                || ShouldCheckDeadman(thingDef)
+                || thingDef.Minifiable;
         }
 
-        public bool ShouldCheckWornClothes(ThingDef thingDef)
+        public bool ShouldCheckInventory(ThingDef thingDef)
         {
-            return _extendedBillData.CountWornApparel && (thingDef.IsApparel || thingDef == ThingDefOf.Apparel_ShieldBelt);
+            return _extendedBillData.CountInventory && GoesInInventory(thingDef);
         }
 
-        public bool ShouldCheckEquippedWeapons(ThingDef thingDef)
+        public bool ShouldCheckAway(ThingDef thingDef)
         {
-            return _extendedBillData.CountEquippedWeapons && thingDef.IsWeapon;
+            return _extendedBillData.CountAway && GoesInInventory(thingDef);
+        }
+
+        public static bool GoesInInventory(ThingDef thingDef)
+        {
+            // Probably redundant, but I'm sure something out there doesn't match O_o
+            return (thingDef.IsApparel || thingDef == ThingDefOf.Apparel_ShieldBelt ||
+                thingDef.IsWeapon ||
+                (thingDef.minifiedDef?.EverHaulable ?? thingDef.EverHaulable));
+        }
+
+        public SpecialThingFilterWorker_NonDeadmansApparel TryGetDeadmanFilter(ThingDef thingDef)
+        {
+            if (ShouldCheckDeadman(thingDef))
+            {
+                SpecialThingFilterWorker_NonDeadmansApparel nonDeadmansApparelFilter = new SpecialThingFilterWorker_NonDeadmansApparel();
+                if (nonDeadmansApparelFilter.CanEverMatch(thingDef))
+                    // Not apparel, don't bother checking
+                    return nonDeadmansApparelFilter;
+            }
+            return null;
+        }
+
+        public bool ShouldCheckDeadman(ThingDef thingDef)
+        {
+            return !_extendedBillData.AllowDeadmansApparel && thingDef.IsApparel;
+        }
+
+        public bool ShouldCheckMap(ThingDef thingDef)
+        {
+            return (_extendedBillData.CountInstalled && thingDef.Minifiable) || !thingDef.Minifiable;
         }
 
         public bool DoesThingOnMapMatchFilter(ThingFilter ingredientFilter, Thing thing)

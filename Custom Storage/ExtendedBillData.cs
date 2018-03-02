@@ -9,11 +9,14 @@ namespace ImprovedWorkbenches
     {
         public ThingFilter OutputFilter = new ThingFilter();
         public bool AllowDeadmansApparel;
-        public bool CountWornApparel;
-        public bool CountEquippedWeapons;
+        public bool CountInventory;
+        public bool CountAway;
+        public bool CountInstalled;
         public bool UseInputFilter;
         public Pawn Worker;
         public string Name;
+
+        public Map Map;
 
         private Zone_Stockpile _countingStockpile;
         private string _countingStockpileName = "null";
@@ -28,6 +31,8 @@ namespace ImprovedWorkbenches
         // Constructor for migrating old data storage format to new method.
         public ExtendedBillData(Bill_Production bill)
         {
+            Map = bill.Map;
+
             var billWithWorkerFilter = bill as IBillWithWorkerFilter;
             Worker = billWithWorkerFilter.GetWorker();
 
@@ -60,6 +65,7 @@ namespace ImprovedWorkbenches
 
         public void SetTakeToStockpile(Zone_Stockpile stockpile)
         {
+            Map = stockpile.Map;
             _takeToStockpile = stockpile;
         }
 
@@ -80,6 +86,7 @@ namespace ImprovedWorkbenches
 
         public void SetCountingStockpile(Zone_Stockpile stockpile)
         {
+            Map = stockpile.Map;
             _countingStockpile = stockpile;
         }
 
@@ -97,18 +104,24 @@ namespace ImprovedWorkbenches
         {
             OutputFilter.CopyAllowancesFrom(other.OutputFilter);
             AllowDeadmansApparel = other.AllowDeadmansApparel;
-            CountWornApparel = other.CountWornApparel;
-            CountEquippedWeapons = other.CountEquippedWeapons;
+            CountInventory = other.CountInventory;
+            CountAway = other.CountAway;
+            CountInstalled = other.CountInstalled;
             UseInputFilter = other.UseInputFilter;
             Worker = other.Worker;
-            _countingStockpile = other._countingStockpile;
-            _takeToStockpile = other._takeToStockpile;
+            if (this.Map == other.Map)
+            {
+                _countingStockpile = other._countingStockpile;
+                _takeToStockpile = other._takeToStockpile;
+            }
             if (cloneName)
                 Name = other.Name;
         }
 
         public void SetDefaultFilter(Bill_Production bill)
         {
+            Map = bill.Map;
+
             var thingDef = bill.recipe.products.First().thingDef;
             OutputFilter.SetDisallowAll();
             OutputFilter.SetAllow(thingDef, true);
@@ -130,11 +143,19 @@ namespace ImprovedWorkbenches
         {
             Scribe_Deep.Look(ref OutputFilter, "outputFilter", new object[0]);
             Scribe_Values.Look(ref AllowDeadmansApparel, "allowDeadmansApparel", false);
-            Scribe_Values.Look(ref CountWornApparel, "countWornApparel", false);
-            Scribe_Values.Look(ref CountEquippedWeapons, "countEquippedWeapons", false);
+            Scribe_Values.Look(ref CountInventory, "countInventory", false);
+            Scribe_Values.Look(ref CountAway, "countAway", false);
+            Scribe_Values.Look(ref CountInstalled, "countInstalled", true);
             Scribe_Values.Look(ref UseInputFilter, "useInputFilter", false);
             Scribe_References.Look(ref Worker, "worker");
             Scribe_Values.Look(ref Name, "name", null);
+
+
+            // Backward compatibilty, combine all settings into inventory
+            bool CountWornApparel = false, CountEquippedWeapons = false;
+            Scribe_Values.Look(ref CountWornApparel, "countWornApparel", false);
+            Scribe_Values.Look(ref CountEquippedWeapons, "countEquippedWeapons", false);
+            CountInventory = CountInventory || CountWornApparel || CountEquippedWeapons;
 
             // Stockpiles need special treatment; they cannot be referenced.
             if (Scribe.mode == LoadSaveMode.Saving)
@@ -145,18 +166,19 @@ namespace ImprovedWorkbenches
 
             Scribe_Values.Look(ref _countingStockpileName, "countingStockpile", "null");
             Scribe_Values.Look(ref _takeToStockpileName, "takeToStockpile", "null");
+            Scribe_References.Look(ref Map, "BillMap");
 
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {
                 _countingStockpile = _countingStockpileName == "null"
                     ? null
-                    : Find.VisibleMap.zoneManager.AllZones.FirstOrDefault(z =>
+                    : Map.zoneManager.AllZones.FirstOrDefault(z =>
                         z is Zone_Stockpile && z.label == _countingStockpileName)
                         as Zone_Stockpile;
 
                 _takeToStockpile = _takeToStockpileName == "null"
                     ? null
-                    : Find.VisibleMap.zoneManager.AllZones.FirstOrDefault(z =>
+                    : Map.zoneManager.AllZones.FirstOrDefault(z =>
                             z is Zone_Stockpile && z.label == _takeToStockpileName)
                         as Zone_Stockpile;
             }

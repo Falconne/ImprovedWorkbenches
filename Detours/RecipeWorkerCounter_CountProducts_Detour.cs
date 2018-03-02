@@ -30,21 +30,12 @@ namespace ImprovedWorkbenches
             if (!statFilterWrapper.IsAnyFilteringNeeded(productThingDef))
                 return true;
 
-            SpecialThingFilterWorker_NonDeadmansApparel nonDeadmansApparelFilter = null;
-            if (!extendedBillData.AllowDeadmansApparel && productThingDef.IsApparel)
-            {
-                // We want to filter out corpse worn apparel
-                nonDeadmansApparelFilter = new SpecialThingFilterWorker_NonDeadmansApparel();
-                if (!nonDeadmansApparelFilter.CanEverMatch(productThingDef))
-                    // Not apparel, don't bother checking
-                    nonDeadmansApparelFilter = null;
-            }
 
-
+            Map map = bill.Map;
             __result = 0;
             if (productThingDef.Minifiable)
             {
-                var minifiedThings = bill.Map.listerThings.ThingsInGroup(ThingRequestGroup.MinifiedThing);
+                var minifiedThings = map.listerThings.ThingsInGroup(ThingRequestGroup.MinifiedThing);
                 foreach (var thing in minifiedThings)
                 {
                     var minifiedThing = (MinifiedThing)thing;
@@ -56,69 +47,98 @@ namespace ImprovedWorkbenches
                         __result++;
                     }
                 }
-
-                return false;
             }
-
-            var thingList = bill.Map.listerThings.ThingsOfDef(productThingDef).ToList();
-            foreach (var thing in thingList)
+            if (statFilterWrapper.ShouldCheckMap(productThingDef))
             {
-                if (!statFilterWrapper.DoesThingOnMapMatchFilter(bill.ingredientFilter, thing))
-                    continue;
+                SpecialThingFilterWorker_NonDeadmansApparel nonDeadmansApparelFilter =
+                    statFilterWrapper.TryGetDeadmanFilter(productThingDef);
 
-                if (nonDeadmansApparelFilter != null && !nonDeadmansApparelFilter.Matches(thing))
-                    continue;
-
-                __result += thing.stackCount;
-            }
-
-            if (statFilterWrapper.ShouldCheckWornClothes(productThingDef))
-            {
-                foreach (var colonist in Find.VisibleMap.mapPawns.FreeColonists)
+                var thingList = map.listerThings.ThingsOfDef(productThingDef).ToList();
+                foreach (var thing in thingList)
                 {
-                    foreach (var apparel in colonist.apparel.WornApparel)
-                    {
-                        if (apparel.def != productThingDef)
-                            continue;
+                    if (!statFilterWrapper.DoesThingOnMapMatchFilter(bill.ingredientFilter, thing))
+                        continue;
 
-                        if (statFilterWrapper.DoesThingMatchFilter(bill.ingredientFilter, apparel))
-                            __result++;
-                    }
-                    foreach (var apparel in colonist.inventory.innerContainer)
-                    {
-                        if (apparel.def != productThingDef)
-                            continue;
+                    if (nonDeadmansApparelFilter != null && !nonDeadmansApparelFilter.Matches(thing))
+                        continue;
 
-                        if (statFilterWrapper.DoesThingMatchFilter(bill.ingredientFilter, apparel))
-                            __result++;
-                    }
-                }
-            }
-
-            if (statFilterWrapper.ShouldCheckEquippedWeapons(productThingDef))
-            {
-                foreach (var colonist in Find.VisibleMap.mapPawns.FreeColonists)
-                {
-                    foreach (var weapon in colonist.equipment.AllEquipmentListForReading)
-                    {
-                        if (weapon.def != productThingDef)
-                            continue;
-
-                        if (statFilterWrapper.DoesThingMatchFilter(bill.ingredientFilter, weapon))
-                            __result++;
-                    }
-                    foreach (var weapon in colonist.inventory.innerContainer)
-                    {
-                        if (weapon.def != productThingDef)
-                            continue;
-
-                        if (statFilterWrapper.DoesThingMatchFilter(bill.ingredientFilter, weapon))
-                            __result++;
-                    }
+                    __result += thing.stackCount;
                 }
             }
 
             return false;
+        }
+
+        [HarmonyPostfix]
+        static void Postfix(ref Bill_Production bill, ref int __result)
+        {
+            var extendedBillData = Main.Instance.GetExtendedBillDataStorage().GetExtendedDataFor(bill);
+            if (extendedBillData == null)
+                return;
+
+            var statFilterWrapper = new StatFilterWrapper(extendedBillData);
+            var productThingDef = bill.recipe.products.First().thingDef;
+
+            if (!statFilterWrapper.IsAnyFilteringNeeded(productThingDef))
+                return;
+
+            if (statFilterWrapper.ShouldCheckInventory(productThingDef))
+            {
+                Map map = bill.Map;
+
+                //Who could have this Thing
+                List<Pawn> pawns = new List<Pawn>();
+
+                //Only this map, or a thorough global search
+                if (!statFilterWrapper.ShouldCheckAway(productThingDef))
+                {
+                    //Spawned only
+                    pawns.AddRange(map.mapPawns.SpawnedPawnsInFaction(Faction.OfPlayer)
+                        .Where(p => p.IsFreeColonist || !p.IsColonist));    //Filter out prisoners, include animals (for inventory)
+                }
+                else
+                {
+                    //Include unspawned (transport pods, cryptosleep, etc.)
+                    pawns.AddRange(map.mapPawns.PawnsInFaction(Faction.OfPlayer)
+                        .Where(p => p.IsFreeColonist || !p.IsColonist));
+
+                    // and caravans
+                    pawns.AddRange(Find.WorldPawns.AllPawnsAlive.Where(p => p.GetOriginMap() == map));
+
+                    // and at other maps (but who originated here)
+                    foreach (Map otherMap in Find.Maps.Where(m => m != map))
+                    {
+                        pawns.AddRange(otherMap.mapPawns.PawnsInFaction(Faction.OfPlayer)
+                            .Where(p => (p.IsFreeColonist || !p.IsColonist) && p.GetOriginMap() == map));
+                    }
+                }
+
+                List<Thing> pawnThings = new List<Thing>();
+                //Gather the Things
+                foreach (var pawn in pawns)
+                {
+                    if (pawn.apparel != null)
+                        pawnThings.AddRange(pawn.apparel.WornApparel.Cast<Thing>());
+                    if (pawn.equipment != null)
+                        pawnThings.AddRange(pawn.equipment.AllEquipmentListForReading.Cast<Thing>());
+                    if (pawn.inventory != null)
+                        pawnThings.AddRange(pawn.inventory.innerContainer);
+                    if (pawn.carryTracker != null)
+                        pawnThings.AddRange(pawn.carryTracker.innerContainer);
+                }
+
+                SpecialThingFilterWorker_NonDeadmansApparel nonDeadmansApparelFilter =
+                    statFilterWrapper.TryGetDeadmanFilter(productThingDef);
+
+                //Count the Things
+                foreach (Thing i in pawnThings)
+                {
+                    Thing item = MinifyUtility.GetInnerIfMinified(i);
+                    if ((item.def == productThingDef && statFilterWrapper.DoesThingMatchFilter(bill.ingredientFilter, item)) &&
+                        (nonDeadmansApparelFilter?.Matches(item) ?? true))
+                        __result += item.stackCount;
+                }
+            }
         }
     }
 }
