@@ -165,22 +165,27 @@ namespace ImprovedWorkbenches
             Scribe_Values.Look(ref AllowDeadmansApparel, "allowDeadmansApparel", false);
             Scribe_Values.Look(ref CountInventory, "countInventory", false);
             Scribe_Values.Look(ref CountAway, "countAway", false);
-            Scribe_Values.Look(ref CountInstalled, "countInstalled", true);
+            Scribe_Values.Look(ref CountInstalled, "countInstalled", false);
             Scribe_Values.Look(ref UseInputFilter, "useInputFilter", false);
             Scribe_References.Look(ref Worker, "worker");
             Scribe_Values.Look(ref Name, "name", null);
-
-            // Backward compatibilty, combine all settings into inventory
-            bool CountWornApparel = false, CountEquippedWeapons = false;
-            Scribe_Values.Look(ref CountWornApparel, "countWornApparel", false);
-            Scribe_Values.Look(ref CountEquippedWeapons, "countEquippedWeapons", false);
-            CountInventory = CountInventory || CountWornApparel || CountEquippedWeapons;
 
             // Stockpiles need special treatment; they cannot be referenced.
             if (Scribe.mode == LoadSaveMode.Saving)
             {
                 _countingStockpileName = _countingStockpile?.label ?? "null";
                 _takeToStockpileName = _takeToStockpile?.label ?? "null";
+            }
+            else
+            {
+                if (!CountInventory)
+                {
+                    // Read legacy settings on load and migrate them if found
+                    bool countWornApparel = false, countEquippedWeapons = false;
+                    Scribe_Values.Look(ref countWornApparel, "countWornApparel", false);
+                    Scribe_Values.Look(ref countEquippedWeapons, "countEquippedWeapons", false);
+                    CountInventory = countWornApparel || countEquippedWeapons;
+                }
             }
 
             Scribe_Values.Look(ref _countingStockpileName, "countingStockpile", "null");
