@@ -26,18 +26,49 @@ namespace ImprovedWorkbenches
         public override void ExposeData()
         {
             base.ExposeData();
-			Scribe_Collections.Look(
-                ref _store, "store", 
-                LookMode.Value, LookMode.Deep, 
+            Scribe_Collections.Look(
+                ref _store, "store",
+                LookMode.Value, LookMode.Deep,
                 ref _billIDsWorkingList, ref _extendedBillDataWorkingList);
 
-            Scribe_Collections.Look(ref _linkedBillsSets, "linkedBillsSets", 
+            Scribe_Collections.Look(ref _linkedBillsSets, "linkedBillsSets",
                 LookMode.Deep);
 
             if (Scribe.mode == LoadSaveMode.LoadingVars && _linkedBillsSets == null)
             {
                 _linkedBillsSets = new List<LinkedBillsSet>();
             }
+        }
+
+        private void SetMapForExtendedBillData(int billIdToFind, ExtendedBillData extendedBillData)
+        {
+            if (extendedBillData.BillMapFoundInSave)
+                return;
+
+            Main.Instance.Logger.Message($"Looking for map for bill id {billIdToFind}...");
+
+            // Found a stored dataset with no BillMap. Search through all work tables
+            // for the matching bill ID for this dataset and use the map in the bill
+            // found.
+            foreach (Map someMap in Find.Maps)
+            {
+                foreach (var workTable in
+                    someMap.listerBuildings.AllBuildingsColonistOfClass<Building_WorkTable>())
+                {
+                    foreach (var bill in workTable.BillStack.Bills)
+                    {
+                        var billProduction = bill as Bill_Production;
+                        if (billProduction == null || GetBillId(billProduction) != billIdToFind)
+                            continue;
+
+                        Main.Instance.Logger.Message($"Setting Map for legacy bill store {billIdToFind}");
+                        extendedBillData.SetBillMap(billProduction.Map);
+                        return;
+                    }
+                }
+            }
+
+            Main.Instance.Logger.Warning($"Bill id {billIdToFind} not found.");
         }
 
         // Return the associate extended data for a given bill, creating a new association
@@ -48,6 +79,7 @@ namespace ImprovedWorkbenches
             var loadId = GetBillId(bill);
             if (_store.TryGetValue(loadId, out ExtendedBillData data))
             {
+                SetMapForExtendedBillData(loadId, data);
                 return data;
             }
 
@@ -200,7 +232,7 @@ namespace ImprovedWorkbenches
         {
             foreach (var extendedBillData in _store.Values)
             {
-                if (extendedBillData.UsesCountingStockpile() 
+                if (extendedBillData.UsesCountingStockpile()
                     && extendedBillData.GetCountingStockpile() == stockpile)
                 {
                     extendedBillData.RemoveCountingStockpile();
@@ -220,7 +252,6 @@ namespace ImprovedWorkbenches
             return CanOutputBeFiltered(bill.recipe);
         }
 
-        
         // Figure out if output of recipe produces a "thing" we care about
         private static bool CanOutputBeFiltered(RecipeDef recipe)
         {

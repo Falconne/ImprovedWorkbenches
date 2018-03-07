@@ -16,8 +16,9 @@ namespace ImprovedWorkbenches
         public Pawn Worker;
         public string Name;
 
-        public Map Map;
+        public bool BillMapFoundInSave = true;
 
+        private Map BillMap;
         private Zone_Stockpile _countingStockpile;
         private string _countingStockpileName = "null";
 
@@ -31,7 +32,7 @@ namespace ImprovedWorkbenches
         // Constructor for migrating old data storage format to new method.
         public ExtendedBillData(Bill_Production bill)
         {
-            Map = bill.Map;
+            BillMap = bill.Map;
 
             var billWithWorkerFilter = bill as IBillWithWorkerFilter;
             Worker = billWithWorkerFilter.GetWorker();
@@ -46,6 +47,25 @@ namespace ImprovedWorkbenches
             OutputFilter = billWithThingFilter.GetOutputFilter();
             AllowDeadmansApparel = billWithThingFilter.GetAllowDeadmansApparel();
             UseInputFilter = billWithThingFilter.GetUseInputFilter();
+        }
+
+        public void SetBillMap(Map map)
+        {
+            BillMap = map;
+            BillMapFoundInSave = true;
+            if (UsesCountingStockpile() && GetCountingStockpile().Map != BillMap)
+            {
+                Main.Instance.Logger.Warning(
+                    $"Resetting ref to counting stockpile {GetCountingStockpile().label} due to map inconsistency.");
+                _countingStockpile = FindStockpile(_countingStockpile.label, BillMap);
+            }
+
+            if (UsesTakeToStockpile() && GetTakeToStockpile().Map != BillMap)
+            {
+                Main.Instance.Logger.Warning(
+                    $"Resetting ref to take-to stockpile {GetTakeToStockpile().label} due to map inconsistency.");
+                _takeToStockpile = FindStockpile(_takeToStockpile.label, BillMap);
+            }
         }
 
         public bool UsesTakeToStockpile()
@@ -65,7 +85,7 @@ namespace ImprovedWorkbenches
 
         public void SetTakeToStockpile(Zone_Stockpile stockpile)
         {
-            Map = stockpile.Map;
+            BillMap = stockpile.Map;
             _takeToStockpile = stockpile;
         }
 
@@ -86,7 +106,7 @@ namespace ImprovedWorkbenches
 
         public void SetCountingStockpile(Zone_Stockpile stockpile)
         {
-            Map = stockpile.Map;
+            BillMap = stockpile.Map;
             _countingStockpile = stockpile;
         }
 
@@ -109,7 +129,7 @@ namespace ImprovedWorkbenches
             CountInstalled = other.CountInstalled;
             UseInputFilter = other.UseInputFilter;
             Worker = other.Worker;
-            if (this.Map == other.Map)
+            if (this.BillMap == other.BillMap)
             {
                 _countingStockpile = other._countingStockpile;
                 _takeToStockpile = other._takeToStockpile;
@@ -120,7 +140,7 @@ namespace ImprovedWorkbenches
 
         public void SetDefaultFilter(Bill_Production bill)
         {
-            Map = bill.Map;
+            BillMap = bill.Map;
 
             var thingDef = bill.recipe.products.First().thingDef;
             OutputFilter.SetDisallowAll();
@@ -150,7 +170,6 @@ namespace ImprovedWorkbenches
             Scribe_References.Look(ref Worker, "worker");
             Scribe_Values.Look(ref Name, "name", null);
 
-
             // Backward compatibilty, combine all settings into inventory
             bool CountWornApparel = false, CountEquippedWeapons = false;
             Scribe_Values.Look(ref CountWornApparel, "countWornApparel", false);
@@ -166,22 +185,53 @@ namespace ImprovedWorkbenches
 
             Scribe_Values.Look(ref _countingStockpileName, "countingStockpile", "null");
             Scribe_Values.Look(ref _takeToStockpileName, "takeToStockpile", "null");
-            Scribe_References.Look(ref Map, "BillMap");
+            Scribe_References.Look(ref BillMap, "BillMap");
 
-            if (Scribe.mode == LoadSaveMode.PostLoadInit)
+            if (Scribe.mode == LoadSaveMode.PostLoadInit &&
+                (IsValidStockpileName(_countingStockpileName) || IsValidStockpileName(_takeToStockpileName)))
             {
-                _countingStockpile = _countingStockpileName == "null"
-                    ? null
-                    : Map.zoneManager.AllZones.FirstOrDefault(z =>
-                        z is Zone_Stockpile && z.label == _countingStockpileName)
-                        as Zone_Stockpile;
+                // Bill Map will not exist in saves loaded for mod versions prior to 18.9.
+                // When migrating old saves, look in all maps for stockpiles. True map will
+                // be filled in after ExtendedBillDataStorage is loaded
+                if (BillMap == null)
+                    BillMapFoundInSave = false;
 
-                _takeToStockpile = _takeToStockpileName == "null"
-                    ? null
-                    : Map.zoneManager.AllZones.FirstOrDefault(z =>
-                            z is Zone_Stockpile && z.label == _takeToStockpileName)
-                        as Zone_Stockpile;
+                _countingStockpile = FindStockpile(_countingStockpileName, BillMap);
+                _takeToStockpile = FindStockpile(_takeToStockpileName, BillMap);
             }
+        }
+
+        private static bool IsValidStockpileName(string name)
+        {
+            return !string.IsNullOrEmpty(name) && name != "null";
+        }
+
+        private static Zone_Stockpile FindStockpile(string name, Map defaultMap)
+        {
+            if (!IsValidStockpileName(name))
+                return null;
+
+            if (defaultMap != null)
+            {
+                return defaultMap.zoneManager.AllZones
+                    .FirstOrDefault(z => z is Zone_Stockpile && z.label == name)
+                    as Zone_Stockpile;
+            }
+
+            // No map given, look in all maps, starting with current map, for performance
+            var mapsToCheck = new List<Map>() {Find.VisibleMap};
+            mapsToCheck.AddRange(Find.Maps);
+            foreach (Map someMap in mapsToCheck)
+            {
+                if (someMap.zoneManager.AllZones
+                    .FirstOrDefault(z => z is Zone_Stockpile && z.label == name)
+                    is Zone_Stockpile possibleStockpile)
+                {
+                    return possibleStockpile;
+                }
+            }
+
+            return null;
         }
     }
 }
