@@ -52,14 +52,12 @@ namespace ImprovedWorkbenches.Filtering
 
         public SpecialThingFilterWorker_NonDeadmansApparel TryGetDeadmanFilter(ThingDef thingDef)
         {
-            if (ShouldCheckDeadman(thingDef))
-            {
-                SpecialThingFilterWorker_NonDeadmansApparel nonDeadmansApparelFilter = new SpecialThingFilterWorker_NonDeadmansApparel();
-                if (nonDeadmansApparelFilter.CanEverMatch(thingDef))
-                    // Not apparel, don't bother checking
-                    return nonDeadmansApparelFilter;
-            }
-            return null;
+            if (!ShouldCheckDeadman(thingDef))
+                // Not apparel, or not excluding deadman clothes, don't bother checking
+                return null;
+
+            var nonDeadmansApparelFilter = new SpecialThingFilterWorker_NonDeadmansApparel();
+            return nonDeadmansApparelFilter.CanEverMatch(thingDef) ? nonDeadmansApparelFilter : null;
         }
 
         public bool ShouldCheckDeadman(ThingDef thingDef)
@@ -69,7 +67,16 @@ namespace ImprovedWorkbenches.Filtering
 
         public bool ShouldCheckMap(ThingDef thingDef)
         {
-            return (_extendedBillData.CountInstalled && thingDef.Minifiable) || !thingDef.Minifiable;
+            // Resources are not counted by the on-map counting routine, unless we only
+            // want to count resources in a single stockpile. Otherwise they are handled
+            // by a vanilla bulk counting routine.
+            if (thingDef.CountAsResource)
+                return _extendedBillData.UsesCountingStockpile();
+
+            // Minifiable things are not counted by the on-map counting routine, they are counted 
+            // by a different routine. But if we want to count installed minifiable things, like
+            // installed statues, we must check the map.
+            return !thingDef.Minifiable || _extendedBillData.CountInstalled;
         }
 
         public bool DoesThingOnMapMatchFilter(ThingFilter ingredientFilter, Thing thing)
