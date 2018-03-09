@@ -83,20 +83,9 @@ namespace ImprovedWorkbenches
                 return data;
             }
 
-            ExtendedBillData newExtendedData;
-            if (bill is IBillWithThingFilter)
-            {
-                Main.Instance.Logger.Warning(
-                    "IW.FoundOldBillText".Translate() + " " + $"({bill.GetUniqueLoadID()})" + ", " + "IW.MigratingToNewFormat".Translate());
-
-                newExtendedData = new ExtendedBillData(bill);
-            }
-            else
-            {
-                newExtendedData = new ExtendedBillData();
-                if (CanOutputBeFiltered(bill))
-                    newExtendedData.SetDefaultFilter(bill);
-            }
+            var newExtendedData = new ExtendedBillData();
+            if (CanOutputBeFiltered(bill))
+                newExtendedData.SetDefaultFilter(bill);
 
             _store[loadId] = newExtendedData;
             return newExtendedData;

@@ -60,7 +60,6 @@
     <Compile Include="Filtering\PawnOriginalMapSaver.cs" />
     <Compile Include="Filtering\StatFilterWrapper.cs" />
     <Compile Include="Keyboard Entry\Dialog_NumericEntry.cs" />
-    <Compile Include="Legacy Support\Bill_ProductionWithFilters.cs" />
     <Compile Include="Custom Storage\ExtendedBillData.cs" />
     <Compile Include="Custom Storage\ExtendedBillDataStorage.cs" />
     <Compile Include="Detours\RecipeWorkerCounter_CountProducts_Detour.cs" />
