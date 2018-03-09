@@ -42,12 +42,6 @@
   <IW.CountCorpseClothesLabel>死者の衣服も含める</IW.CountCorpseClothesLabel>
   <IW.CountCorpseClothesDesc>アイテム数に死体の着ている衣服も含めます</IW.CountCorpseClothesDesc>
 
-  <IW.CountInventoryLabel>装備中の衣服も含める</IW.CountInventoryLabel>
-  <IW.CountInventoryDesc>入植者が現在着ている服も数えます</IW.CountInventoryDesc>
-
-  <IW.CountEquippedWeaponsLabel>装備アイテムも含める</IW.CountEquippedWeaponsLabel>
-  <IW.CountEquippedWeaponsDesc>入植者が現在装備しているアイテムや武器も数えます</IW.CountEquippedWeaponsDesc>
-
   <IW.OpenPreviousBillTip>前の加工命令を開く</IW.OpenPreviousBillTip>
 
   <IW.OpenNextBillTip>次の加工命令を開く</IW.OpenNextBillTip>

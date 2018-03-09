@@ -42,9 +42,6 @@
 	<IW.CountCorpseClothesLabel>计入尸体的衣物</IW.CountCorpseClothesLabel>
 	<IW.CountCorpseClothesDesc>从尸体上扒下来的衣物也会被计入</IW.CountCorpseClothesDesc>
 
-	<IW.CountInventoryLabel>计入已装备的衣物</IW.CountInventoryLabel>
-	<IW.CountInventoryDesc>已经被殖民者装备的衣物也会被计入</IW.CountInventoryDesc>
-
 	<IW.OpenPreviousBillTip>打开这个工作台的上一个任务清单</IW.OpenPreviousBillTip>
 	
 	<IW.OpenNextBillTip>打开这个工作台的下一个任务任务清单</IW.OpenNextBillTip>
@@ -70,5 +67,12 @@
 	
 	<IW.ShowItemCountInFilterLabel>在筛选器内显示物品数量</IW.ShowItemCountInFilterLabel>
 	<IW.ShowItemCountInFilterDesc>在任务清单的原料筛选设置中显示物品数量</IW.ShowItemCountInFilterDesc>
+	
+  	<IW.EnableDragToReorder>拖拽清单重新排序</IW.EnableDragToReorder>
+  	<IW.EnableDragToReorderDesc>如果你发现其他MOD产生了冲突，可以关闭这个在工作台管理列表的拖拽重新排序功能</IW.EnableDragToReorderDesc>
 
+  	<IW.PasteBillSettings>从已经复制了的清单中粘贴所有（除了产物之外的）相关选项到这个清单</IW.PasteBillSettings>
+
+ 	<IW.MirrorSuspendedStatus>同步暂停</IW.MirrorSuspendedStatus>
+ 	<IW.MirrorSuspendedStatusDesc>启用后，一旦一个清单被暂停或者取消暂停了，所有链接的清单会被做出相同的改动。 (注意：启用这个选项的瞬间会立即对所有已链接的清单进行一次同步)</IW.MirrorSuspendedStatusDesc>
 </LanguageData>
