@@ -371,8 +371,8 @@ namespace ImprovedWorkbenches
 
             y += 7;
 
-            //Helper method for checkboxes
-            void SimpleCheckBoxTip(string label, ref bool setting, string tip)
+            // Helper method for checkboxes
+            void SimpleCheckBoxWithToolTip(string label, ref bool setting, string tip)
             {
                 y += 26;
                 var subRect = new Rect(0f, y, columnWidth, buttonHeight);
@@ -381,14 +381,17 @@ namespace ImprovedWorkbenches
 
                 TooltipHandler.TipRegion(subRect, tip.Translate());
             };
-            //Super helper method for string construction
+
+            // Checkbox helper method with consistent language tokens
             void SimpleCheckBox(string label, ref bool setting)
-            { SimpleCheckBoxTip("IW." + label + "Label", ref setting, "IW." + label + "Desc"); }
+            {
+                SimpleCheckBoxWithToolTip($"IW.{label}Label", ref setting, $"IW.{label}Desc");
+            }
 
             // Use input ingredients for counted items filter
             if (billRaw.ingredientFilter != null && thingDef.MadeFromStuff)
-                SimpleCheckBoxTip("IW.MatchInputIngredientsText", ref extendedBillData.UseInputFilter,
-                    "IW.MatchInputIngredientsTip");
+                SimpleCheckBoxWithToolTip("IW.MatchInputIngredientsText", ref extendedBillData.UseInputFilter,
+                    "IW.IngredientsTip");
 
             //Installable filter
             if (thingDef.Minifiable)
