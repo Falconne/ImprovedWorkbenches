@@ -41,12 +41,17 @@ namespace ImprovedWorkbenches
                 "mirrorSuspendedStatus", "IW.MirrorSuspendedStatus".Translate(),
                 "IW.MirrorSuspendedStatusDesc".Translate(), true);
 
-            _mirrorSuspendedStatus.OnValueChanged = value => {
+            _mirrorSuspendedStatus.OnValueChanged = value =>
+            {
                 if (value)
                 {
                     _extendedBillDataStorage?.UpdateAllLinkedBills();
                 }
             };
+
+            _dropOnFloorByDefault = Settings.GetHandle(
+                "dropOnFloorByDefault", "IW.DropOnFloorByDefault".Translate(),
+                "IW.DropOnFloorByDefaultDesc".Translate(), false);
 
             try
             {
@@ -84,7 +89,12 @@ namespace ImprovedWorkbenches
             return _mirrorSuspendedStatus;
         }
 
-    public void OnProductionDialogBeingShown()
+        public bool ShouldDropOnFloorByDefault()
+        {
+            return _dropOnFloorByDefault;
+        }
+
+        public void OnProductionDialogBeingShown()
         {
             IsRootBillFilterBeingDrawn = _showIngredientCount;
         }
@@ -117,6 +127,8 @@ namespace ImprovedWorkbenches
         private SettingHandle<bool> _enableDragToReorder;
 
         private SettingHandle<bool> _mirrorSuspendedStatus;
+
+        private SettingHandle<bool> _dropOnFloorByDefault;
 
         private ExtendedBillDataStorage _extendedBillDataStorage;
     }

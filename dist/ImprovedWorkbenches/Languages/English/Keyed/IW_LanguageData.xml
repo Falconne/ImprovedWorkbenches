@@ -84,4 +84,7 @@
 
   <IW.MirrorSuspendedStatus>Mirror suspended status</IW.MirrorSuspendedStatus>
   <IW.MirrorSuspendedStatusDesc>If enabled, when a linked bill is suspended or unsuspended, all linked bills will take on the same status. (Note: Toggling this setting to True will trigger synchronisation on all linked jobs)</IW.MirrorSuspendedStatusDesc>
+
+  <IW.DropOnFloorByDefault>Drop on floor by default</IW.DropOnFloorByDefault>
+  <IW.DropOnFloorByDefaultDesc>New bills will default to "Drop on floor" instead of "Take to best stockpile".</IW.DropOnFloorByDefaultDesc>
 </LanguageData>
