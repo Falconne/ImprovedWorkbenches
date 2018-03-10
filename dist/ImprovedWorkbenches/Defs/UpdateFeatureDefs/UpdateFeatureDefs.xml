@@ -59,4 +59,10 @@
     <assemblyVersion>18.8.0</assemblyVersion>
     <content>Feature added by @alextd: "Do Until X" bills can now also count any equipped weapons and shield belts, extending the existing "Count equipped clothing" functionality.</content>
   </HugsLib.UpdateFeatureDef>
+
+  <HugsLib.UpdateFeatureDef ParentName="UpdateFeatureBase">
+    <defName>ImprovedWorkbenches_18_9_0</defName>
+    <assemblyVersion>18.9.0</assemblyVersion>
+    <content>Fixes and new features added by @alextd on Github:|* Fixed bug where "count in" and "take to" stockpile settings got cleared when game is saved on another map.|* It is now possible to count any item worn, equipped or carried by any colonist or colony animal.|* Added option to also count items on colonists and animals originating at the bill's map, but are away on caravans, raids, etc.|* Added option to count installed statues, if desired.</content>
+  </HugsLib.UpdateFeatureDef>
 </Defs>
