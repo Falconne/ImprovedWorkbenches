@@ -25,7 +25,7 @@
   <IW.PasteFilterButton>ペースト</IW.PasteFilterButton>
 
   <IW.RenameTip>クリックしてからキーボードを使用して名前や値を入力します</IW.RenameTip>
-  <IW.CountOnStockpilesText>すべての備蓄ゾーンを含みます</IW.CountOnStockpilesText>
+  <IW.CountOnStockpilesText>全備蓄ゾーンを含む</IW.CountOnStockpilesText>
 
   <IW.CountInText>備蓄数</IW.CountInText>
   <IW.WillCountTowardsTargetTip>指定された備蓄ゾーン内のアイテムのみが計測される対象です。</IW.WillCountTowardsTargetTip>
@@ -41,6 +41,18 @@
 
   <IW.CountCorpseClothesLabel>死者の衣服も含める</IW.CountCorpseClothesLabel>
   <IW.CountCorpseClothesDesc>アイテム数に死体の着ている衣服も含めます</IW.CountCorpseClothesDesc>
+
+  <IW.CountInventoryLabel>入植者の所持品を含む</IW.CountInventoryLabel>
+  <IW.CountInventoryDesc>入植者やペットが現在装備している服や装備している武器または運んでいるアイテムも数えます</IW.CountInventoryDesc>
+
+  <IW.CountAwayLabel>ほぼ全てを含む</IW.CountAwayLabel>
+  <IW.CountAwayDesc>キャラバン隊や輸送用ポッドや冬眠カプセルに送られたアイテムや、使用禁止にされたその他の物などを含めて、入植者やペットのアイテムを数えます。</IW.CountAwayDesc>
+
+  <IW.CountInstalledLabel>設置品も含む</IW.CountInstalledLabel>
+  <IW.CountInstalledDesc>設置されたアイテムや建築物も含めて数えます</IW.CountInstalledDesc>
+
+  <IW.CountEquippedWeaponsLabel>装備アイテムも含める</IW.CountEquippedWeaponsLabel>
+  <IW.CountEquippedWeaponsDesc>入植者が現在装備しているアイテムや武器も数えます</IW.CountEquippedWeaponsDesc>
 
   <IW.OpenPreviousBillTip>前の加工命令を開く</IW.OpenPreviousBillTip>
 
@@ -75,5 +87,8 @@
 
   <IW.MirrorSuspendedStatus>一時停止状態も反映</IW.MirrorSuspendedStatus>
   <IW.MirrorSuspendedStatusDesc>もし有効化すると、リンクされた指示命令が一時停止/再開されると、すべてのリンクされた請求書は同じ状態(一時停止または再開)になります。（注：この設定をTrueに切り替えると、すべてのリンクされた仕事でも同期条件のトリガーになります）</IW.MirrorSuspendedStatusDesc>
+
+  <IW.DropOnFloorByDefault>床に置くを初期設定にする</IW.DropOnFloorByDefault>
+  <IW.DropOnFloorByDefaultDesc>新しい加工命令の初期設定として「最良の保管庫へ運ぶ」の代わりに「床に置く」を設定します。</IW.DropOnFloorByDefaultDesc>
 
 </LanguageData>
