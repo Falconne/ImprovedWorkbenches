@@ -75,6 +75,26 @@
   <ItemGroup>
     <Folder Include="ThirdParty\" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="dist\ImprovedWorkbenches\About\About.xml" />
+    <Content Include="dist\ImprovedWorkbenches\About\Preview.png" />
+    <Content Include="dist\ImprovedWorkbenches\About\PublishedFileId.txt" />
+    <Content Include="dist\ImprovedWorkbenches\About\Version.xml" />
+    <Content Include="dist\ImprovedWorkbenches\Defs\UpdateFeatureDefs\UpdateFeatureDefs.xml" />
+    <Content Include="dist\ImprovedWorkbenches\Languages\ChineseSimplified\DefInjected\BillRepeatModeDef\BillRepeatModeDefs.xml" />
+    <Content Include="dist\ImprovedWorkbenches\Languages\ChineseSimplified\Keyed\IW_LanguageData.xml" />
+    <Content Include="dist\ImprovedWorkbenches\Languages\English\DefInjected\BillRepeatModeDef\BillRepeatModeDefs.xml" />
+    <Content Include="dist\ImprovedWorkbenches\Languages\English\Keyed\IW_LanguageData.xml" />
+    <Content Include="dist\ImprovedWorkbenches\Languages\Japanese\DefInjected\HugsLib.UpdateFeatureDef\UpdateFeatures.xml" />
+    <Content Include="dist\ImprovedWorkbenches\Languages\Japanese\Keyed\IW_LanguageData.xml" />
+    <Content Include="dist\ImprovedWorkbenches\Languages\Russian\Keyed\IW_LanguageData.xml" />
+    <Content Include="dist\ImprovedWorkbenches\Patches\ImprovedWorkbenches.xml" />
+    <Content Include="dist\ImprovedWorkbenches\Textures\BestStockpile.png" />
+    <Content Include="dist\ImprovedWorkbenches\Textures\BreakLink.png" />
+    <Content Include="dist\ImprovedWorkbenches\Textures\DropOnFloor.png" />
+    <Content Include="dist\ImprovedWorkbenches\Textures\LeftArrow.png" />
+    <Content Include="dist\ImprovedWorkbenches\Textures\RightArrow.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy /y/s  $(ProjectDir)dist\* "%25ProgramFiles(x86)%25\Steam\SteamApps\common\RimWorld\Mods"
