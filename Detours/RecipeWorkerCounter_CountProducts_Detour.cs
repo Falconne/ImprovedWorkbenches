@@ -74,7 +74,7 @@ namespace ImprovedWorkbenches
                 // Above clause will count "resource" type items in a specific stockpile, if
                 // UsesCountingStockpile() is true. If it isn't, let the vanilla code count
                 // resoucres in all stockpiles.
-                __result += billMap.resourceCounter.GetCount(thingCountClass.thingDef);
+                __result += billMap.resourceCounter.GetCount(productThingDef);
             }
 
             if (!statFilterWrapper.ShouldCheckInventory(productThingDef))

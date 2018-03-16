@@ -53,9 +53,18 @@ namespace ImprovedWorkbenches
                 "dropOnFloorByDefault", "IW.DropOnFloorByDefault".Translate(),
                 "IW.DropOnFloorByDefaultDesc".Translate(), false);
 
+
+            // Integration with other mods
+
+            IntegrateWithOutfitter();
+
+            IntegrateWithRimFactory();
+        }
+
+        private void IntegrateWithOutfitter()
+        {
             try
             {
-
                 var outfitterBillsPatcher = GenTypes.GetTypeInAnyAssembly("Outfitter.TabPatch.ITab_Bills_Patch");
                 if (outfitterBillsPatcher == null)
                     return;
@@ -72,6 +81,40 @@ namespace ImprovedWorkbenches
                 Logger.Error(e.Message);
                 Logger.Error(e.StackTrace);
             }
+        }
+
+        private void IntegrateWithRimFactory()
+        {
+            _isRimfactoryLoaded = false;
+            try
+            {
+                _rimFactoryBillsTabType = GenTypes.GetTypeInAnyAssembly("ProjectRimFactory.SAL3.UI.ITab_SAL3Bills");
+                if (_rimFactoryBillsTabType == null)
+                    return;
+
+                Logger.Message("Adding support for ProjectRimFactory");
+                _rimFactoryBuildingType = GenTypes.GetTypeInAnyAssembly(
+                    "ProjectRimFactory.SAL3.Things.Assemblers.Building_DynamicBillGiver");
+                _isRimfactoryLoaded = true;
+            }
+            catch (Exception e)
+            {
+                Logger.Error("Exception while trying to detect RimFactory:");
+                Logger.Error(e.Message);
+                Logger.Error(e.StackTrace);
+            }
+
+        }
+
+        public bool IsOfTypeRimFactoryBillsTab(InspectTabBase tab)
+        {
+            return _isRimfactoryLoaded && tab?.GetType() == _rimFactoryBillsTabType;
+        }
+
+        public bool IsOfTypeRimFactoryBuilding(Thing obj)
+        {
+            return _isRimfactoryLoaded && (obj?.GetType().IsSubclassOf(_rimFactoryBuildingType) ?? false);
+
         }
 
         public bool ShouldExpandBillsTab()
@@ -116,7 +159,7 @@ namespace ImprovedWorkbenches
 
         public readonly BillCopyPaste BillCopyPasteHandler = new BillCopyPaste();
 
-        public bool IsRootBillFilterBeingDrawn = false;
+        public bool IsRootBillFilterBeingDrawn;
 
         public override string ModIdentifier => "ImprovedWorkbenches";
 
@@ -131,5 +174,12 @@ namespace ImprovedWorkbenches
         private SettingHandle<bool> _dropOnFloorByDefault;
 
         private ExtendedBillDataStorage _extendedBillDataStorage;
+
+        // RImFactory support
+        private bool _isRimfactoryLoaded;
+
+        private Type _rimFactoryBillsTabType;
+
+        private Type _rimFactoryBuildingType;
     }
 }

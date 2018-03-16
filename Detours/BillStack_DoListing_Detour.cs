@@ -17,12 +17,17 @@ namespace ImprovedWorkbenches
             if (!Main.Instance.ShouldAllowDragToReorder())
                 return true;
 
-            if (!(Find.Selector.SingleSelectedThing is Building_WorkTable workTable))
+            var selectedThing = Find.Selector.SingleSelectedThing;
+            var billGiver = selectedThing as IBillGiver;
+            if (billGiver == null)
+                return true;
+
+            if (!(selectedThing is Building_WorkTable) && !Main.Instance.IsOfTypeRimFactoryBuilding(selectedThing))
                 return true;
 
             ReorderableGroup = ReorderableWidget.NewGroup(delegate (int from, int to)
             {
-                ReorderBillInStack(workTable.BillStack, from, to);
+                ReorderBillInStack(billGiver.BillStack, from, to);
             });
 
             return true;
