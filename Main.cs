@@ -59,6 +59,8 @@ namespace ImprovedWorkbenches
             IntegrateWithOutfitter();
 
             IntegrateWithRimFactory();
+
+            IntegrateWithPrisonLabor();
         }
 
         private void IntegrateWithOutfitter()
@@ -117,6 +119,23 @@ namespace ImprovedWorkbenches
 
         }
 
+        private void IntegrateWithPrisonLabor()
+        {
+            IsPrisonLaborLoaded = false;
+            try
+            {
+                var modClass = GenTypes.GetTypeInAnyAssembly("PrisonLabor.HarmonyPatches.HPatcher");
+                IsPrisonLaborLoaded = modClass != null;
+            }
+            catch (Exception e)
+            {
+                Logger.Error("Exception while trying to detect Prison Labor:");
+                Logger.Error(e.Message);
+                Logger.Error(e.StackTrace);
+            }
+
+        }
+
         public bool ShouldExpandBillsTab()
         {
             return _expandBillsTab;
@@ -162,6 +181,8 @@ namespace ImprovedWorkbenches
         public bool IsRootBillFilterBeingDrawn;
 
         public override string ModIdentifier => "ImprovedWorkbenches";
+
+        public bool IsPrisonLaborLoaded { get; private set; }
 
         private SettingHandle<bool> _expandBillsTab;
 

@@ -239,6 +239,7 @@ namespace ImprovedWorkbenches
             if (billRaw.repeatMode != BillRepeatModeDefOf.TargetCount)
                 return;
 
+            if (!Main.Instance.IsPrisonLaborLoaded)
             {
                 var keyboardRect = new Rect(middleColumn + 90f, inRect.yMin + 208f, 24f, 24f);
                 void TargetCountSetter(int i)
@@ -248,6 +249,7 @@ namespace ImprovedWorkbenches
                         billRaw.unpauseWhenYouHave = billRaw.targetCount - 1;
                 }
 
+                // Manual entry of target
                 if (Widgets.ButtonImage(keyboardRect, Resources.Rename))
                 {
                     Find.WindowStack.Add(new Dialog_NumericEntry(
@@ -262,7 +264,7 @@ namespace ImprovedWorkbenches
             const float smallButtonHeight = 24f;
 
             // "Unpause when" level adjustment buttons
-            if (billRaw.pauseWhenSatisfied)
+            if (billRaw.pauseWhenSatisfied  && !Main.Instance.IsPrisonLaborLoaded)
             {
                 var buttonWidth = 42f;
                 var minusOneRect = new Rect(middleColumn, inRect.height - 70, buttonWidth, smallButtonHeight);
