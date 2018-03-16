@@ -194,12 +194,16 @@ namespace ImprovedWorkbenches
                 destinationBill.suspended = sourceBill.suspended;
             }
 
-            if (CanOutputBeFiltered(destinationBill) || sourceBill.repeatMode != BillRepeatModeDefOf.TargetCount)
+            var outputCanBeFiltered = 
+                CanOutputBeFiltered(destinationBill) 
+                || destinationBill.recipe?.WorkerCounter is RecipeWorkerCounter_MakeStoneBlocks;
+
+            if (sourceBill.repeatMode != BillRepeatModeDefOf.TargetCount || outputCanBeFiltered)
             {
                 destinationBill.repeatMode = sourceBill.repeatMode;
             }
 
-            if (CanOutputBeFiltered(destinationBill))
+            if (outputCanBeFiltered)
             {
                 destinationBill.repeatCount = sourceBill.repeatCount;
                 destinationBill.targetCount = sourceBill.targetCount;
@@ -238,13 +242,13 @@ namespace ImprovedWorkbenches
         // Figure out if output of bill produces a "thing" we care about
         public static bool CanOutputBeFiltered(Bill_Production bill)
         {
-            return CanOutputBeFiltered(bill.recipe);
-        }
+            if (bill.recipe == null)
+                return false;
 
-        // Figure out if output of recipe produces a "thing" we care about
-        private static bool CanOutputBeFiltered(RecipeDef recipe)
-        {
-            return recipe.products != null && recipe.products.Count > 0;
+            if (bill.recipe.specialProducts == null && bill.recipe.products != null)
+                return bill.recipe.products.Count == 1;
+
+            return false;
         }
 
         private int GetBillId(Bill_Production bill)
