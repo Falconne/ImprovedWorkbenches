@@ -55,7 +55,7 @@ namespace ImprovedWorkbenches
 
             _showExtraButtons = Settings.GetHandle(
                 "showExtraButtons", "IW.ShowExtraUIButtons".Translate(),
-                "IW.IW.ShowExtraUIButtonsDesc".Translate(), true);
+                "IW.ShowExtraUIButtonsDesc".Translate(), true);
 
 
             // Integration with other mods
