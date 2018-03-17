@@ -24,7 +24,7 @@
   <IW.CopyFilterTip>材料のフィルタ設定をコピーして、適合するフィルターにペーストします</IW.CopyFilterTip>
   <IW.PasteFilterButton>ペースト</IW.PasteFilterButton>
 
-  <IW.RenameTip>クリックしてからキーボードを使用して名前や値を入力します</IW.RenameTip>
+  <IW.RenameTip>クリックしてからキーボードを使用して直接名前や数値を入力します</IW.RenameTip>
   <IW.CountOnStockpilesText>全備蓄ゾーンを含む</IW.CountOnStockpilesText>
 
   <IW.CountInText>備蓄数</IW.CountInText>
@@ -90,5 +90,8 @@
 
   <IW.DropOnFloorByDefault>床に置くを初期設定にする</IW.DropOnFloorByDefault>
   <IW.DropOnFloorByDefaultDesc>新しい加工命令の初期設定として「最良の保管庫へ運ぶ」の代わりに「床に置く」を設定します。</IW.DropOnFloorByDefaultDesc>
+
+  <IW.ShowExtraUIButtons>追加UIボタンを表示</IW.ShowExtraUIButtons>
+  <IW.IW.ShowExtraUIButtonsDesc>キーボードを使用して、加工命令の詳細に「目標数」と「一時停止解除」の数値を設定するためのボタンを表示します。これらのボタンが間違って配置されるようになるmodまたは言語がある場合は、これを無効にします。</IW.IW.ShowExtraUIButtonsDesc>
 
 </LanguageData>
