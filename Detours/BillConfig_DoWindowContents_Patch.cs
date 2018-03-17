@@ -239,7 +239,7 @@ namespace ImprovedWorkbenches
             if (billRaw.repeatMode != BillRepeatModeDefOf.TargetCount)
                 return;
 
-            if (!Main.Instance.IsPrisonLaborLoaded)
+            if (Main.Instance.ShouldShowExtraButtons())
             {
                 var keyboardRect = new Rect(middleColumn + 90f, inRect.yMin + 208f, 24f, 24f);
                 void TargetCountSetter(int i)
@@ -264,7 +264,7 @@ namespace ImprovedWorkbenches
             const float smallButtonHeight = 24f;
 
             // "Unpause when" level adjustment buttons
-            if (billRaw.pauseWhenSatisfied  && !Main.Instance.IsPrisonLaborLoaded)
+            if (billRaw.pauseWhenSatisfied && Main.Instance.ShouldShowExtraButtons())
             {
                 var buttonWidth = 42f;
                 var minusOneRect = new Rect(middleColumn, inRect.height - 70, buttonWidth, smallButtonHeight);

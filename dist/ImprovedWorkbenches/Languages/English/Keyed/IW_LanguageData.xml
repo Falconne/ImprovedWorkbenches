@@ -87,4 +87,7 @@
 
   <IW.DropOnFloorByDefault>Drop on floor by default</IW.DropOnFloorByDefault>
   <IW.DropOnFloorByDefaultDesc>New bills will default to "Drop on floor" instead of "Take to best stockpile".</IW.DropOnFloorByDefaultDesc>
+
+  <IW.ShowExtraUIButtons>Show extra UI buttons</IW.ShowExtraUIButtons>
+  <IW.ShowExtraUIButtonsDesc>Show buttons that let you set "target count" and "resume level" values in bill details via the keyboard. Disable if you have a mod or language that causes these buttons to become misplaced.</IW.ShowExtraUIButtonsDesc>
 </LanguageData>

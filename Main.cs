@@ -53,6 +53,10 @@ namespace ImprovedWorkbenches
                 "dropOnFloorByDefault", "IW.DropOnFloorByDefault".Translate(),
                 "IW.DropOnFloorByDefaultDesc".Translate(), false);
 
+            _showExtraButtons = Settings.GetHandle(
+                "showExtraButtons", "IW.ShowExtraUIButtons".Translate(),
+                "IW.IW.ShowExtraUIButtonsDesc".Translate(), true);
+
 
             // Integration with other mods
 
@@ -121,11 +125,14 @@ namespace ImprovedWorkbenches
 
         private void IntegrateWithPrisonLabor()
         {
-            IsPrisonLaborLoaded = false;
+            _isPrisonLaborLoaded = false;
             try
             {
-                var modClass = GenTypes.GetTypeInAnyAssembly("PrisonLabor.HarmonyPatches.HPatcher");
-                IsPrisonLaborLoaded = modClass != null;
+                if (GenTypes.GetTypeInAnyAssembly("PrisonLabor.HarmonyPatches.HPatcher") != null)
+                {
+                    _isPrisonLaborLoaded = true;
+                    Logger.Message("Prison Labor detected");
+                }
             }
             catch (Exception e)
             {
@@ -156,6 +163,11 @@ namespace ImprovedWorkbenches
             return _dropOnFloorByDefault;
         }
 
+        public bool ShouldShowExtraButtons()
+        {
+            return _showExtraButtons && !_isPrisonLaborLoaded;
+        }
+
         public void OnProductionDialogBeingShown()
         {
             IsRootBillFilterBeingDrawn = _showIngredientCount;
@@ -182,8 +194,6 @@ namespace ImprovedWorkbenches
 
         public override string ModIdentifier => "ImprovedWorkbenches";
 
-        public bool IsPrisonLaborLoaded { get; private set; }
-
         private SettingHandle<bool> _expandBillsTab;
 
         private SettingHandle<bool> _showIngredientCount;
@@ -194,7 +204,11 @@ namespace ImprovedWorkbenches
 
         private SettingHandle<bool> _dropOnFloorByDefault;
 
+        private SettingHandle<bool> _showExtraButtons;
+
         private ExtendedBillDataStorage _extendedBillDataStorage;
+
+        private bool _isPrisonLaborLoaded;
 
         // RImFactory support
         private bool _isRimfactoryLoaded;
