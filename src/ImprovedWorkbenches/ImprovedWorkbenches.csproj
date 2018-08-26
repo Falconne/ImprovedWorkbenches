@@ -21,14 +21,17 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="0Harmony">
-      <HintPath>ThirdParty\0Harmony.dll</HintPath>
+    <Reference Include="%24HugsLibChecker, Version=0.4.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\UnlimitedHugs.Rimworld.HugsLibChecker.4.0.0\lib\net35\$HugsLibChecker.dll</HintPath>
+    </Reference>
+    <Reference Include="0Harmony, Version=1.0.9.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\UnlimitedHugs.Rimworld.HugsLib.4.1.1\lib\net35\0Harmony.dll</HintPath>
     </Reference>
     <Reference Include="Assembly-CSharp">
-      <HintPath>ThirdParty\Assembly-CSharp.dll</HintPath>
+      <HintPath>..\..\ThirdParty\Assembly-CSharp.dll</HintPath>
     </Reference>
-    <Reference Include="HugsLib">
-      <HintPath>ThirdParty\HugsLib.dll</HintPath>
+    <Reference Include="HugsLib, Version=0.18.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\UnlimitedHugs.Rimworld.HugsLib.4.1.1\lib\net35\HugsLib.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -37,7 +40,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="UnityEngine">
-      <HintPath>ThirdParty\UnityEngine.dll</HintPath>
+      <HintPath>..\..\ThirdParty\UnityEngine.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -73,39 +76,13 @@
     <Compile Include="Resources.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="ThirdParty\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="dist\ImprovedWorkbenches\About\About.xml" />
-    <Content Include="dist\ImprovedWorkbenches\About\Preview.png" />
-    <Content Include="dist\ImprovedWorkbenches\About\PublishedFileId.txt" />
-    <Content Include="dist\ImprovedWorkbenches\About\Version.xml" />
-    <Content Include="dist\ImprovedWorkbenches\Defs\UpdateFeatureDefs\UpdateFeatureDefs.xml" />
-    <Content Include="dist\ImprovedWorkbenches\Languages\ChineseSimplified\DefInjected\BillRepeatModeDef\BillRepeatModeDefs.xml" />
-    <Content Include="dist\ImprovedWorkbenches\Languages\ChineseSimplified\Keyed\IW_LanguageData.xml" />
-    <Content Include="dist\ImprovedWorkbenches\Languages\English\DefInjected\BillRepeatModeDef\BillRepeatModeDefs.xml" />
-    <Content Include="dist\ImprovedWorkbenches\Languages\English\Keyed\IW_LanguageData.xml" />
-    <Content Include="dist\ImprovedWorkbenches\Languages\Japanese\DefInjected\HugsLib.UpdateFeatureDef\UpdateFeatures.xml" />
-    <Content Include="dist\ImprovedWorkbenches\Languages\Japanese\Keyed\IW_LanguageData.xml" />
-    <Content Include="dist\ImprovedWorkbenches\Languages\Russian\Keyed\IW_LanguageData.xml" />
-    <Content Include="dist\ImprovedWorkbenches\Patches\ImprovedWorkbenches.xml" />
-    <Content Include="dist\ImprovedWorkbenches\Textures\BestStockpile.png" />
-    <Content Include="dist\ImprovedWorkbenches\Textures\BreakLink.png" />
-    <Content Include="dist\ImprovedWorkbenches\Textures\DropOnFloor.png" />
-    <Content Include="dist\ImprovedWorkbenches\Textures\LeftArrow.png" />
-    <Content Include="dist\ImprovedWorkbenches\Textures\RightArrow.png" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy /y/s  $(ProjectDir)dist\* "%25ProgramFiles(x86)%25\Steam\SteamApps\common\RimWorld\Mods"
-copy /y $(TargetPath) "%25ProgramFiles(x86)%25\Steam\SteamApps\common\RimWorld\Mods\$(TargetName)\Assemblies"</PostBuildEvent>
+    <PostBuildEvent>powershell.exe -EP Unrestricted $(ProjectDir)..\..\build.ps1 doPostBuild</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent>if not exist $(ProjectDir)ThirdParty mkdir  $(ProjectDir)ThirdParty
-copy /y "%25ProgramFiles(x86)%25\Steam\SteamApps\common\RimWorld\RimWorldWin_Data\Managed\UnityEngine.dll"  $(ProjectDir)ThirdParty
-copy /y "%25ProgramFiles(x86)%25\Steam\SteamApps\common\RimWorld\RimWorldWin_Data\Managed\Assembly-CSharp.dll"  $(ProjectDir)ThirdParty
-copy /y "%25ProgramFiles(x86)%25\Steam\SteamApps\workshop\content\294100\818773962\Assemblies\*.dll" $(ProjectDir)ThirdParty
-if not exist $(ProjectDir)dist\$(TargetName)\Assemblies mkdir $(ProjectDir)dist\$(TargetName)\Assemblies
-copy /y $(ProjectDir)RimworldHugsLibChecker\Mods\HugsLibChecker\Assemblies\*.dll $(ProjectDir)dist\$(TargetName)\Assemblies</PreBuildEvent>
+    <PreBuildEvent>powershell.exe -EP Unrestricted $(ProjectDir)..\..\build.ps1 doPreBuild</PreBuildEvent>
   </PropertyGroup>
 </Project>

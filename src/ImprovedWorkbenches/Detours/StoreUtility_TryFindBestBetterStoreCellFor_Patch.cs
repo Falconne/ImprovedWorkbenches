@@ -14,8 +14,7 @@ namespace ImprovedWorkbenches
             if (carrier == null || faction == null || faction != Faction.OfPlayer || t.SpawnedOrAnyParentSpawned)
                 return true;
 
-            var bill = carrier.CurJob.bill as Bill_Production;
-            if (bill == null)
+            if (!(carrier.CurJob.bill is Bill_Production bill))
                 return true;
 
             if (bill.GetStoreMode() != BillStoreModeDefOf.BestStockpile)

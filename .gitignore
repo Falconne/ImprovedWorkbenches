@@ -292,3 +292,4 @@ __pycache__/
 *.exe
 
 ThirdParty/HugsLib.xml
+dist/
