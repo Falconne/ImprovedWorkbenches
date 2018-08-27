@@ -78,6 +78,62 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\..\mod-structure\About\About.xml">
+      <Link>mod-structure\About\About.xml</Link>
+    </Content>
+    <Content Include="..\..\mod-structure\About\Preview.png">
+      <Link>mod-structure\About\Preview.png</Link>
+    </Content>
+    <Content Include="..\..\mod-structure\About\PublishedFileId.txt">
+      <Link>mod-structure\About\PublishedFileId.txt</Link>
+    </Content>
+    <Content Include="..\..\mod-structure\About\Version.xml">
+      <Link>mod-structure\About\Version.xml</Link>
+    </Content>
+    <Content Include="..\..\mod-structure\Defs\UpdateFeatureDefs\UpdateFeatureDefs.xml">
+      <Link>mod-structure\Defs\UpdateFeatureDefs\UpdateFeatureDefs.xml</Link>
+    </Content>
+    <Content Include="..\..\mod-structure\Languages\ChineseSimplified\DefInjected\BillRepeatModeDef\BillRepeatModeDefs.xml">
+      <Link>mod-structure\Languages\ChineseSimplified\DefInjected\BillRepeatModeDef\BillRepeatModeDefs.xml</Link>
+    </Content>
+    <Content Include="..\..\mod-structure\Languages\ChineseSimplified\Keyed\IW_LanguageData.xml">
+      <Link>mod-structure\Languages\ChineseSimplified\Keyed\IW_LanguageData.xml</Link>
+    </Content>
+    <Content Include="..\..\mod-structure\Languages\English\DefInjected\BillRepeatModeDef\BillRepeatModeDefs.xml">
+      <Link>mod-structure\Languages\English\DefInjected\BillRepeatModeDef\BillRepeatModeDefs.xml</Link>
+    </Content>
+    <Content Include="..\..\mod-structure\Languages\English\Keyed\IW_LanguageData.xml">
+      <Link>mod-structure\Languages\English\Keyed\IW_LanguageData.xml</Link>
+    </Content>
+    <Content Include="..\..\mod-structure\Languages\Japanese\DefInjected\HugsLib.UpdateFeatureDef\UpdateFeatures.xml">
+      <Link>mod-structure\Languages\Japanese\DefInjected\HugsLib.UpdateFeatureDef\UpdateFeatures.xml</Link>
+    </Content>
+    <Content Include="..\..\mod-structure\Languages\Japanese\Keyed\IW_LanguageData.xml">
+      <Link>mod-structure\Languages\Japanese\Keyed\IW_LanguageData.xml</Link>
+    </Content>
+    <Content Include="..\..\mod-structure\Languages\Russian\Keyed\IW_LanguageData.xml">
+      <Link>mod-structure\Languages\Russian\Keyed\IW_LanguageData.xml</Link>
+    </Content>
+    <Content Include="..\..\mod-structure\Patches\ImprovedWorkbenches.xml">
+      <Link>mod-structure\Patches\ImprovedWorkbenches.xml</Link>
+    </Content>
+    <Content Include="..\..\mod-structure\Textures\BestStockpile.png">
+      <Link>mod-structure\Textures\BestStockpile.png</Link>
+    </Content>
+    <Content Include="..\..\mod-structure\Textures\BreakLink.png">
+      <Link>mod-structure\Textures\BreakLink.png</Link>
+    </Content>
+    <Content Include="..\..\mod-structure\Textures\DropOnFloor.png">
+      <Link>mod-structure\Textures\DropOnFloor.png</Link>
+    </Content>
+    <Content Include="..\..\mod-structure\Textures\LeftArrow.png">
+      <Link>mod-structure\Textures\LeftArrow.png</Link>
+    </Content>
+    <Content Include="..\..\mod-structure\Textures\RightArrow.png">
+      <Link>mod-structure\Textures\RightArrow.png</Link>
+    </Content>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>powershell.exe -EP Unrestricted $(ProjectDir)..\..\build.ps1 doPostBuild</PostBuildEvent>
