@@ -1,3 +1,8 @@
+# TODO:
+# 1. Update ThirdParty automatically when Game updates
+# 2. Update assemblyinfo.cs when needed based on last git tag
+# 3. Update HugsLib version checker's Version.xml
+
 param
 (
     [Parameter(Mandatory = $true)]
@@ -75,6 +80,18 @@ function updateToGameVersion
     $gameVersionWithRev = Get-Content $gameVersionFile
     $version = [version] ($gameVersionWithRev.Split(" "))[0]
 
+
+
+    $aboutFile = Resolve-Path "$PSScriptRoot\mod-structure\About\About.xml"
+    $aboutFileContent = [xml] (Get-Content -Raw $aboutFile)
+    $gameVersion = [version] $aboutFileContent.ModMetaData.targetVersion
+    if ($gameVersion -ne $version)
+    {
+        Write-Host "Updating to mod to game version $version"
+        $aboutFileContent.ModMetaData.targetVersion = $version.ToString()
+        $aboutFileContent.Save($aboutFile)
+    }
+
     $content = Get-Content -Raw $assemblyInfoFile
     $newContent = $content -replace '"\d+\.\d+(\.\d+\.\d+")', "`"$($version.Major).$($version.Minor)`$1"
 
@@ -82,14 +99,7 @@ function updateToGameVersion
     {
         return
     }
-
-    Write-Host "Updating to mod to game version $version"
     Set-Content -Encoding UTF8 -Path $assemblyInfoFile $newContent
-
-    $aboutFile = Resolve-Path "$PSScriptRoot\mod-structure\About\About.xml"
-    $aboutFileContent = [xml] (Get-Content -Raw $aboutFile)
-    $aboutFileContent.ModMetaData.targetVersion = $version.ToString()
-    $aboutFileContent.Save($aboutFile)
 }
 
 function copyDependencies
@@ -109,7 +119,7 @@ function copyDependencies
         exit 1
     }
 
-    $depsDir = "$installDir\RimWorldWin_Data\Managed"
+    $depsDir = "$installDir\RimWorldWin64_Data\Managed"
     Write-Host "Copying dependencies from installation directory"
     if (!(Test-Path $thirdpartyDir)) { mkdir $thirdpartyDir | Out-Null }
     Copy-Item -Force "$depsDir\UnityEngine.dll" "$thirdpartyDir\"
