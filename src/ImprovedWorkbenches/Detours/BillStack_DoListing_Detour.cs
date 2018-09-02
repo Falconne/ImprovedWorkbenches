@@ -25,10 +25,9 @@ namespace ImprovedWorkbenches
             if (!(selectedThing is Building_WorkTable) && !Main.Instance.IsOfTypeRimFactoryBuilding(selectedThing))
                 return true;
 
-            ReorderableGroup = ReorderableWidget.NewGroup(delegate (int from, int to)
-            {
-                ReorderBillInStack(billGiver.BillStack, from, to);
-            });
+            ReorderableGroup = ReorderableWidget.NewGroup(
+                (from, to) => ReorderBillInStack(billGiver.BillStack, from, to),
+                ReorderableDirection.Vertical);
 
             return true;
         }

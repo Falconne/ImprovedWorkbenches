@@ -53,17 +53,11 @@
     <Compile Include="Detours\Bill_DoInterface_Detour.cs" />
     <Compile Include="Detours\Bill_LabelCap_Detour.cs" />
     <Compile Include="Detours\Bill_Production_DoConfigInterface_Detour.cs" />
-    <Compile Include="Detours\Bill_PawnAllowedToStartAnew_Detour.cs" />
     <Compile Include="Detours\Bill_Production_RepeatInfoText_Detour.cs" />
     <Compile Include="Detours\Building_Destroy_Detour.cs" />
-    <Compile Include="Detours\Listing_TreeThingFilter_DoThingDef_Detour.cs" />
     <Compile Include="Detours\Pawn_Spawn_Detour.cs" />
-    <Compile Include="Detours\StoreUtility_TryFindBestBetterStoreCellFor_Patch.cs" />
     <Compile Include="Detours\Widgets_ButtonImage_Detour.cs" />
-    <Compile Include="Detours\ZoneManager_DeregisterZone_Patch.cs" />
     <Compile Include="Filtering\PawnOriginalMapSaver.cs" />
-    <Compile Include="Filtering\StatFilterWrapper.cs" />
-    <Compile Include="Keyboard Entry\Dialog_NumericEntry.cs" />
     <Compile Include="Custom Storage\ExtendedBillData.cs" />
     <Compile Include="Custom Storage\ExtendedBillDataStorage.cs" />
     <Compile Include="Detours\RecipeWorkerCounter_CountProducts_Detour.cs" />

@@ -17,6 +17,9 @@ namespace ImprovedWorkbenches
                 return;
 
             var tab = __instance.CurTabs?.FirstOrDefault();
+            if (tab == null)
+                return;
+
             var tabIsBills = false;
 
             if (tab is ITab_Bills || Main.Instance.IsOfTypeRimFactoryBillsTab(tab))

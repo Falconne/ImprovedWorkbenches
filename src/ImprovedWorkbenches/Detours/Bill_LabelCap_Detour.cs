@@ -13,7 +13,7 @@ namespace ImprovedWorkbenches
             if (bill == null)
                 return true;
 
-            var extendedBillData = Main.Instance.GetExtendedBillDataStorage().GetExtendedDataFor(bill);
+            var extendedBillData = Main.Instance.GetExtendedBillDataStorage().GetOrCreateExtendedDataFor(bill);
 
             if (string.IsNullOrEmpty(extendedBillData?.Name))
                 return true;

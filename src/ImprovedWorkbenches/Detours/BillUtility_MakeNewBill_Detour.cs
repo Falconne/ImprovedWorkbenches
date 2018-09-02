@@ -12,10 +12,8 @@ namespace ImprovedWorkbenches.Detours
                 return;
 
             var billProduction = __result as Bill_Production;
-            if (billProduction == null)
-                return;
 
-            billProduction.storeMode = BillStoreModeDefOf.DropOnFloor;
+            billProduction?.SetStoreMode(BillStoreModeDefOf.DropOnFloor);
         }
     }
 }

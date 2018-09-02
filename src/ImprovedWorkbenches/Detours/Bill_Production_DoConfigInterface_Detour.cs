@@ -24,7 +24,7 @@ namespace ImprovedWorkbenches
             var storeModeImage = Resources.BestStockpile;
             var nextStoreMode = BillStoreModeDefOf.DropOnFloor;
             var tip = "IW.ClickToDropTip".Translate();
-            if (__instance.storeMode == BillStoreModeDefOf.DropOnFloor)
+            if (__instance.GetStoreMode() == BillStoreModeDefOf.DropOnFloor)
             {
                 storeModeImage = Resources.DropOnFloor;
                 nextStoreMode = BillStoreModeDefOf.BestStockpile;
@@ -32,29 +32,15 @@ namespace ImprovedWorkbenches
             }
 
             var extendedBillDataStorage = Main.Instance.GetExtendedBillDataStorage();
-            var storeModeRect = new Rect(baseRect.xMax - 80f, baseRect.y, 24f, 24f);
+            var storeModeRect = new Rect(baseRect.xMax - 110f, baseRect.y, 24f, 24f);
             if (Widgets.ButtonImage(storeModeRect, storeModeImage, baseColor))
             {
-                __instance.storeMode = nextStoreMode;
-                var extendedBillData = extendedBillDataStorage.GetExtendedDataFor(__instance);
-                extendedBillData?.RemoveTakeToStockpile();
+                __instance.SetStoreMode(nextStoreMode);
             }
             TooltipHandler.TipRegion(storeModeRect, tip);
 
             var nextButtonX = storeModeRect.xMin - 28f;
             var copyPasteHandler = Main.Instance.BillCopyPasteHandler;
-            if (copyPasteHandler.CanCopy(__instance))
-            {
-                var copyBillRect = new Rect(nextButtonX, baseRect.y, 24f, 24f);
-                if (Widgets.ButtonImage(copyBillRect, Resources.CopyButton, baseColor))
-                {
-                    copyPasteHandler.DoCopy(__instance);
-                }
-                TooltipHandler.TipRegion(copyBillRect, "IW.CopyJustBillsTip".Translate());
-
-                nextButtonX -= 28f;
-            }
-
             var pasteRect = new Rect(nextButtonX, baseRect.y, 24f, 24f);
             if (copyPasteHandler.CanPasteInto(__instance))
             {

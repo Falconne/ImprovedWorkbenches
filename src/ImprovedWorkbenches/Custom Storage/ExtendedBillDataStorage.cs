@@ -8,7 +8,7 @@ using Verse;
 
 namespace ImprovedWorkbenches
 {
-    public class ExtendedBillDataStorage : UtilityWorldObject, IExposable
+    public class ExtendedBillDataStorage : UtilityWorldObject
     {
         private Dictionary<int, ExtendedBillData> _store =
             new Dictionary<int, ExtendedBillData>();
@@ -40,53 +40,26 @@ namespace ImprovedWorkbenches
             }
         }
 
-        private void SetMapForExtendedBillData(int billIdToFind, ExtendedBillData extendedBillData)
+        // Return the associate extended data for a given bill, if found.
+        public ExtendedBillData GetExtendedDataFor(Bill_Production bill)
         {
-            if (extendedBillData.BillMapFoundInSave)
-                return;
-
-            Main.Instance.Logger.Message($"Looking for map for bill id {billIdToFind}...");
-
-            // Found a stored dataset with no BillMap. Search through all work tables
-            // for the matching bill ID for this dataset and use the map in the bill
-            // found.
-            foreach (Map someMap in Find.Maps)
-            {
-                foreach (var workTable in
-                    someMap.listerBuildings.AllBuildingsColonistOfClass<Building_WorkTable>())
-                {
-                    foreach (var bill in workTable.BillStack.Bills)
-                    {
-                        var billProduction = bill as Bill_Production;
-                        if (billProduction == null || GetBillId(billProduction) != billIdToFind)
-                            continue;
-
-                        Main.Instance.Logger.Message($"Setting Map for legacy bill store {billIdToFind}");
-                        extendedBillData.SetBillMap(billProduction.Map);
-                        return;
-                    }
-                }
-            }
-
-            Main.Instance.Logger.Warning($"Bill id {billIdToFind} not found.");
+            var loadId = GetBillId(bill);
+            return _store.TryGetValue(loadId, out ExtendedBillData data) ? data : null;
         }
 
         // Return the associate extended data for a given bill, creating a new association
         // if required.
-        public ExtendedBillData GetExtendedDataFor(Bill_Production bill)
+        public ExtendedBillData GetOrCreateExtendedDataFor(Bill_Production bill)
         {
-
-            var loadId = GetBillId(bill);
-            if (_store.TryGetValue(loadId, out ExtendedBillData data))
+            var data = GetExtendedDataFor(bill);
+            if (data != null)
             {
-                SetMapForExtendedBillData(loadId, data);
                 return data;
             }
 
             var newExtendedData = new ExtendedBillData();
-            if (CanOutputBeFiltered(bill))
-                newExtendedData.SetDefaultFilter(bill);
 
+            var loadId = GetBillId(bill);
             _store[loadId] = newExtendedData;
             return newExtendedData;
         }
@@ -177,8 +150,7 @@ namespace ImprovedWorkbenches
 
         public void MirrorBills(Bill_Production sourceBill, Bill_Production destinationBill, bool preserveTargetProduct)
         {
-            if (!preserveTargetProduct || DoFiltersMatch(sourceBill.recipe?.fixedIngredientFilter,
-                destinationBill.recipe?.fixedIngredientFilter))
+            if (!preserveTargetProduct || DoFiltersMatch(sourceBill, destinationBill))
             {
                 if (sourceBill.ingredientFilter != null)
                     destinationBill.ingredientFilter?.CopyAllowancesFrom(sourceBill.ingredientFilter);
@@ -186,7 +158,7 @@ namespace ImprovedWorkbenches
 
             destinationBill.ingredientSearchRadius = sourceBill.ingredientSearchRadius;
             destinationBill.allowedSkillRange = sourceBill.allowedSkillRange;
-            destinationBill.storeMode = sourceBill.storeMode;
+            destinationBill.SetStoreMode(sourceBill.GetStoreMode());
             destinationBill.paused = sourceBill.paused;
 
             if (Main.Instance.ShouldMirrorSuspendedStatus())
@@ -209,34 +181,22 @@ namespace ImprovedWorkbenches
                 destinationBill.targetCount = sourceBill.targetCount;
                 destinationBill.pauseWhenSatisfied = sourceBill.pauseWhenSatisfied;
                 destinationBill.unpauseWhenYouHave = sourceBill.unpauseWhenYouHave;
+                destinationBill.includeEquipped = sourceBill.includeEquipped;
+                destinationBill.includeTainted = sourceBill.includeTainted;
+                destinationBill.includeFromZone = sourceBill.includeFromZone;
+                destinationBill.hpRange = sourceBill.hpRange;
+                destinationBill.qualityRange = sourceBill.qualityRange;
+                destinationBill.limitToAllowedStuff = sourceBill.limitToAllowedStuff;
             }
 
-            var sourceExtendedData = GetExtendedDataFor(sourceBill);
+            var sourceExtendedData = GetOrCreateExtendedDataFor(sourceBill);
 
             if (sourceExtendedData == null)
                 return;
 
-            var destinationExtendedData = GetExtendedDataFor(destinationBill);
+            var destinationExtendedData = GetOrCreateExtendedDataFor(destinationBill);
 
             destinationExtendedData?.CloneFrom(sourceExtendedData, !preserveTargetProduct);
-        }
-
-        public void OnStockpileDeteled(Zone_Stockpile stockpile)
-        {
-            foreach (var extendedBillData in _store.Values)
-            {
-                if (extendedBillData.UsesCountingStockpile()
-                    && extendedBillData.GetCountingStockpile() == stockpile)
-                {
-                    extendedBillData.RemoveCountingStockpile();
-                }
-
-                if (extendedBillData.UsesTakeToStockpile()
-                    && extendedBillData.GetTakeToStockpile() == stockpile)
-                {
-                    extendedBillData.RemoveTakeToStockpile();
-                }
-            }
         }
 
         // Figure out if output of bill produces a "thing" we care about
@@ -256,8 +216,11 @@ namespace ImprovedWorkbenches
             return (int)LoadIdGetter.GetValue(bill);
         }
 
-        private bool DoFiltersMatch(ThingFilter first, ThingFilter second)
+        private bool DoFiltersMatch(Bill sourceBill, Bill destinationBill)
         {
+            var first = sourceBill.recipe?.fixedIngredientFilter;
+            var second = destinationBill.recipe?.fixedIngredientFilter;
+
             if (first == null || second == null)
                 return false;
 
