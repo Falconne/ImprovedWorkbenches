@@ -34,6 +34,12 @@ namespace ImprovedWorkbenches
 
         static void ReorderBillInStack(BillStack stack, int from, int to)
         {
+            if (to >= stack.Count)
+                to = stack.Count - 1;
+
+            if (from == to)
+                return;
+
             var bill = stack[from];
             var offset = to - from;
             stack.Reorder(bill, offset);
