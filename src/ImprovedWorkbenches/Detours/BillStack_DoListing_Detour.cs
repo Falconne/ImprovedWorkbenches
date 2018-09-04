@@ -1,7 +1,9 @@
-﻿using Harmony;
+﻿using System.Reflection;
+using Harmony;
 using RimWorld;
 using UnityEngine;
 using Verse;
+using Verse.Sound;
 
 namespace ImprovedWorkbenches
 {
@@ -11,6 +13,20 @@ namespace ImprovedWorkbenches
         public static int ReorderableGroup { get; private set; }
 
         public static bool BlockButtonDraw = false;
+
+        private static readonly FieldInfo WinSizeGetter = typeof(ITab_Bills).GetField("WinSize",
+            BindingFlags.NonPublic | BindingFlags.Static);
+
+        private static readonly FieldInfo PasteXGetter = typeof(ITab_Bills).GetField("PasteX",
+            BindingFlags.NonPublic | BindingFlags.Static);
+
+        private static readonly FieldInfo PasteYGetter = typeof(ITab_Bills).GetField("PasteY",
+            BindingFlags.NonPublic | BindingFlags.Static);
+
+        private static readonly FieldInfo PasteSizeGetter = typeof(ITab_Bills).GetField("PasteSize",
+            BindingFlags.NonPublic | BindingFlags.Static);
+
+        private static Rect _vanillaPasteRect;
 
         public static bool Prefix()
         {
@@ -28,6 +44,24 @@ namespace ImprovedWorkbenches
             ReorderableGroup = ReorderableWidget.NewGroup(
                 (from, to) => ReorderBillInStack(billGiver.BillStack, from, to),
                 ReorderableDirection.Vertical);
+
+            var winSize = (Vector2) WinSizeGetter.GetValue(null);
+            var pasteX = (float) PasteXGetter.GetValue(null);
+            var pasteY = (float) PasteYGetter.GetValue(null);
+            var buttonWidth = (float) PasteSizeGetter.GetValue(null);
+            _vanillaPasteRect = new Rect(winSize.x - pasteX, pasteY, buttonWidth, buttonWidth);
+
+            if (!(selectedThing is Building_WorkTable workTable))
+                return true;
+
+            var billCopyPasteHandler = Main.Instance.BillCopyPasteHandler;
+            if (!billCopyPasteHandler.CanPasteInto(workTable))
+                return true;
+
+            if (Widgets.ButtonImageFitted(_vanillaPasteRect, Resources.PasteButton, Color.white))
+            {
+                billCopyPasteHandler.DoPasteInto(workTable, false);
+            }
 
             return true;
         }
@@ -51,45 +85,39 @@ namespace ImprovedWorkbenches
                 return;
 
             var gap = 4f;
-            var buttonWidth = 70f;
-            var rectCopyAll = new Rect(rect.xMin + 154f, rect.yMin, buttonWidth, 29f);
+            var buttonWidth = (float) PasteSizeGetter.GetValue(null);
+
+            var buttonRect = new Rect(_vanillaPasteRect);
+            buttonRect.xMin -= buttonWidth + gap;
+            buttonRect.xMax -= buttonWidth + gap;
+
             var billCopyPasteHandler = Main.Instance.BillCopyPasteHandler;
             if (workTable.BillStack != null && workTable.BillStack.Count > 0)
             {
-                if (Widgets.ButtonText(rectCopyAll, "IW.CopyAllLabel".Translate()))
+                if (Widgets.ButtonImageFitted(buttonRect, Resources.CopyButton, Color.white))
                 {
                     billCopyPasteHandler.DoCopy(workTable);
+					SoundDefOf.Tick_Low.PlayOneShotOnCamera();
                 }
-                TooltipHandler.TipRegion(rectCopyAll, "IW.CopyAllTip".Translate());
+                TooltipHandler.TipRegion(buttonRect, "IW.CopyAllTip".Translate());
+                buttonRect.xMin -= buttonWidth + gap;
+                buttonRect.xMax -= buttonWidth + gap;
             }
 
             if (!billCopyPasteHandler.CanPasteInto(workTable))
                 return;
 
-            var rectPaste = new Rect(rectCopyAll);
-            rectPaste.xMin += buttonWidth + gap;
-            rectPaste.xMax += buttonWidth + gap;
-            if (Widgets.ButtonText(rectPaste, 
-                billCopyPasteHandler.IsMultipleBillsCopied() ? "IW.PasteAllLabel".Translate() : "IW.Paste".Translate()))
+            var rectPaste = new Rect(_vanillaPasteRect);
+            if (Widgets.ButtonImageFitted(rectPaste, Resources.PasteButton, Color.white))
             {
                 billCopyPasteHandler.DoPasteInto(workTable, false);
             }
-            TooltipHandler.TipRegion(rectPaste, "IW.PasteAllTip".Translate());
 
-            var oldFont = Text.Font;
-            Text.Font = GameFont.Tiny;
-
-            var rectLink = new Rect(rectPaste);
-            rectLink.xMin += buttonWidth + gap;
-            rectLink.xMax += buttonWidth + gap;
-            if (Widgets.ButtonText(rectLink, "IW.PasteLinkLabel".Translate()))
+            if (Widgets.ButtonImageFitted(buttonRect, Resources.Link, Color.white))
             {
                 billCopyPasteHandler.DoPasteInto(workTable, true);
             }
-            TooltipHandler.TipRegion(rectLink,
-                "IW.PasteLinkTip".Translate());
-
-            Text.Font = oldFont;
+            TooltipHandler.TipRegion(buttonRect, "IW.PasteLinkTip".Translate());
         }
     }
 }

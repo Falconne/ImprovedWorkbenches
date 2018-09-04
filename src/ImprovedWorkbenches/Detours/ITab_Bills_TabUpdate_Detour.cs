@@ -14,9 +14,14 @@ namespace ImprovedWorkbenches
         [HarmonyPrefix]
         public static bool Prefix(ref ITab_Bills __instance)
         {
-            var bill = MouseOverBillGetter.GetValue(__instance) as Bill_Production;
-            if (bill == null)
+            if (!(MouseOverBillGetter.GetValue(__instance) is Bill_Production bill))
                 return true;
+
+            if (BillUtility.Clipboard != null)
+            {
+                Main.Instance.BillCopyPasteHandler.DoCopy(bill);
+                BillUtility.Clipboard = null;
+            }
 
             Main.Instance.GetExtendedBillDataStorage().MirrorBillToLinkedBills(bill);
             return true;

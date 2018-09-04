@@ -14,6 +14,8 @@ namespace ImprovedWorkbenches
 
         public static readonly Texture2D BreakLink = ContentFinder<Texture2D>.Get("BreakLink");
 
+        public static readonly Texture2D Link = ContentFinder<Texture2D>.Get("Link");
+
         public static readonly Texture2D LeftArrow = ContentFinder<Texture2D>.Get("LeftArrow");
 
         public static readonly Texture2D RightArrow = ContentFinder<Texture2D>.Get("RightArrow");

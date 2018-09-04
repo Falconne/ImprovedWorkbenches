@@ -90,17 +90,17 @@ namespace ImprovedWorkbenches
 
             const float buttonHeight = 26f;
 
-            var y = inRect.height - 100f + Text.LineHeight;
+            var y = inRect.height - 84f;
 
             // Helper method for checkboxes
             void SimpleCheckBoxWithToolTip(string label, ref bool setting, string tip)
             {
-                y += 26;
                 var subRect = new Rect(0f, y, columnWidth, buttonHeight);
                 Widgets.CheckboxLabeled(subRect, label.Translate(),
                     ref setting);
 
                 TooltipHandler.TipRegion(subRect, tip.Translate());
+                y += 26;
             };
 
             // Checkbox helper method with consistent language tokens
