@@ -51,9 +51,6 @@
   <IW.CountInstalledLabel>設置品も含む</IW.CountInstalledLabel>
   <IW.CountInstalledDesc>設置されたアイテムや建築物も含めて数えます</IW.CountInstalledDesc>
 
-  <IW.CountEquippedWeaponsLabel>装備アイテムも含める</IW.CountEquippedWeaponsLabel>
-  <IW.CountEquippedWeaponsDesc>入植者が現在装備しているアイテムや武器も数えます</IW.CountEquippedWeaponsDesc>
-
   <IW.OpenPreviousBillTip>前の加工命令を開く</IW.OpenPreviousBillTip>
 
   <IW.OpenNextBillTip>次の加工命令を開く</IW.OpenNextBillTip>
