@@ -158,7 +158,7 @@ namespace ImprovedWorkbenches
 
             destinationBill.ingredientSearchRadius = sourceBill.ingredientSearchRadius;
             destinationBill.allowedSkillRange = sourceBill.allowedSkillRange;
-            destinationBill.SetStoreMode(sourceBill.GetStoreMode());
+            destinationBill.SetStoreMode(sourceBill.GetStoreMode(), sourceBill.GetStoreZone());
             destinationBill.paused = sourceBill.paused;
 
             if (Main.Instance.ShouldMirrorSuspendedStatus())
