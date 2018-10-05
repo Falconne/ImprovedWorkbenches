@@ -2,6 +2,7 @@
 using System.Linq;
 using RimWorld;
 using Verse;
+using Harmony;
 
 namespace ImprovedWorkbenches
 {
@@ -27,4 +28,30 @@ namespace ImprovedWorkbenches
             Scribe_Values.Look(ref Name, "name", null);
         }
     }
+
+
+    [HarmonyPatch(typeof(Bill_Production), nameof(Bill_Production.ExposeData))]
+    public static class ExtendedBillData_ExposeData
+    {
+        public static void Postfix(Bill_Production __instance)
+        {
+            var storage = HugsLib.Utils.UtilityWorldObjectManager.GetUtilityWorldObject<ExtendedBillDataStorage>();
+            storage.GetOrCreateExtendedDataFor(__instance).ExposeData();
+        }
+    }
+
+
+    [HarmonyPatch(typeof(Bill_Production), nameof(Bill_Production.Clone))]
+    public static class ExtendedBillData_Clone
+    {
+        public static void Postfix(Bill_Production __instance, Bill_Production __result)
+        {
+            var storage = Main.Instance.GetExtendedBillDataStorage();
+            var sourceExtendedData = storage.GetExtendedDataFor(__instance);
+            var destinationExtendedData = storage.GetOrCreateExtendedDataFor(__result);
+            
+            destinationExtendedData?.CloneFrom(sourceExtendedData, true);
+        }
+    }
+
 }
