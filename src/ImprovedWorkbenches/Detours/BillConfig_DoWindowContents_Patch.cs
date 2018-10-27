@@ -98,7 +98,14 @@ namespace ImprovedWorkbenches
                 optionsList.CheckboxLabeled("IW.CountAwayLabel".Translate(), ref extendedBillData.CountAway, "IW.CountAwayDesc".Translate());
             }
             else
-                optionsList.Gap(Text.LineHeight);
+                optionsList.Gap(Text.LineHeight + optionsList.verticalSpacing);
+
+            // Output Filter
+            if(optionsList.ButtonText("IW.OutputFilterLabel".Translate()))
+            {
+                //TODO: handle multiple ThingFilterUI?
+                Find.WindowStack.Add(new Dialog_ThingFilter(extendedBillData));
+            }
 
             optionsList.End();
         }
