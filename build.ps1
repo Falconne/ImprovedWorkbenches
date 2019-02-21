@@ -139,7 +139,14 @@ function doPostBuild
 
     $version = $matches[1]
     $distZip = "$distDir\$targetName.$version.zip"
-    Compress-Archive -Path $distTargetDir -DestinationPath $distZip -CompressionLevel Optimal
+    removePath $distZip
+    $sevenZip = "$PSScriptRoot\7z.exe"
+    & $sevenZip a -mx=9 "$distZip" "$distDir\*"
+    if ($LASTEXITCODE -ne 0)
+    {
+        throw "7zip command failed"
+    }
+
     Write-Host "Created $distZip"
 
 
