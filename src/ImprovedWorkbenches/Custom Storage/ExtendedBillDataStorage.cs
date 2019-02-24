@@ -10,26 +10,14 @@ namespace ImprovedWorkbenches
 {
     public class ExtendedBillDataStorage : UtilityWorldObject
     {
-        private Dictionary<int, ExtendedBillData> _store =
-            new Dictionary<int, ExtendedBillData>();
+        private Dictionary<Bill_Production, ExtendedBillData> _store =
+            new Dictionary<Bill_Production, ExtendedBillData>();
 
         private List<LinkedBillsSet> _linkedBillsSets = new List<LinkedBillsSet>();
-
-        private List<int> _billIDsWorkingList;
-
-        private List<ExtendedBillData> _extendedBillDataWorkingList;
-
-        private static readonly FieldInfo LoadIdGetter = typeof(Bill).GetField("loadID",
-            BindingFlags.NonPublic | BindingFlags.Instance);
-
-
+        
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Collections.Look(
-                ref _store, "store",
-                LookMode.Value, LookMode.Deep,
-                ref _billIDsWorkingList, ref _extendedBillDataWorkingList);
 
             Scribe_Collections.Look(ref _linkedBillsSets, "linkedBillsSets",
                 LookMode.Deep);
@@ -43,8 +31,7 @@ namespace ImprovedWorkbenches
         // Return the associate extended data for a given bill, if found.
         public ExtendedBillData GetExtendedDataFor(Bill_Production bill)
         {
-            var loadId = GetBillId(bill);
-            return _store.TryGetValue(loadId, out ExtendedBillData data) ? data : null;
+            return _store.TryGetValue(bill, out ExtendedBillData data) ? data : null;
         }
 
         // Return the associate extended data for a given bill, creating a new association
@@ -59,17 +46,15 @@ namespace ImprovedWorkbenches
 
             var newExtendedData = new ExtendedBillData();
 
-            var loadId = GetBillId(bill);
-            _store[loadId] = newExtendedData;
+            _store[bill] = newExtendedData;
             return newExtendedData;
         }
 
         // Delete extended data when bill is deleted
         public void DeleteExtendedDataFor(Bill_Production bill)
         {
-            var billId = GetBillId(bill);
             RemoveBillFromLinkSets(bill);
-            _store.Remove(billId);
+            _store.Remove(bill);
         }
 
         public void LinkBills(Bill_Production parent, Bill_Production child)
@@ -209,11 +194,6 @@ namespace ImprovedWorkbenches
                 return bill.recipe.products.Count == 1;
 
             return false;
-        }
-
-        private int GetBillId(Bill_Production bill)
-        {
-            return (int)LoadIdGetter.GetValue(bill);
         }
 
         private bool DoFiltersMatch(Bill sourceBill, Bill destinationBill)
