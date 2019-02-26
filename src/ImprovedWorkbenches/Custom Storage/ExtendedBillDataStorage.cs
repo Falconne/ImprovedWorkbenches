@@ -60,12 +60,6 @@ namespace ImprovedWorkbenches
 
             var productionBills = _store.Keys.ToList();
 
-            Main.Instance.Logger.Message("Existing bill IDs:");
-            foreach (var productionBill in productionBills)
-            {
-                Main.Instance.Logger.Message($"ID: {(int) loadIdGetter.GetValue(productionBill)}");
-            }
-
             foreach (var billId in _legacyStore.Keys)
             {
                 var bill = productionBills.FirstOrDefault(b => billId == (int) loadIdGetter.GetValue(b));
