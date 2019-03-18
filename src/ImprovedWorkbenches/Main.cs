@@ -21,6 +21,7 @@ namespace ImprovedWorkbenches
             _extendedBillDataStorage =
                 UtilityWorldObjectManager.GetUtilityWorldObject<ExtendedBillDataStorage>();
             BillCopyPasteHandler.Clear();
+            _extendedBillDataStorage.MigrateLegacyBillStore();
         }
 
         public override void DefsLoaded()

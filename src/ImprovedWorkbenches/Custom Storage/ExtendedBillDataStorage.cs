@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using HugsLib.Utils;
@@ -10,11 +11,15 @@ namespace ImprovedWorkbenches
 {
     public class ExtendedBillDataStorage : UtilityWorldObject
     {
-        private Dictionary<Bill_Production, ExtendedBillData> _store =
+        private readonly Dictionary<Bill_Production, ExtendedBillData> _store =
             new Dictionary<Bill_Production, ExtendedBillData>();
 
+        private Dictionary<int, ExtendedBillData> _legacyStore =
+            new Dictionary<int, ExtendedBillData>();
+
+
         private List<LinkedBillsSet> _linkedBillsSets = new List<LinkedBillsSet>();
-        
+
         public override void ExposeData()
         {
             base.ExposeData();
@@ -22,11 +27,55 @@ namespace ImprovedWorkbenches
             Scribe_Collections.Look(ref _linkedBillsSets, "linkedBillsSets",
                 LookMode.Deep);
 
+            {
+                // Needed for migrating legacy ExtendedBillData storage
+                var billIDsWorkingList = new List<int>();
+                var extendedBillDataWorkingList = new List<ExtendedBillData>();
+
+                Scribe_Collections.Look(
+                    ref _legacyStore, "store",
+                    LookMode.Value, LookMode.Deep,
+                    ref billIDsWorkingList, ref extendedBillDataWorkingList);
+            }
+
             if (Scribe.mode == LoadSaveMode.LoadingVars && _linkedBillsSets == null)
             {
                 _linkedBillsSets = new List<LinkedBillsSet>();
             }
         }
+
+        public void MigrateLegacyBillStore()
+        {
+            if (_legacyStore.Count == 0) return;
+
+            Main.Instance.Logger.Message("Migrating legacy bill store");
+
+            var loadIdGetter = typeof(Bill).GetField("loadID", BindingFlags.NonPublic | BindingFlags.Instance);
+
+            if (loadIdGetter == null)
+            {
+                Main.Instance.Logger.Warning("Cannot fetch ID field from Bills, cannot migrate legacy data.");
+                return;
+            }
+
+            var productionBills = _store.Keys.ToList();
+
+            foreach (var billId in _legacyStore.Keys)
+            {
+                var bill = productionBills.FirstOrDefault(b => billId == (int) loadIdGetter.GetValue(b));
+                if (bill == null)
+                {
+                    Main.Instance.Logger.Warning($"Cannot find bill for id {billId}, cannot migrate");
+                    continue;
+                }
+
+                _store[bill] = _legacyStore[billId];
+                Main.Instance.Logger.Message($"Migradted bill id: {billId}");
+            }
+
+            _legacyStore.Clear();
+        }
+
 
         // Return the associate extended data for a given bill, if found.
         public ExtendedBillData GetExtendedDataFor(Bill_Production bill)
@@ -151,8 +200,8 @@ namespace ImprovedWorkbenches
                 destinationBill.suspended = sourceBill.suspended;
             }
 
-            var outputCanBeFiltered = 
-                CanOutputBeFiltered(destinationBill) 
+            var outputCanBeFiltered =
+                CanOutputBeFiltered(destinationBill)
                 || destinationBill.recipe?.WorkerCounter is RecipeWorkerCounter_MakeStoneBlocks;
 
             if (sourceBill.repeatMode != BillRepeatModeDefOf.TargetCount || outputCanBeFiltered)

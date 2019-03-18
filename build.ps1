@@ -1,8 +1,3 @@
-# TODO:
-# 1. Update ThirdParty automatically when Game updates
-# 2. Update assemblyinfo.cs when needed based on last git tag
-# 3. Update HugsLib version checker's Version.xml
-
 param
 (
     [Parameter(Mandatory = $true)]
@@ -80,18 +75,6 @@ function updateToGameVersion
     $gameVersionWithRev = Get-Content $gameVersionFile
     $version = [version] ($gameVersionWithRev.Split(" "))[0]
 
-
-
-    $aboutFile = Resolve-Path "$PSScriptRoot\mod-structure\About\About.xml"
-    $aboutFileContent = [xml] (Get-Content -Raw $aboutFile)
-    $gameVersion = [version] $aboutFileContent.ModMetaData.targetVersion
-    if ($gameVersion -ne $version)
-    {
-        Write-Host "Updating to mod to game version $version"
-        $aboutFileContent.ModMetaData.targetVersion = $version.ToString()
-        $aboutFileContent.Save($aboutFile)
-    }
-
     $content = Get-Content -Raw $assemblyInfoFile
     $newContent = $content -replace '"\d+\.\d+(\.\d+\.\d+")', "`"$($version.Major).$($version.Minor)`$1"
 
@@ -156,7 +139,14 @@ function doPostBuild
 
     $version = $matches[1]
     $distZip = "$distDir\$targetName.$version.zip"
-    Compress-Archive -Path $distTargetDir -DestinationPath $distZip -CompressionLevel Optimal
+    removePath $distZip
+    $sevenZip = "$PSScriptRoot\7z.exe"
+    & $sevenZip a -mx=9 "$distZip" "$distDir\*"
+    if ($LASTEXITCODE -ne 0)
+    {
+        throw "7zip command failed"
+    }
+
     Write-Host "Created $distZip"
 
 
