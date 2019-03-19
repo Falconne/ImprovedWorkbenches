@@ -19,7 +19,6 @@ namespace ImprovedWorkbenches
         public void CloneFrom(ExtendedBillData other, bool cloneName)
         {
             CountAway = other.CountAway;
-            ProductAdditionalFilter = other.ProductAdditionalFilter;
             ProductAdditionalFilter = new ThingFilter();
             ProductAdditionalFilter.CopyAllowancesFrom(other.ProductAdditionalFilter);
             if (cloneName)
