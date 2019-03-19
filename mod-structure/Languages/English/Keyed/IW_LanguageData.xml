@@ -48,7 +48,9 @@
   <IW.CountAwayLabel>Count when away</IW.CountAwayLabel>
   <IW.CountAwayDesc>Also count items on any colonist or animal sent on a caravan, in transport pods, in cryptosleep chambers, or otherwise unavailable</IW.CountAwayDesc>
 
-  <IW.OutputFilterLabel>Output Filter</IW.OutputFilterLabel>
+  <IW.OutputFilterLabel>Also Include For "Until X"</IW.OutputFilterLabel>
+    
+  <IW.OutputFilterTitle>"Do Until X" also includes these:</IW.OutputFilterTitle>
 
   <IW.CountInstalledLabel>Count installed items</IW.CountInstalledLabel>
   <IW.CountInstalledDesc>Also count items that have been installed as a building</IW.CountInstalledDesc>

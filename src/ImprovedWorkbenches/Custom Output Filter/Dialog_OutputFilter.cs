@@ -47,14 +47,14 @@ namespace ImprovedWorkbenches
             filterRect.height -= 80;
             filterRect.y += 35;
 
-            Widgets.Label(titleRect, "Do Until X also includes these:");
+            Widgets.Label(titleRect, "IW.OutputFilterTitle".Translate());
 
             ThingFilterUI.DoThingFilterConfigWindow(filterRect, ref scrollPosition, filter,
                 openMask: TreeOpenMasks.ThingFilter,
                 forceHiddenFilters: specialThingDefs,
                 parentFilter: baseFilter);
 
-            if (Widgets.ButtonText(okayRect, "OK"))
+            if (Widgets.ButtonText(okayRect, "OK".Translate()))
             {
                 if (filter.AllowedThingDefs.Count() == 0)
                     extendedBill.ProductAdditionalFilter = null;
