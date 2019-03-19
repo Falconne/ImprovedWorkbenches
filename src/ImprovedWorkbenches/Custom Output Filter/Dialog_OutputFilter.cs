@@ -31,7 +31,7 @@ namespace ImprovedWorkbenches
                     extendedBill.ProductAdditionalFilter.CopyAllowancesFrom(filter);
             };
 
-            buttonBText = "Default Filter";
+            buttonBText = "Stop Using Filter";
             buttonBAction = () =>
             {
                 extendedBill.ProductAdditionalFilter = null;
