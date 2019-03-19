@@ -103,8 +103,9 @@ namespace ImprovedWorkbenches
             // Output Filter
             if(optionsList.ButtonText("IW.OutputFilterLabel".Translate()))
             {
-                //TODO: handle multiple ThingFilterUI?
-                Find.WindowStack.Add(new Dialog_ThingFilter(extendedBillData));
+                Window temp = Find.WindowStack.currentlyDrawnWindow;
+                temp.Close();
+                Find.WindowStack.Add(new Dialog_ThingFilter(extendedBillData, temp));
             }
 
             optionsList.End();
