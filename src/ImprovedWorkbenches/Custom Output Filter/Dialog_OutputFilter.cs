@@ -57,6 +57,7 @@ namespace ImprovedWorkbenches
             filterRect.height -= 40;
             ThingFilterUI.DoThingFilterConfigWindow(filterRect, ref scrollPosition, filter,
                 openMask: TreeOpenMasks.ThingFilter,
+                forceHiddenFilters: specialThingDefs,
                 parentFilter: baseFilter);
         }
 
