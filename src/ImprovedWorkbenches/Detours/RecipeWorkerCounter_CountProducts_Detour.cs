@@ -17,7 +17,7 @@ namespace ImprovedWorkbenches
 
             if (extendedBillData?.ProductAdditionalFilter != null)
             {
-                __result += CountAdditionalProducts(__instance, bill, extendedBillData.ProductAdditionalFilter);
+                __result += CountAdditionalProducts(__instance, bill, extendedBillData);
             }
 
             if (!bill.includeEquipped)
@@ -94,14 +94,17 @@ namespace ImprovedWorkbenches
         }
 
         // Count other things on map for ProductAdditionalFilter
-        public static int CountAdditionalProducts(RecipeWorkerCounter counter, Bill_Production bill, ThingFilter filter)
+        public static int CountAdditionalProducts(RecipeWorkerCounter counter, Bill_Production bill, ExtendedBillData extendedBillData)
         {
+            ThingFilter filter = extendedBillData.ProductAdditionalFilter;
+            bool countAway = extendedBillData.CountAway;
+                
             Map map = bill.Map;
             ThingDef defaultProductDef = counter.recipe.products[0].thingDef;
             int count = 0;
             foreach (ThingDef def in filter.AllowedThingDefs)
             {
-                //Obviously skip the default product
+                //Obviously skip the default product, it was already counted
                 if (def == defaultProductDef) continue;
 
                 //Same as CountProducts but now with other products
@@ -151,6 +154,10 @@ namespace ImprovedWorkbenches
                     {
                         count += CountPawnThings(pawn, counter, bill, def);
                     }
+                }
+                if (countAway)
+                {
+                    count += CountAway(map, counter, bill, def);
                 }
             }
             return count;
