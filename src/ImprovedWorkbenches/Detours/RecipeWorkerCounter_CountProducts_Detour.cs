@@ -94,6 +94,7 @@ namespace ImprovedWorkbenches
         }
 
         // Count other things on map for ProductAdditionalFilter
+        // This is sadly most of CountProducts re-written with a for loop for the additional defs
         public static int CountAdditionalProducts(RecipeWorkerCounter counter, Bill_Production bill, ExtendedBillData extendedBillData)
         {
             ThingFilter filter = extendedBillData.ProductAdditionalFilter;
