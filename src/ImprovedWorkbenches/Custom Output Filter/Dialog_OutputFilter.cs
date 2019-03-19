@@ -55,7 +55,7 @@ namespace ImprovedWorkbenches
                 forceHiddenFilters: specialThingDefs,
                 parentFilter: baseFilter);
 
-            if (Widgets.ButtonText(cancelRect, "Stop Using Filter"))
+            if (Widgets.ButtonText(cancelRect, "Clear and Stop Using Filter"))
             {
                 extendedBill.ProductAdditionalFilter = null;
                 Close();
