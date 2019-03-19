@@ -42,7 +42,6 @@ namespace ImprovedWorkbenches
         {
             Rect titleRect = inRect.TopPartPixels(40);
             Rect buttonsRect = inRect.BottomPartPixels(40);
-            Rect cancelRect = buttonsRect.LeftHalf();
             Rect okayRect = buttonsRect.RightHalf();
             Rect filterRect = inRect;
             filterRect.height -= 80;
@@ -55,17 +54,17 @@ namespace ImprovedWorkbenches
                 forceHiddenFilters: specialThingDefs,
                 parentFilter: baseFilter);
 
-            if (Widgets.ButtonText(cancelRect, "Clear and Stop Using Filter"))
-            {
-                extendedBill.ProductAdditionalFilter = null;
-                Close();
-            }
             if (Widgets.ButtonText(okayRect, "OK"))
             {
-                if (extendedBill.ProductAdditionalFilter == null)
-                    extendedBill.ProductAdditionalFilter = filter;
+                if (filter.AllowedThingDefs.Count() == 0)
+                    extendedBill.ProductAdditionalFilter = null;
                 else
-                    extendedBill.ProductAdditionalFilter.CopyAllowancesFrom(filter);
+                {
+                    if (extendedBill.ProductAdditionalFilter == null)
+                        extendedBill.ProductAdditionalFilter = filter;
+                    else
+                        extendedBill.ProductAdditionalFilter.CopyAllowancesFrom(filter);
+                }
                 Close();
             }
         }
