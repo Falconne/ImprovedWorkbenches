@@ -62,7 +62,7 @@ namespace ImprovedWorkbenches
 
             foreach (var billId in _legacyStore.Keys)
             {
-                var bill = productionBills.FirstOrDefault(b => billId == (int) loadIdGetter.GetValue(b));
+                var bill = productionBills.FirstOrDefault(b => billId == (int)loadIdGetter.GetValue(b));
                 if (bill == null)
                 {
                     Main.Instance.Logger.Warning($"Cannot find bill for id {billId}, cannot migrate");
@@ -215,12 +215,36 @@ namespace ImprovedWorkbenches
                 destinationBill.targetCount = sourceBill.targetCount;
                 destinationBill.pauseWhenSatisfied = sourceBill.pauseWhenSatisfied;
                 destinationBill.unpauseWhenYouHave = sourceBill.unpauseWhenYouHave;
-                destinationBill.includeEquipped = sourceBill.includeEquipped;
-                destinationBill.includeTainted = sourceBill.includeTainted;
                 destinationBill.includeFromZone = sourceBill.includeFromZone;
                 destinationBill.hpRange = sourceBill.hpRange;
-                destinationBill.qualityRange = sourceBill.qualityRange;
-                destinationBill.limitToAllowedStuff = sourceBill.limitToAllowedStuff;
+
+                var sourceThingDef = sourceBill.recipe.ProducedThingDef;
+                var producedThingDef = destinationBill.recipe.ProducedThingDef;
+                if (sourceThingDef != null && producedThingDef != null)
+                {
+                    if ((sourceThingDef.IsWeapon || sourceThingDef.IsApparel) &&
+                        (producedThingDef.IsWeapon || producedThingDef.IsApparel))
+                    {
+                        destinationBill.includeEquipped = sourceBill.includeEquipped;
+                    }
+
+                    if (sourceThingDef.IsApparel && sourceThingDef.apparel.careIfWornByCorpse &&
+                        producedThingDef.IsApparel && producedThingDef.apparel.careIfWornByCorpse)
+                    {
+                        destinationBill.includeTainted = sourceBill.includeTainted;
+                    }
+
+                    if (sourceThingDef.HasComp(typeof(CompQuality)) &&
+                        producedThingDef.HasComp(typeof(CompQuality)))
+                    {
+                        destinationBill.qualityRange = sourceBill.qualityRange;
+                    }
+
+                    if (sourceThingDef.MadeFromStuff && producedThingDef.MadeFromStuff)
+                    {
+                        destinationBill.limitToAllowedStuff = sourceBill.limitToAllowedStuff;
+                    }
+                }
             }
 
             var sourceExtendedData = GetOrCreateExtendedDataFor(sourceBill);

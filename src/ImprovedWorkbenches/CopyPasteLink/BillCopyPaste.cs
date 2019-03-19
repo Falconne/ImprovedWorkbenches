@@ -67,11 +67,6 @@ namespace ImprovedWorkbenches
             return _copiedBills.Count == 1 && _copiedBills.First() != targetBill;
         }
 
-        public bool IsMultipleBillsCopied()
-        {
-            return _copiedBills.Count > 1;
-        }
-
         public void DoPasteInto(Building_WorkTable workTable, bool link)
         {
             foreach (var sourceBill in _copiedBills)
