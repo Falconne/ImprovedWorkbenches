@@ -16,7 +16,7 @@ namespace ImprovedWorkbenches
 
         public Window reOpenWindow;
 
-        public Dialog_ThingFilter(ExtendedBillData extendedBill, Window w) : base("Product Filter")
+        public Dialog_ThingFilter(ExtendedBillData extendedBill, Window w) : base("Do Until X also includes these:")
         {
             reOpenWindow = w;
             filter = new ThingFilter();
@@ -53,7 +53,7 @@ namespace ImprovedWorkbenches
         {
             base.DoWindowContents(inRect);
 
-            Rect filterRect = new Rect(inRect);
+            Rect filterRect = inRect.BottomPartPixels(inRect.height - 40);
             filterRect.height -= 40;
             ThingFilterUI.DoThingFilterConfigWindow(filterRect, ref scrollPosition, filter,
                 openMask: TreeOpenMasks.ThingFilter,
