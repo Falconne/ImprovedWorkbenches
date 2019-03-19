@@ -40,7 +40,7 @@ namespace ImprovedWorkbenches
 
 
             // Look for matching items in colonists and animals away from base
-            foreach (var pawn in Find.WorldPawns.AllPawnsAlive)
+            foreach (var pawn in PawnsFinder.AllMapsCaravansAndTravelingTransportPods_Alive_OfPlayerFaction)
             {
                 if (pawn.GetOriginMap() != billMap)
                     // OriginMap is only set on our pawns who are away from base

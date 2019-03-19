@@ -27,7 +27,7 @@ namespace ImprovedWorkbenches.Detours
             if (__instance.HasOriginMap() && map.IsPlayerHome)
             {
                 //Pawn is there ; doesn't need to remember it
-                __instance.SetOriginMap(null); 
+                __instance.SetOriginMap(null);
             }
         }
     }
