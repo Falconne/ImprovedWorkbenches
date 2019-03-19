@@ -15,28 +15,28 @@ namespace ImprovedWorkbenches
 
         public Vector2 scrollPosition;
 
-        public Dialog_ThingFilter(ExtendedBillData extendedBill) : base("Output Filter")
+        public Dialog_ThingFilter(ExtendedBillData extendedBill) : base("Product Filter")
         {
             _extendedBill = extendedBill;
 
             filter = new ThingFilter();
-            if (_extendedBill.OutputFilter != null)
-                filter.CopyAllowancesFrom(_extendedBill.OutputFilter);
+            if (_extendedBill.ProductAdditionalFilter != null)
+                filter.CopyAllowancesFrom(_extendedBill.ProductAdditionalFilter);
 
             buttonAAction = () =>
             {
                 Log.Message("APPLIED");
-                if (_extendedBill.OutputFilter == null)
-                    _extendedBill.OutputFilter = filter;
+                if (_extendedBill.ProductAdditionalFilter == null)
+                    _extendedBill.ProductAdditionalFilter = filter;
                 else
-                    _extendedBill.OutputFilter.CopyAllowancesFrom(filter);
+                    _extendedBill.ProductAdditionalFilter.CopyAllowancesFrom(filter);
             };
 
             buttonBText = "Default Filter";
             buttonBAction = () =>
             {
                 Log.Message("Clear");
-                _extendedBill.OutputFilter = null;
+                _extendedBill.ProductAdditionalFilter = null;
             };
         }
 

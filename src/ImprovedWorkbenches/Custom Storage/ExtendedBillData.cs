@@ -10,7 +10,7 @@ namespace ImprovedWorkbenches
     {
         public bool CountAway;
         public string Name;
-        public ThingFilter OutputFilter;
+        public ThingFilter ProductAdditionalFilter;
 
         public ExtendedBillData()
         {
@@ -19,9 +19,9 @@ namespace ImprovedWorkbenches
         public void CloneFrom(ExtendedBillData other, bool cloneName)
         {
             CountAway = other.CountAway;
-            OutputFilter = other.OutputFilter;
-            OutputFilter = new ThingFilter();
-            OutputFilter.CopyAllowancesFrom(other.OutputFilter);
+            ProductAdditionalFilter = other.ProductAdditionalFilter;
+            ProductAdditionalFilter = new ThingFilter();
+            ProductAdditionalFilter.CopyAllowancesFrom(other.ProductAdditionalFilter);
             if (cloneName)
                 Name = other.Name;
         }
@@ -30,8 +30,7 @@ namespace ImprovedWorkbenches
         {
             Scribe_Values.Look(ref CountAway, "countAway", false);
             Scribe_Values.Look(ref Name, "name", null);
-            Scribe_Deep.Look(ref OutputFilter, "outputFilter");
-            Log.Message($"OutputFilter is {OutputFilter}");
+            Scribe_Deep.Look(ref ProductAdditionalFilter, "productFilter");
         }
     }
 
