@@ -20,7 +20,9 @@ namespace ImprovedWorkbenches
         {
             CountAway = other.CountAway;
             ProductAdditionalFilter = new ThingFilter();
-            ProductAdditionalFilter.CopyAllowancesFrom(other.ProductAdditionalFilter);
+            if(other.ProductAdditionalFilter != null)
+                ProductAdditionalFilter.CopyAllowancesFrom(other.ProductAdditionalFilter);
+
             if (cloneName)
                 Name = other.Name;
         }
