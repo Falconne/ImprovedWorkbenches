@@ -38,14 +38,26 @@ namespace ImprovedWorkbenches
             };
         }
 
-        List<SpecialThingFilterDef> specialThingDefs = DefDatabase<SpecialThingFilterDef>.AllDefs.ToList();
+        //to hide HP, quality, special filters, this is needed:
+        static ThingFilter baseFilter;
+        static Dialog_ThingFilter()
+        {
+            baseFilter = new ThingFilter();
+            baseFilter.SetAllowAll(null);
+            baseFilter.DisplayRootCategory = ThingCategoryNodeDatabase.RootNode;
+            baseFilter.allowedHitPointsConfigurable = false;
+            baseFilter.allowedQualitiesConfigurable = false;
+        }
+        static List<SpecialThingFilterDef> specialThingDefs = DefDatabase<SpecialThingFilterDef>.AllDefs.ToList();
         public override void DoWindowContents(Rect inRect)
         {
             base.DoWindowContents(inRect);
 
             Rect filterRect = new Rect(inRect);
             filterRect.height -= 40;
-            ThingFilterUI.DoThingFilterConfigWindow(filterRect, ref scrollPosition, filter, openMask: TreeOpenMasks.ThingFilter, forceHideHitPointsConfig: true, forceHiddenFilters: specialThingDefs);
+            ThingFilterUI.DoThingFilterConfigWindow(filterRect, ref scrollPosition, filter,
+                openMask: TreeOpenMasks.ThingFilter,
+                parentFilter: baseFilter);
         }
 
         public override void PreClose()
