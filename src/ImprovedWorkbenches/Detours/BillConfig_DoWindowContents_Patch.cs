@@ -87,33 +87,28 @@ namespace ImprovedWorkbenches
 
             if (billRaw.repeatMode != BillRepeatModeDefOf.TargetCount)
                 return;
-
-            const float buttonHeight = 26f;
-
-            var y = inRect.height - 84f;
-
-            // Helper method for checkboxes
-            void SimpleCheckBoxWithToolTip(string label, ref bool setting, string tip)
-            {
-                var subRect = new Rect(0f, y, columnWidth, buttonHeight);
-                Widgets.CheckboxLabeled(subRect, label.Translate(),
-                    ref setting);
-
-                TooltipHandler.TipRegion(subRect, tip.Translate());
-                y += 26;
-            };
-
-            // Checkbox helper method with consistent language tokens
-            void SimpleCheckBox(string label, ref bool setting)
-            {
-                SimpleCheckBoxWithToolTip($"IW.{label}Label", ref setting, $"IW.{label}Desc");
-            }
+            
+            Listing_Standard optionsList = new Listing_Standard();
+            float optionsHeight = 120;
+            optionsList.Begin(new Rect(0, inRect.height - optionsHeight, columnWidth, optionsHeight));
 
             // Inventory Filter
             if (billRaw.includeEquipped)
             {
-                SimpleCheckBox("CountAway", ref extendedBillData.CountAway);
+                optionsList.CheckboxLabeled("IW.CountAwayLabel".Translate(), ref extendedBillData.CountAway, "IW.CountAwayDesc".Translate());
             }
+            else
+                optionsList.Gap(Text.LineHeight + optionsList.verticalSpacing);
+
+            // Output Filter
+            if(optionsList.ButtonText("IW.OutputFilterLabel".Translate()))
+            {
+                Window temp = Find.WindowStack.currentlyDrawnWindow;
+                temp.Close();
+                Find.WindowStack.Add(new Dialog_ThingFilter(extendedBillData, temp));
+            }
+
+            optionsList.End();
         }
 
         private static void DrawWorkTableNavigation(Dialog_BillConfig dialog, Bill_Production bill, Rect inRect)
