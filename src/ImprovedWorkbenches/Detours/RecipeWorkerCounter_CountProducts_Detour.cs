@@ -44,7 +44,7 @@ namespace ImprovedWorkbenches
             if (extendedBillData?.CountAway ?? false)
                 __result += CountAway(billMap, __instance, bill, productThingDef);
         }
-        
+
         private static int CountAway(Map billMap, RecipeWorkerCounter counter, Bill_Production bill, ThingDef productThingDef)
         {
             int count = 0;
@@ -99,7 +99,7 @@ namespace ImprovedWorkbenches
         {
             ThingFilter filter = extendedBillData.ProductAdditionalFilter;
             bool countAway = extendedBillData.CountAway;
-                
+
             Map map = bill.Map;
             ThingDef defaultProductDef = counter.recipe.products[0].thingDef;
             int count = 0;
@@ -132,11 +132,15 @@ namespace ImprovedWorkbenches
                             }
                         }
                     }
-                    if(!bill.includeEquipped)   //Still count Carried Things
+
+                    if (!bill.includeEquipped)
+                    {
+                        //Still count Carried Things
                         foreach (Pawn pawn in map.mapPawns.FreeColonistsSpawned)
                         {
                             count += CountPawnThings(pawn, counter, bill, def, true);
                         }
+                    }
                 }
                 else
                 {
@@ -149,6 +153,7 @@ namespace ImprovedWorkbenches
                         }
                     }
                 }
+
                 if (bill.includeEquipped)
                 {
                     foreach (Pawn pawn in map.mapPawns.FreeColonistsSpawned)
