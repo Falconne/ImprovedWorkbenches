@@ -48,6 +48,10 @@
   <IW.CountAwayLabel>ほぼ全てを含む</IW.CountAwayLabel>
   <IW.CountAwayDesc>キャラバン隊や輸送用ポッドや冬眠カプセルに送られたアイテムや、使用禁止にされたその他の物などを含めて、入植者やペットのアイテムを数えます。</IW.CountAwayDesc>
 
+  <IW.OutputFilterLabel>追加アイテムも数える</IW.OutputFilterLabel>
+
+  <IW.OutputFilterTitle>さらにこれらの生産品も数える：</IW.OutputFilterTitle>
+
   <IW.CountInstalledLabel>設置品も含む</IW.CountInstalledLabel>
   <IW.CountInstalledDesc>設置されたアイテムや建築物も含めて数えます</IW.CountInstalledDesc>
 
