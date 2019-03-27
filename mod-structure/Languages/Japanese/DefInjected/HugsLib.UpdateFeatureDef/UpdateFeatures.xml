@@ -1,34 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
 
-	<ImprovedWorkbenches_17_1_0.modNameReadable>Better Workbench Management</ImprovedWorkbenches_17_1_0.modNameReadable>
-	<ImprovedWorkbenches_17_1_0.content>*　加工命令を「EnhancedCrafting」Modのように、特定の入植者に限定できるようになりました。|*　「EnhancedCrafting」Modのように、加工の継続レベルを微調整するボタンが追加されました。|*　材料指定フィルタで定義された材料を使用して作成されたアイテムのみをカウントするオプションが追加されました。|*　設置された彫刻などの配置されたアイテムは、もう利用可能な材料としてカウントされません。</ImprovedWorkbenches_17_1_0.content>
 
-	<ImprovedWorkbenches_17_3_0.modNameReadable>Better Workbench Management</ImprovedWorkbenches_17_3_0.modNameReadable>
-	<ImprovedWorkbenches_17_3_0.content>*　加工命令を互換性のあるワークベンチの中や同じ種類のワークベンチ間でコピーして貼り付けることができるようになりました。これは一度に1つずつ個別に実行することも、すべての加工命令をワークベンチにコピーして一度に貼り付けることもできます。このために[加工命令]タブのUIに新しいボタンが表示されます。|*　加工を貼り付けるときは、ペーストされた加工を元の加工に戻すリンクを貼り付けることができます。リンクされた加工に加えられた変更は、加工連鎖内のすべての加工に反映されます。後から手動でリンクを切断することもできます。|*　ワークベンチが選択されると、[加工命令]タブが自動的に開きます。これは、[Mod設定]メニューで無効にすることができます。|*　加工命令の名前を変更できるようになりました。</ImprovedWorkbenches_17_3_0.content>
-
-	<ImprovedWorkbenches_17_4_0.modNameReadable>Better Workbench Management</ImprovedWorkbenches_17_4_0.modNameReadable>
-	<ImprovedWorkbenches_17_4_0.content>名前を「Improved　Workbench　Filters」から「Better　Workbench　Management」に変更しました。</ImprovedWorkbenches_17_4_0.content>
-
-	<ImprovedWorkbenches_17_5_0.modNameReadable>Better Workbench Management</ImprovedWorkbenches_17_5_0.modNameReadable>
-	<ImprovedWorkbenches_17_5_0.content>*　互換性のある加工の間で材料フィルタの構成をコピーして貼り付ける機能が追加されました。利用可能な場合は、フィルターの下にボタンが表示されます。|*　材料は加工詳細のフィルタに表示され、その材料の今現在の在庫数が材料のところに表示されます。これはmod設定で無効にできます。|*　在庫が一定数以下に下がったときに生産を再開するように設定されている加工命令は、ワークベンチの概要にある括弧内に数量を表示します。「在庫x個まで繰り返す」ボタンのラベルは、「x回繰り返す」に合わせて短縮されています。|*　そのワークベンチの加工同士の間を案内するために、加工詳細ウィンドウの右上に案内の矢印が追加されています。</ImprovedWorkbenches_17_5_0.content>
-
-	<ImprovedWorkbenches_17_7_0.modNameReadable>Better Workbench Management</ImprovedWorkbenches_17_7_0.modNameReadable>
-	<ImprovedWorkbenches_17_7_0.content>*　「床に置く」/「最良の保管庫へ移動」に追加されたトグルボタンは、「Enhanced Crafting」Modのように、ワークベンチの概略パネルの各加工項目に切り替えます。|*　加工貯蔵の仕方を選択できるボタン（"最良の保管庫へ移動"と"床に置く"）には、マップ上の個々の備蓄された在庫も一覧表示されるようになりました。1か所を選択すると、労働者はその指定された備蓄ゾーンに完成品を保管することができます（備蓄ゾーンがそのアイテムを許可するように設定されていると仮定します）。|*　加工対象モードが「x回繰り返す」に設定されている場合、指定された在庫量の製品のみがカウントされるように指定できるようになりました。|*　「x回繰り返す」に設定されている衣類の加工命令については、入植者が着用する衣服も数える様に指定できるようになりました。|*　「目標数」と「達成で一時停止」スライダの近くに、キーボードで値を入力できるようにしたボタンが追加されました。|*　ModのUI管理は、レシピ情報ソートにあまり多くのスペースを取らずにダイアログに移動できるようになっています。作業者の制限用ボタンは現在2番目の列に表示されます。</ImprovedWorkbenches_17_7_0.content>
-
-	<ImprovedWorkbenches_18_2_0.modNameReadable>Better Workbench Management</ImprovedWorkbenches_18_2_0.modNameReadable>
-	<ImprovedWorkbenches_18_2_0.content>加工命令を上/下ボタンを使用する代わりに、ワークベンチの概要窓でドラッグして加工命令を並べ替えることができます。ドラッグは、加工命令の背景のどこからでも行うことができます。また、ボタンを置き換えたドラッグボックスを使用することもできます。</ImprovedWorkbenches_18_2_0.content>
-
-	<ImprovedWorkbenches_18_6_0.modNameReadable>Better Workbench Management</ImprovedWorkbenches_18_6_0.modNameReadable>
-	<ImprovedWorkbenches_18_6_0.content>*1つの指示がコピーされると、他のすべての指示、指示の詳細および作業台の概要画面に「貼り付け」ボタンが表示されます。このボタンは、生産アイテム自体を除き、材料指示からの互換性のある設定をすべて目的の指示命令に貼り付けます。たとえば、衣服アイテムごとにさまざまな指示命令を作成し、生産数と材料選択を調整して他のすべてに貼り付けることができます。どの指示命令の設定も別の指示命令に貼り付けることができますが、ひとつの設定がすべてのレシピ間で、互換性があるわけではありません。互換性のない設定はコピーされません。|*リンクされた指示命令が一時停止/再開されると、リンクされたすべての指示命令は同じステータスになります（設定で変更できます）。</ImprovedWorkbenches_18_6_0.content>
-
-	<ImprovedWorkbenches_18_7_0.modNameReadable>Better Workbench Management</ImprovedWorkbenches_18_7_0.modNameReadable>
-	<ImprovedWorkbenches_18_7_0.content>*備蓄ゾーンが選択されると、作業台の加工命令タブと同じように、その備蓄タブが自動的に開きます。</ImprovedWorkbenches_18_7_0.content>
-
-	<ImprovedWorkbenches_18_8_0.modNameReadable>Better Workbench Management</ImprovedWorkbenches_18_8_0.modNameReadable>
-	<ImprovedWorkbenches_18_8_0.content>@alextdによって追加された機能：「X回実行」の加工命令は、入植者が装備されている武器やシールドベルトを数えられるようになり、既存の「着ている服を数える」機能が拡張されました。</ImprovedWorkbenches_18_8_0.content>
-
-	<ImprovedWorkbenches_18_10_0.modNameReadable>Better Workbench Management</ImprovedWorkbenches_18_10_0.modNameReadable>
-	<ImprovedWorkbenches_18_10_0.content>*「床に置く」を「最良の保管庫へ運ぶ」の代わりに新しい加工の初期値として設定するオプションを追加しました。|Githubで@alextdによって追加された修正と新機能：|「備蓄数」と「運ぶ」|ゲームが別のマップで保存されたときに備蓄の設定がクリアされた問題の修正|*加工命令でマップに存在する、入植者や動物の所持するアイテムを数えるためのオプションを追加しましたが、マップ外のキャラバン隊や、襲撃者などは対象外です。| |*必要に応じて、設置された彫刻を数えるオプションを追加しました。</ImprovedWorkbenches_18_10_0.content>
+	<ImprovedWorkbenches_1_0_6.modNameReadable>Better Workbench Management</ImprovedWorkbenches_1_0_6.modNameReadable>
+	<ImprovedWorkbenches_1_0_6.content>*「X回実行」を使用している加工命令に、任意のアイテム数も追加して数えるボタンを追加しました。|Githubで@alextdによって追加された新機能：|例えば、簡単な食事をX回作成する加工命令を作成して、その加工命令を最終的な数量計算の際に「手のこんだ食事」または「豪華な食事」もカウントするように設定できます。
+</ImprovedWorkbenches_1_0_6.content>
 
 </LanguageData>
