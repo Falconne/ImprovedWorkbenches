@@ -10,39 +10,62 @@ namespace ImprovedWorkbenches
     [HarmonyPatch(typeof(RecipeWorkerCounter), "CountProducts")]
     public static class RecipeWorkerCounter_CountProducts_Detour
     {
-        [HarmonyPrefix]
         public static void Postfix(ref RecipeWorkerCounter __instance, ref int __result, ref Bill_Production bill)
         {
             var extendedBillData = Main.Instance.GetExtendedBillDataStorage().GetExtendedDataFor(bill);
+            if (extendedBillData == null)
+                return;
 
-            if (extendedBillData?.ProductAdditionalFilter != null)
+            if (extendedBillData.ProductAdditionalFilter != null)
             {
                 __result += CountAdditionalProducts(__instance, bill, extendedBillData);
+            }
+
+            if (!ExtendedBillDataStorage.CanOutputBeFiltered(bill))
+                return;
+
+            var productThingDef = bill.recipe.products.First().thingDef;
+
+            // Count resource items not in stockpiles
+            if (productThingDef.CountAsResource
+                && !bill.includeEquipped
+                && (bill.includeTainted || !productThingDef.IsApparel || !productThingDef.apparel.careIfWornByCorpse)
+                && bill.includeFromZone == null
+                && bill.hpRange.min == 0f
+                && bill.hpRange.max == 1f
+                && bill.qualityRange.min == QualityCategory.Awful
+                && bill.qualityRange.max == QualityCategory.Legendary
+                && !bill.limitToAllowedStuff)
+            {
+                __result += GetMatchingItemCountOutsideStockpiles(bill, productThingDef);
             }
 
             if (!bill.includeEquipped)
                 return;
 
-            if (!ExtendedBillDataStorage.CanOutputBeFiltered(bill))
-                return;
+            if (extendedBillData.CountAway)
+                __result += CountAway(bill.Map, __instance, bill, productThingDef);
+        }
 
-            var billMap = bill.Map;
+        private static int GetMatchingItemCountOutsideStockpiles(Bill bill, ThingDef productThingDef)
+        {
+            var result = 0;
 
-            var productThingDef = bill.recipe.products.First().thingDef;
-            // Fix for vanilla not counting items being hauled by colonists or animals
-            foreach (var pawn in billMap.mapPawns.SpawnedPawnsInFaction(Faction.OfPlayer))
+            var thingsOnMap = bill.Map.listerThings.ThingsOfDef(productThingDef);
+            foreach (var thing in thingsOnMap)
             {
-                // Ignore prisoners, include animals
-                if (!(pawn.IsFreeColonist || !pawn.IsColonist))
+                if (thing.Position == IntVec3.Invalid || thing.IsNotFresh())
+                {
+                    continue;
+                }
+
+                if (bill.Map.zoneManager.ZoneAt(thing.Position) is Zone_Stockpile)
                     continue;
 
-                if (pawn.carryTracker != null)
-                    __result += CountMatchingThingsIn(
-                        pawn.carryTracker.innerContainer, __instance, bill,productThingDef);
+                result += thing.stackCount;
             }
 
-            if (extendedBillData?.CountAway ?? false)
-                __result += CountAway(billMap, __instance, bill, productThingDef);
+            return result;
         }
 
         private static int CountAway(Map billMap, RecipeWorkerCounter counter, Bill_Production bill, ThingDef productThingDef)
@@ -168,5 +191,5 @@ namespace ImprovedWorkbenches
             }
             return count;
         }
-   }
+    }
 }

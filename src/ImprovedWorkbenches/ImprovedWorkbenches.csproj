@@ -85,6 +85,7 @@
     </Content>
     <Content Include="..\..\mod-structure\Defs\UpdateFeatureDefs\UpdateFeatureDefs.xml">
       <Link>mod-structure\Defs\UpdateFeatureDefs\UpdateFeatureDefs.xml</Link>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="..\..\mod-structure\Languages\ChineseSimplified\DefInjected\BillRepeatModeDef\BillRepeatModeDefs.xml">
       <Link>mod-structure\Languages\ChineseSimplified\DefInjected\BillRepeatModeDef\BillRepeatModeDefs.xml</Link>
