@@ -27,7 +27,8 @@ namespace ImprovedWorkbenches
             var productThingDef = bill.recipe.products.First().thingDef;
 
             // Count resource items not in stockpiles
-            if (productThingDef.CountAsResource
+            if (Main.Instance.ShouldCountOutsideStockpiles()
+                && productThingDef.CountAsResource
                 && !bill.includeEquipped
                 && (bill.includeTainted || !productThingDef.IsApparel || !productThingDef.apparel.careIfWornByCorpse)
                 && bill.includeFromZone == null

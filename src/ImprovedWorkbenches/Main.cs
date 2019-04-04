@@ -50,6 +50,10 @@ namespace ImprovedWorkbenches
                 "dropOnFloorByDefault", "IW.DropOnFloorByDefault".Translate(),
                 "IW.DropOnFloorByDefaultDesc".Translate(), false);
 
+            _countOutsideStockpiles = Settings.GetHandle(
+                "countOutsideStockpiles", "IW.CountOutsideStockpiles".Translate(),
+                "IW.CountOutsideStockpilesDesc".Translate(), true);
+
             // Integration with other mods
 
             IntegrateWithOutfitter();
@@ -133,6 +137,11 @@ namespace ImprovedWorkbenches
             return _dropOnFloorByDefault;
         }
 
+        public bool ShouldCountOutsideStockpiles()
+        {
+            return _countOutsideStockpiles;
+        }
+
         public ExtendedBillDataStorage GetExtendedBillDataStorage()
         {
             return _extendedBillDataStorage;
@@ -159,6 +168,8 @@ namespace ImprovedWorkbenches
         private SettingHandle<bool> _mirrorSuspendedStatus;
 
         private SettingHandle<bool> _dropOnFloorByDefault;
+
+        private SettingHandle<bool> _countOutsideStockpiles;
 
         private ExtendedBillDataStorage _extendedBillDataStorage;
 

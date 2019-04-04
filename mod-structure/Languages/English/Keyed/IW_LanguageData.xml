@@ -94,4 +94,7 @@
 
   <IW.ShowExtraUIButtons>Show extra UI buttons</IW.ShowExtraUIButtons>
   <IW.ShowExtraUIButtonsDesc>Show buttons that let you set "target count" and "resume level" values in bill details via the keyboard. Disable if you have a mod or language that causes these buttons to become misplaced.</IW.ShowExtraUIButtonsDesc>
+
+  <IW.CountOutsideStockpiles>Count resources outside stockpiles</IW.CountOutsideStockpiles>
+  <IW.CountOutsideStockpilesDesc>A bug in the vanilla game prevents "resource items" (e.g. meals and medicine) from being counted if they are not in stockpiles. Enable this option to fix that, or disable if you are using another mod to do that.</IW.CountOutsideStockpilesDesc>
 </LanguageData>
