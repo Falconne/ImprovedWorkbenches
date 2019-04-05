@@ -55,12 +55,12 @@ namespace ImprovedWorkbenches
             var thingsOnMap = bill.Map.listerThings.ThingsOfDef(productThingDef);
             foreach (var thing in thingsOnMap)
             {
-                if (thing.Position == IntVec3.Invalid || thing.ParentHolder != null || thing.IsNotFresh())
+                if (thing.Position == IntVec3.Invalid || thing.IsNotFresh())
                 {
                     continue;
                 }
 
-                if (bill.Map.zoneManager.ZoneAt(thing.Position) is Zone_Stockpile)
+                if (thing.GetSlotGroup() != null)
                     continue;
 
                 result += thing.stackCount;
