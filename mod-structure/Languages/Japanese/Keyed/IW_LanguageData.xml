@@ -95,4 +95,7 @@
   <IW.ShowExtraUIButtons>追加UIボタンを表示</IW.ShowExtraUIButtons>
   <IW.ShowExtraUIButtonsDesc>キーボードを使用して、加工命令の詳細に「目標数」と「一時停止解除」の数値を設定するためのボタンを表示します。これらのボタンが間違って配置されるようになるmodまたは言語がある場合は、これを無効にします。</IW.ShowExtraUIButtonsDesc>
 
+  <IW.CountOutsideStockpiles>備蓄ゾーン外も数える</IW.CountOutsideStockpiles>
+  <IW.CountOutsideStockpilesDesc>バニラのゲームが持つバグによって、備蓄ゾーンに入っていない場合、「資源アイテム」（食事や薬など）の数が計測されなくなります。この問題を修正するにはこのオプションを有効にします。既に修正を行う他のmodを使用している場合は無効にします。</IW.CountOutsideStockpilesDesc>
+
 </LanguageData>
