@@ -55,7 +55,7 @@ namespace ImprovedWorkbenches
             var thingsOnMap = bill.Map.listerThings.ThingsOfDef(productThingDef);
             foreach (var thing in thingsOnMap)
             {
-                if (thing.Position == IntVec3.Invalid || thing.IsNotFresh())
+                if (thing.Position == IntVec3.Invalid || thing.ParentHolder != null || thing.IsNotFresh())
                 {
                     continue;
                 }
