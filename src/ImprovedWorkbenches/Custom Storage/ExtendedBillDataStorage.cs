@@ -194,6 +194,7 @@ namespace ImprovedWorkbenches
             destinationBill.allowedSkillRange = sourceBill.allowedSkillRange;
             destinationBill.SetStoreMode(sourceBill.GetStoreMode(), sourceBill.GetStoreZone());
             destinationBill.paused = sourceBill.paused;
+            destinationBill.pawnRestriction = sourceBill.pawnRestriction;
 
             if (Main.Instance.ShouldMirrorSuspendedStatus())
             {
