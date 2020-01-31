@@ -10,6 +10,7 @@ namespace ImprovedWorkbenches
     [HarmonyPatch(typeof(Selector), "Select")]
     public static class Open_Bills_Tab_On_Select {
         public static void Postfix(Selector __instance) {
+            if (!Main.Instance.ShouldExpandBillsTab()) return;
             // Has one single thing been selected:
             if (__instance.NumSelected != 1) return;
             Zone z = __instance.SelectedZone;
