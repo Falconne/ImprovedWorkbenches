@@ -105,7 +105,7 @@ function copyDependencies
     $depsDir = "$installDir\RimWorldWin64_Data\Managed"
     Write-Host "Copying dependencies from installation directory"
     if (!(Test-Path $thirdpartyDir)) { mkdir $thirdpartyDir | Out-Null }
-    Copy-Item -Force "$depsDir\UnityEngine.dll" "$thirdpartyDir\"
+    Copy-Item -Force "$depsDir\Unity*.dll" "$thirdpartyDir\"
     Copy-Item -Force "$depsDir\Assembly-CSharp.dll" "$thirdpartyDir\"
 }
 

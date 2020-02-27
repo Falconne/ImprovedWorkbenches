@@ -2,7 +2,7 @@
 using System.Linq;
 using RimWorld;
 using Verse;
-using Harmony;
+using HarmonyLib;
 
 namespace ImprovedWorkbenches
 {

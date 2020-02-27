@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Reflection;
-using Harmony;
+using HarmonyLib;
 using UnityEngine;
 using Verse;
 
@@ -10,7 +10,7 @@ namespace ImprovedWorkbenches
     public class Widgets_ButtonImage_Detour
     {
         [HarmonyTargetMethod]
-        public static MethodInfo TargetMethod(HarmonyInstance inst)
+        public static MethodInfo TargetMethod(Harmony inst)
         {
             try
             {
