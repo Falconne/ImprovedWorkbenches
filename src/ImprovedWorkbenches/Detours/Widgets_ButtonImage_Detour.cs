@@ -15,7 +15,7 @@ namespace ImprovedWorkbenches
             try
             {
                 return AccessTools.Method(typeof(Widgets), "ButtonImage",
-                    new[] { typeof(Rect), typeof(Texture2D), typeof(Color) });
+                    new[] { typeof(Rect), typeof(Texture2D), typeof(Color), typeof(bool) });
 
             }
             catch (Exception )
@@ -24,7 +24,7 @@ namespace ImprovedWorkbenches
             }
         }
 
-        static bool Prefix(ref bool __result, Rect butRect, Texture2D tex, Color baseColor)
+        static bool Prefix(ref bool __result, Rect butRect, Texture2D tex, Color baseColor, bool doMouseoverSound)
         {
             if (!Main.Instance.ShouldAllowDragToReorder())
                 return true;

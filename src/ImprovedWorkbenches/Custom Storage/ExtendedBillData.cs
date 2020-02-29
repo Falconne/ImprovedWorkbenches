@@ -50,13 +50,16 @@ namespace ImprovedWorkbenches
     [HarmonyPatch(typeof(Bill_Production), nameof(Bill_Production.Clone))]
     public static class ExtendedBillData_Clone
     {
-        public static void Postfix(Bill_Production __instance, Bill_Production __result)
+        public static void Postfix(Bill_Production __instance, Bill __result)
         {
-            var storage = Main.Instance.GetExtendedBillDataStorage();
-            var sourceExtendedData = storage.GetExtendedDataFor(__instance);
-            var destinationExtendedData = storage.GetOrCreateExtendedDataFor(__result);
-            
-            destinationExtendedData?.CloneFrom(sourceExtendedData, true);
+            if (__result is Bill_Production billProduction)
+            {
+                var storage = Main.Instance.GetExtendedBillDataStorage();
+                var sourceExtendedData = storage.GetExtendedDataFor(__instance);
+                var destinationExtendedData = storage.GetOrCreateExtendedDataFor(billProduction);
+
+                destinationExtendedData?.CloneFrom(sourceExtendedData, true);
+            }
         }
     }
 

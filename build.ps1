@@ -100,10 +100,6 @@ function updateToGameVersion
 function copyDependencies
 {
     $thirdpartyDir = "$PSScriptRoot\ThirdParty"
-    if (Test-Path "$thirdpartyDir\*.dll")
-    {
-        return
-    }
 
     if (!$installDir)
     {
@@ -116,8 +112,9 @@ function copyDependencies
     $depsDir = "$installDir\RimWorldWin64_Data\Managed"
     Write-Host "Copying dependencies from installation directory"
     if (!(Test-Path $thirdpartyDir)) { mkdir $thirdpartyDir | Out-Null }
-    Copy-Item -Force "$depsDir\Unity*.dll" "$thirdpartyDir\"
-    Copy-Item -Force "$depsDir\Assembly-CSharp.dll" "$thirdpartyDir\"
+
+    Copy-Item "$depsDir\Unity*.dll" "$thirdpartyDir\"
+    Copy-Item "$depsDir\Assembly-CSharp.dll" "$thirdpartyDir\"
 }
 
 function doPreBuild
