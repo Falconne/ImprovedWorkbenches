@@ -249,7 +249,7 @@
     <Compile Include="Detours\BillStack_DoListing_Detour.cs" />
     <Compile Include="Detours\ITab_Bills_TabUpdate_Detour.cs" />
     <Compile Include="CopyPasteLink\LinkedBillsSet.cs" />
-    <Compile Include="Detours\MainTabWindow_Inspect_Detour.cs" />
+    <Compile Include="Detours\Selector_Select_Detour.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources.cs" />
