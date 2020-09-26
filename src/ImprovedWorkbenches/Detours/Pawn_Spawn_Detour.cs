@@ -10,7 +10,7 @@ namespace ImprovedWorkbenches.Detours
     {
         public static void Prefix(Pawn __instance)
         {
-            if (__instance.Map?.IsPlayerHome ?? false && (__instance.Faction?.IsPlayer ?? false))
+            if ((__instance?.Map?.IsPlayerHome ?? false) && (__instance?.Faction?.IsPlayer ?? false))
             {
                 __instance.SetOriginMap(__instance.Map);
             }
