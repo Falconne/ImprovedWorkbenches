@@ -18,13 +18,16 @@ namespace ImprovedWorkbenches
 
         public void CloneFrom(ExtendedBillData other, bool cloneName)
         {
-            CountAway = other.CountAway;
-            ProductAdditionalFilter = new ThingFilter();
-            if(other.ProductAdditionalFilter != null)
-                ProductAdditionalFilter.CopyAllowancesFrom(other.ProductAdditionalFilter);
+            if (other != null)
+            {
+                CountAway = other.CountAway;
+                ProductAdditionalFilter = new ThingFilter();
+                if (other.ProductAdditionalFilter != null)
+                    ProductAdditionalFilter.CopyAllowancesFrom(other.ProductAdditionalFilter);
 
-            if (cloneName)
-                Name = other.Name;
+                if (cloneName)
+                    Name = other.Name;
+            }
         }
 
         public void ExposeData()
