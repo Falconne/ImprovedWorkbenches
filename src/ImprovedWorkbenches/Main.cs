@@ -59,6 +59,8 @@ namespace ImprovedWorkbenches
             IntegrateWithOutfitter();
 
             IntegrateWithRimFactory();
+
+            IntegrateWithNoMaxBills();
         }
 
         private void IntegrateWithOutfitter()
@@ -104,6 +106,24 @@ namespace ImprovedWorkbenches
                 Logger.Error(e.StackTrace);
             }
 
+        }
+
+        private void IntegrateWithNoMaxBills()
+        {
+            try
+            {
+                if (GenTypes.GetTypeInAnyAssembly("NoMaxBills.Patch_BillStack_DoListing") == null)
+                    return;
+
+                Logger.Message("Adding support for No Max Bills");
+                _isNoMaxBillsLoaded = true;
+            }
+            catch (Exception e)
+            {
+                Logger.Error("Exception while trying to detect NoMaxBills:");
+                Logger.Error(e.Message);
+                Logger.Error(e.StackTrace);
+            }
         }
 
         public bool IsOfTypeRimFactoryBillsTab(InspectTabBase tab)
@@ -153,6 +173,11 @@ namespace ImprovedWorkbenches
             BillCopyPasteHandler.RemoveBill(bill);
         }
 
+        public int GetMaxBills()
+        {
+            return _isNoMaxBillsLoaded ? 125 : BillStack.MaxCount;
+        }
+
         internal new ModLogger Logger => base.Logger;
 
         internal static Main Instance { get; private set; }
@@ -179,5 +204,7 @@ namespace ImprovedWorkbenches
         private Type _rimFactoryBillsTabType;
 
         private Type _rimFactoryBuildingType;
+
+        private bool _isNoMaxBillsLoaded;
     }
 }

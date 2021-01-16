@@ -101,7 +101,7 @@ namespace ImprovedWorkbenches
 
         private static bool CanWorkTableDoRecipeNow(Building_WorkTable workTable, RecipeDef recipe)
         {
-            return workTable.BillStack.Count < 15 &&
+            return workTable.BillStack.Count < Main.Instance.GetMaxBills() &&
                 recipe.AvailableNow &&
                 workTable.def.AllRecipes != null &&
                 workTable.def.AllRecipes.Contains(recipe);
