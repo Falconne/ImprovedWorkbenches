@@ -132,9 +132,7 @@ function doPostBuild
     $targetDir = "$(getProjectDir)\bin\Release"
     $targetPath = "$targetDir\$targetName.dll"
 
-    $gameVersion =
-
-    $distAssemblyDir = "$distTargetDir\v$(getGameVersion)\Assemblies"
+    $distAssemblyDir = "$distTargetDir\$(getGameVersion)\Assemblies"
     mkdir $distAssemblyDir | Out-Null
 
     Copy-Item -Recurse -Force "$PSScriptRoot\mod-structure\*" $distTargetDir
