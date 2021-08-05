@@ -13,7 +13,7 @@ namespace ImprovedWorkbenches
         public ThingFilter filter;
         public ExtendedBillData extendedBill;
 
-        public Vector2 scrollPosition;
+        public ThingFilterUI.UIState uiState;
 
         public Window reOpenWindow;
 
@@ -49,7 +49,7 @@ namespace ImprovedWorkbenches
 
             Widgets.Label(titleRect, "IW.OutputFilterTitle".Translate());
 
-            ThingFilterUI.DoThingFilterConfigWindow(filterRect, ref scrollPosition, filter,
+            ThingFilterUI.DoThingFilterConfigWindow(filterRect, uiState, filter,
                 openMask: TreeOpenMasks.ThingFilter,
                 forceHiddenFilters: specialThingDefs,
                 parentFilter: baseFilter);

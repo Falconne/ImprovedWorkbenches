@@ -18,10 +18,8 @@ namespace ImprovedWorkbenches
         public override void WorldLoaded()
         {
             base.WorldLoaded();
-            _extendedBillDataStorage =
-                UtilityWorldObjectManager.GetUtilityWorldObject<ExtendedBillDataStorage>();
+            _extendedBillDataStorage = Find.World.GetComponent<ExtendedBillDataStorage>();
             BillCopyPasteHandler.Clear();
-            _extendedBillDataStorage.MigrateLegacyBillStore();
         }
 
         public override void DefsLoaded()
@@ -38,9 +36,9 @@ namespace ImprovedWorkbenches
                 "mirrorSuspendedStatus", "IW.MirrorSuspendedStatus".Translate(),
                 "IW.MirrorSuspendedStatusDesc".Translate(), true);
 
-            _mirrorSuspendedStatus.OnValueChanged = value =>
+            _mirrorSuspendedStatus.ValueChanged += handle =>
             {
-                if (value)
+                if (_mirrorSuspendedStatus.Value)
                 {
                     _extendedBillDataStorage?.UpdateAllLinkedBills();
                 }
