@@ -135,14 +135,17 @@ function doPostBuild
     $targetDir = "$(getProjectDir)\bin\Release"
     $targetPath = "$targetDir\$targetName.dll"
 
-    $distAssemblyDir = "$distTargetDir\v$(getGameVersion)\Assemblies"
+    $distAssemblyDir = "$distTargetDir\$(getGameVersion)\Assemblies"
     mkdir $distAssemblyDir | Out-Null
 
     Copy-Item -Recurse -Force "$PSScriptRoot\mod-structure\*" $distTargetDir
     Copy-Item -Force $targetPath $distAssemblyDir
 
-    $modStructureAssemblyLocation = "$PSScriptRoot\mod-structure\v$(getGameVersion)\Assemblies"
-    mkdir $modStructureAssemblyLocation | Out-Null
+    $modStructureAssemblyLocation = "$PSScriptRoot\mod-structure\$(getGameVersion)\Assemblies"
+    if (!(Test-Path $modStructureAssemblyLocation))
+    {
+        mkdir $modStructureAssemblyLocation | Out-Null
+    }
     Copy-Item -Force $targetPath $modStructureAssemblyLocation
 
     Write-Host "Creating distro package"
