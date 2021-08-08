@@ -2,15 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using HugsLib.Utils;
-using ImprovedWorkbenches;
 using RimWorld;
+using RimWorld.Planet;
 using Verse;
 
 namespace ImprovedWorkbenches
 {
-    public class ExtendedBillDataStorage : UtilityWorldObject
+    public class ExtendedBillDataStorage : WorldComponent
     {
+        public ExtendedBillDataStorage(World world) : base(world) { }
+
         private readonly Dictionary<Bill_Production, ExtendedBillData> _store =
             new Dictionary<Bill_Production, ExtendedBillData>();
 
@@ -44,7 +45,12 @@ namespace ImprovedWorkbenches
             }
         }
 
-        public void MigrateLegacyBillStore()
+        public override void FinalizeInit()
+        {
+            this.MigrateLegacyBillStore();
+        }
+
+        private void MigrateLegacyBillStore()
         {
             if (_legacyStore.Count == 0) return;
 
@@ -194,7 +200,7 @@ namespace ImprovedWorkbenches
             destinationBill.allowedSkillRange = sourceBill.allowedSkillRange;
             destinationBill.SetStoreMode(sourceBill.GetStoreMode(), sourceBill.GetStoreZone());
             destinationBill.paused = sourceBill.paused;
-            destinationBill.pawnRestriction = sourceBill.pawnRestriction;
+            destinationBill.SetPawnRestriction(sourceBill.PawnRestriction);
 
             if (Main.Instance.ShouldMirrorSuspendedStatus())
             {

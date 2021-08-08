@@ -44,7 +44,7 @@ namespace ImprovedWorkbenches
     {
         public static void Postfix(Bill_Production __instance)
         {
-            var storage = HugsLib.Utils.UtilityWorldObjectManager.GetUtilityWorldObject<ExtendedBillDataStorage>();
+            var storage = Find.World.GetComponent<ExtendedBillDataStorage>();
             storage.GetOrCreateExtendedDataFor(__instance).ExposeData();
         }
     }
