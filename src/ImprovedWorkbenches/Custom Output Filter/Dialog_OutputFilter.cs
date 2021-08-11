@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,7 +13,7 @@ namespace ImprovedWorkbenches
         public ThingFilter filter;
         public ExtendedBillData extendedBill;
 
-        public ThingFilterUI.UIState uiState;
+        public ThingFilterUI.UIState state;
 
         public Window reOpenWindow;
 
@@ -21,6 +21,7 @@ namespace ImprovedWorkbenches
         {
             reOpenWindow = w;
             extendedBill = e;
+            state = new ThingFilterUI.UIState();
 
             filter = new ThingFilter();
             if (extendedBill.ProductAdditionalFilter != null)
@@ -49,7 +50,7 @@ namespace ImprovedWorkbenches
 
             Widgets.Label(titleRect, "IW.OutputFilterTitle".Translate());
 
-            ThingFilterUI.DoThingFilterConfigWindow(filterRect, uiState, filter,
+            ThingFilterUI.DoThingFilterConfigWindow(filterRect, state, filter,
                 openMask: TreeOpenMasks.ThingFilter,
                 forceHiddenFilters: specialThingDefs,
                 parentFilter: baseFilter);

@@ -101,12 +101,12 @@ namespace ImprovedWorkbenches
                 optionsList.Gap(Text.LineHeight + optionsList.verticalSpacing);
 
             // Output Filter
-            //if(optionsList.ButtonText("IW.OutputFilterLabel".Translate()))
-            //{
-            //    Window temp = Find.WindowStack.currentlyDrawnWindow;
-            //    temp.Close();
-            //    Find.WindowStack.Add(new Dialog_ThingFilter(extendedBillData, temp));
-            //}
+            if(optionsList.ButtonText("IW.OutputFilterLabel".Translate()))
+            {
+                Window temp = Find.WindowStack.currentlyDrawnWindow;
+                temp.Close();
+                Find.WindowStack.Add(new Dialog_ThingFilter(extendedBillData, temp));
+            }
 
             optionsList.End();
         }
