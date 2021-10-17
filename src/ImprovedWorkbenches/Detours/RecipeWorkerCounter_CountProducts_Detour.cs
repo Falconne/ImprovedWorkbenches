@@ -140,6 +140,11 @@ namespace ImprovedWorkbenches
                     {
                         count += CountPawnThings(pawn, counter, bill, def, true);
                     }
+
+                    if (Main.Instance.ShouldCountOutsideStockpiles())
+                    {
+                        count += GetMatchingItemCountOutsideStockpiles(bill, def);
+                    }
                 }
                 else if (bill.includeFromZone == null)
                 {
