@@ -30,9 +30,6 @@ namespace ImprovedWorkbenches
 
         public static bool Prefix()
         {
-            if (!Main.Instance.ShouldAllowDragToReorder())
-                return true;
-
             var selectedThing = Find.Selector.SingleSelectedThing;
             var billGiver = selectedThing as IBillGiver;
             if (billGiver == null)
@@ -41,9 +38,13 @@ namespace ImprovedWorkbenches
             if (!(selectedThing is Building_WorkTable) && !Main.Instance.IsOfTypeRimFactoryBuilding(selectedThing))
                 return true;
 
-            ReorderableGroup = ReorderableWidget.NewGroup(
+            if (Main.Instance.ShouldAllowDragToReorder() && Event.current.type == EventType.Repaint)
+            {
+                ReorderableGroup = ReorderableWidget.NewGroup(
                 (from, to) => ReorderBillInStack(billGiver.BillStack, from, to),
-                ReorderableDirection.Vertical);
+                ReorderableDirection.Vertical, 
+                new Rect(0f, 0f, UI.screenWidth, UI.screenHeight));
+            }
 
             var winSize = (Vector2) WinSizeGetter.GetValue(null);
             var pasteX = (float) PasteXGetter.GetValue(null);
