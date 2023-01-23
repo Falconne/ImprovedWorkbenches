@@ -15,13 +15,13 @@ namespace ImprovedWorkbenches
             curName = currentName;
         }
 
-        protected override void SetName(string name)
+        public override void SetName(string name)
         {
             if (string.IsNullOrEmpty(name) || name != _currentName)
                 _extendedBill.Name = name;
         }
 
-        protected override AcceptanceReport NameIsValid(string name)
+        public override AcceptanceReport NameIsValid(string name)
         {
             return true;
         }
