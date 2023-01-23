@@ -57,10 +57,9 @@ namespace ImprovedWorkbenches
             }
             catch (Exception e)
             {
-                Main.Instance.Logger.Error(
-                    "Error trying to select bill or storage tab. Please report this to the Better Workbench Management mod page");
-                Main.Instance.Logger.Error(e.Message);
-                Main.Instance.Logger.Error(e.StackTrace);
+                Log.Message("[Better Workbench Management] Error trying to select bill or storage tab. Please report this to the Better Workbench Management mod page");
+                Log.Error("[Better Workbench Management] " + e.Message);
+                Log.Error("[Better Workbench Management] " + e.StackTrace);
             }
         }
 

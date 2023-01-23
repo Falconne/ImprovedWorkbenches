@@ -54,13 +54,13 @@ namespace ImprovedWorkbenches
         {
             if (_legacyStore.Count == 0) return;
 
-            Main.Instance.Logger.Message("Migrating legacy bill store");
+            Log.Message("[Better Workbench Management] Migrating legacy bill store");
 
             var loadIdGetter = typeof(Bill).GetField("loadID", BindingFlags.NonPublic | BindingFlags.Instance);
 
             if (loadIdGetter == null)
             {
-                Main.Instance.Logger.Warning("Cannot fetch ID field from Bills, cannot migrate legacy data.");
+                Log.Message("[Better Workbench Management] Cannot fetch ID field from Bills, cannot migrate legacy data.");
                 return;
             }
 
@@ -71,12 +71,12 @@ namespace ImprovedWorkbenches
                 var bill = productionBills.FirstOrDefault(b => billId == (int)loadIdGetter.GetValue(b));
                 if (bill == null)
                 {
-                    Main.Instance.Logger.Warning($"Cannot find bill for id {billId}, cannot migrate");
+                    Log.Message($"[Better Workbench Management] Cannot find bill for id {billId}, cannot migrate");
                     continue;
                 }
 
                 _store[bill] = _legacyStore[billId];
-                Main.Instance.Logger.Message($"Migradted bill id: {billId}");
+                Log.Message($"[Better Workbench Management] Migradted bill id: {billId}");
             }
 
             _legacyStore.Clear();
