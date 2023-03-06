@@ -88,31 +88,16 @@ namespace ImprovedWorkbenches
             _isRimfactoryLoaded = false;
             try
             {
-                //assemblers
-                var sal3Bills = GenTypes.GetTypeInAnyAssembly("ProjectRimFactory.SAL3.UI.ITab_SAL3Bills"); //most assemblers
-                //drills
-                var minerOld = GenTypes.GetTypeInAnyAssembly("ProjectRimFactory.AutoMachineTool.ITabBillTable"); //before PRF patch
-                var minerNew = GenTypes.GetTypeInAnyAssembly("ProjectRimFactory.SAL3.UI.IBillTab"); //after PRF patch
-
-                //quick exit: if we don't find types, we aren't going to integrate
-                if (sal3Bills is null && minerOld is null && minerNew is null)
-                    return;
-
-                Logger.Message("Adding support for ProjectRimFactory");
-
-                //register the bill tabs
-                //TODO: it looks like these are not used by the mod and is cruft
-                if (sal3Bills != null)
-                    _rimFactoryBillsTabs.Add(sal3Bills);
-                if (minerOld != null)
-                    _rimFactoryBillsTabs.Add(minerOld);
-                if (minerNew != null)
-                    _rimFactoryBillsTabs.Add(minerNew);
-
                 var assemblers = GenTypes.GetTypeInAnyAssembly(
                     "ProjectRimFactory.SAL3.Things.Assemblers.Building_DynamicBillGiver");
                 var drills = GenTypes.GetTypeInAnyAssembly(
                     "ProjectRimFactory.AutoMachineTool.Building_Miner");
+
+                //quick exit: if we don't find types, we aren't going to integrate
+                if (assemblers is null && drills is null)
+                    return;
+
+                Logger.Message("Adding support for ProjectRimFactory");
 
                 //register the buildings
                 if (assemblers != null)
@@ -146,11 +131,6 @@ namespace ImprovedWorkbenches
                 Logger.Error(e.Message);
                 Logger.Error(e.StackTrace);
             }
-        }
-
-        public bool IsOfTypeRimFactoryBillsTab(InspectTabBase tab)
-        {
-            return _isRimfactoryLoaded && _rimFactoryBillsTabs.Any(x => x == tab?.GetType());
         }
 
         public bool IsOfTypeRimFactoryBuilding(Thing obj)
@@ -222,8 +202,6 @@ namespace ImprovedWorkbenches
 
         // RImFactory support
         private bool _isRimfactoryLoaded;
-
-        private List<Type> _rimFactoryBillsTabs = new List<Type>();
 
         private List<Type> _rimFactoryBuildings = new List<Type>();
 
