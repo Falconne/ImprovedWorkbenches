@@ -154,7 +154,7 @@ namespace ImprovedWorkbenches
 
         public bool IsOfTypeRimFactoryBuilding(Thing obj)
         {
-            return _isRimfactoryLoaded && _rimFactoryBillsTabs.Any(x => obj?.GetType().IsSubclassOf(x) ?? false);
+            return _isRimfactoryLoaded && _rimFactoryBuildings.Any(x => obj?.GetType().IsSubclassOf(x) ?? false);
         }
 
         public bool ShouldExpandBillsTab()
