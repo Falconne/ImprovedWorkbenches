@@ -112,7 +112,7 @@ namespace ImprovedWorkbenches
                 var assemblers = GenTypes.GetTypeInAnyAssembly(
                     "ProjectRimFactory.SAL3.Things.Assemblers.Building_DynamicBillGiver");
                 var drills = GenTypes.GetTypeInAnyAssembly(
-                    "ProjectRimFactory.AutoMachineTool.Building_Miner"); //erroneous for plasma
+                    "ProjectRimFactory.AutoMachineTool.Building_Miner");
 
                 if (assemblers != null)
                     _rimFactoryBuildings.Add(assemblers);
