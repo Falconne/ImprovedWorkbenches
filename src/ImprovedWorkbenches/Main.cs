@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using HarmonyLib;
 using HugsLib.Settings;
 using HugsLib.Utils;
@@ -88,13 +89,36 @@ namespace ImprovedWorkbenches
             _isRimfactoryLoaded = false;
             try
             {
-                _rimFactoryBillsTabType = GenTypes.GetTypeInAnyAssembly("ProjectRimFactory.SAL3.UI.ITab_SAL3Bills");
-                if (_rimFactoryBillsTabType == null)
+                //assemblers
+                var sal3Bills = GenTypes.GetTypeInAnyAssembly("ProjectRimFactory.SAL3.UI.ITab_SAL3Bills"); //most assemblers
+                //drills
+                var minerOld = GenTypes.GetTypeInAnyAssembly("ProjectRimFactory.AutoMachineTool.ITabBillTable"); //before PRF patch
+                var minerNew = GenTypes.GetTypeInAnyAssembly("ProjectRimFactory.SAL3.UI.IBillTab"); //after PRF patch
+
+                if (sal3Bills is null && minerOld is null && minerNew is null)
                     return;
+                else
+                {
+                    if (sal3Bills != null)
+                        _rimFactoryBillsTabs.Add(sal3Bills);
+                    if (minerOld != null)
+                        _rimFactoryBillsTabs.Add(minerOld);
+                    if (minerNew != null)
+                        _rimFactoryBillsTabs.Add(minerNew);
+                }
 
                 Logger.Message("Adding support for ProjectRimFactory");
-                _rimFactoryBuildingType = GenTypes.GetTypeInAnyAssembly(
+
+                var assemblers = GenTypes.GetTypeInAnyAssembly(
                     "ProjectRimFactory.SAL3.Things.Assemblers.Building_DynamicBillGiver");
+                var drills = GenTypes.GetTypeInAnyAssembly(
+                    "ProjectRimFactory.AutoMachineTool.Building_Miner");
+
+                if (assemblers != null)
+                    _rimFactoryBuildings.Add(assemblers);
+                if (drills != null)
+                    _rimFactoryBuildings.Add(drills);
+
                 _isRimfactoryLoaded = true;
             }
             catch (Exception e)
@@ -103,7 +127,6 @@ namespace ImprovedWorkbenches
                 Logger.Error(e.Message);
                 Logger.Error(e.StackTrace);
             }
-
         }
 
         private void IntegrateWithNoMaxBills()
@@ -126,13 +149,12 @@ namespace ImprovedWorkbenches
 
         public bool IsOfTypeRimFactoryBillsTab(InspectTabBase tab)
         {
-            return _isRimfactoryLoaded && tab?.GetType() == _rimFactoryBillsTabType;
+            return _isRimfactoryLoaded && _rimFactoryBillsTabs.Any(x => x == tab?.GetType());
         }
 
         public bool IsOfTypeRimFactoryBuilding(Thing obj)
         {
-            return _isRimfactoryLoaded && (obj?.GetType().IsSubclassOf(_rimFactoryBuildingType) ?? false);
-
+            return _isRimfactoryLoaded && _rimFactoryBillsTabs.Any(x => obj?.GetType().IsSubclassOf(x) ?? false);
         }
 
         public bool ShouldExpandBillsTab()
@@ -199,9 +221,9 @@ namespace ImprovedWorkbenches
         // RImFactory support
         private bool _isRimfactoryLoaded;
 
-        private Type _rimFactoryBillsTabType;
+        private List<Type> _rimFactoryBillsTabs = new List<Type>();
 
-        private Type _rimFactoryBuildingType;
+        private List<Type> _rimFactoryBuildings = new List<Type>();
 
         private bool _isNoMaxBillsLoaded;
     }
