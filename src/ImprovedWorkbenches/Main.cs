@@ -112,7 +112,7 @@ namespace ImprovedWorkbenches
                 var assemblers = GenTypes.GetTypeInAnyAssembly(
                     "ProjectRimFactory.SAL3.Things.Assemblers.Building_DynamicBillGiver");
                 var drills = GenTypes.GetTypeInAnyAssembly(
-                    "ProjectRimFactory.AutoMachineTool.Building_Miner");
+                    "ProjectRimFactory.AutoMachineTool.Building_Miner"); //erroneous for plasma
 
                 if (assemblers != null)
                     _rimFactoryBuildings.Add(assemblers);
@@ -154,7 +154,8 @@ namespace ImprovedWorkbenches
 
         public bool IsOfTypeRimFactoryBuilding(Thing obj)
         {
-            return _isRimfactoryLoaded && _rimFactoryBuildings.Any(x => obj?.GetType().IsSubclassOf(x) ?? false);
+            var type = obj?.GetType();
+            return _isRimfactoryLoaded && _rimFactoryBuildings.Any(x => x == type || (type?.IsSubclassOf(x) ?? false));
         }
 
         public bool ShouldExpandBillsTab()
