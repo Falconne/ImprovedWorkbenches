@@ -4,7 +4,6 @@ using HarmonyLib;
 using HugsLib.Settings;
 using HugsLib.Utils;
 using RimWorld;
-using UnityEngine;
 using Verse;
 
 namespace ImprovedWorkbenches
@@ -95,25 +94,27 @@ namespace ImprovedWorkbenches
                 var minerOld = GenTypes.GetTypeInAnyAssembly("ProjectRimFactory.AutoMachineTool.ITabBillTable"); //before PRF patch
                 var minerNew = GenTypes.GetTypeInAnyAssembly("ProjectRimFactory.SAL3.UI.IBillTab"); //after PRF patch
 
+                //quick exit: if we don't find types, we aren't going to integrate
                 if (sal3Bills is null && minerOld is null && minerNew is null)
                     return;
-                else
-                {
-                    if (sal3Bills != null)
-                        _rimFactoryBillsTabs.Add(sal3Bills);
-                    if (minerOld != null)
-                        _rimFactoryBillsTabs.Add(minerOld);
-                    if (minerNew != null)
-                        _rimFactoryBillsTabs.Add(minerNew);
-                }
 
                 Logger.Message("Adding support for ProjectRimFactory");
+
+                //register the bill tabs
+                //TODO: it looks like these are not used by the mod and is cruft
+                if (sal3Bills != null)
+                    _rimFactoryBillsTabs.Add(sal3Bills);
+                if (minerOld != null)
+                    _rimFactoryBillsTabs.Add(minerOld);
+                if (minerNew != null)
+                    _rimFactoryBillsTabs.Add(minerNew);
 
                 var assemblers = GenTypes.GetTypeInAnyAssembly(
                     "ProjectRimFactory.SAL3.Things.Assemblers.Building_DynamicBillGiver");
                 var drills = GenTypes.GetTypeInAnyAssembly(
                     "ProjectRimFactory.AutoMachineTool.Building_Miner");
 
+                //register the buildings
                 if (assemblers != null)
                     _rimFactoryBuildings.Add(assemblers);
                 if (drills != null)
