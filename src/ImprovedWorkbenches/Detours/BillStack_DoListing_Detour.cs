@@ -1,6 +1,7 @@
 ﻿using HarmonyLib;
 using RimWorld;
 using System.Reflection;
+using System.Text;
 using UnityEngine;
 using Verse;
 using Verse.Sound;
@@ -31,16 +32,37 @@ namespace ImprovedWorkbenches
         public static bool Prefix()
         {
             var selectedThing = Find.Selector.SingleSelectedThing;
+            var debug_selectedType = selectedThing.GetType();
+
+            //super spammy as soon as I enter the Bills menu
+            Main.Instance.Logger.Message($"DoListing: I am a {debug_selectedType} and have made it into DoListingPrefix.");
+
             var billGiver = selectedThing as IBillGiver;
             if (billGiver == null)
                 return true;
+
+            StringBuilder builder = new StringBuilder();
+            builder.Append($"DoListing: I am a {debug_selectedType} and my bills are: ");
+            foreach (var bill in billGiver.BillStack.Bills)
+            {
+                builder.Append($"{bill.Label}; ");
+            }
+            Main.Instance.Logger.Message(builder.ToString());
+
 
             //if this is not a workable table or an automated building, exit
             if (!(selectedThing is Building_WorkTable) && !Main.Instance.IsOfTypeRimFactoryBuilding(selectedThing))
                 return true;
 
+            Main.Instance.Logger.Message($"DoListing: I am a {debug_selectedType} and have made it past the selected thing filter.");
+
+            Main.Instance.Logger.Message($"DoListing: I am a {debug_selectedType} and my event type is: {Event.current.type}");
+
             if (Main.Instance.ShouldAllowDragToReorder() && Event.current.type == EventType.Repaint)
             {
+                //NOT any spam in the log :'(
+                Main.Instance.Logger.Message($"DoListing: I am a {debug_selectedType} and reordering is enabled and event is repaint.");
+
                 ReorderableGroup = ReorderableWidget.NewGroup(
                 (from, to) => ReorderBillInStack(billGiver.BillStack, from, to),
                 ReorderableDirection.Vertical, 
@@ -54,6 +76,7 @@ namespace ImprovedWorkbenches
             _vanillaPasteRect = new Rect(winSize.x - pasteX, pasteY, buttonWidth, buttonWidth);
             
             //exit pasting if not a worktable -- why shouldn't we paste bills for PRF??
+            //Answer: because the code doesn't like PRF's non-work table paths. Lame.
             if (!(selectedThing is Building_WorkTable workTable))
                 return true;
 
