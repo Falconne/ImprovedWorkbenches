@@ -25,13 +25,13 @@ namespace ImprovedWorkbenches
             _copiedBills.Add(bill);
         }
 
-        public void DoCopy(Building_WorkTable workTable)
+        public void DoCopy(BillStack bills)
         {
-            if (workTable.BillStack == null || workTable.BillStack.Count == 0)
+            if (bills == null || bills.Count == 0)
                 return;
 
             _copiedBills.Clear();
-            foreach (var bill in workTable.BillStack.Bills)
+            foreach (var bill in bills.Bills)
             {
                 var billProduction = bill as Bill_Production;
                 if (billProduction == null)
@@ -41,19 +41,19 @@ namespace ImprovedWorkbenches
             }
         }
 
-        public bool CanPasteInto(Building_WorkTable workTable)
+        public bool CanPasteInto(BillStack bills, IEnumerable<RecipeDef> recipes)
         {
             if (_copiedBills.Count == 0)
                 return false;
 
-            if (workTable.BillStack == null)
+            if (bills == null)
                 return false;
 
             _copiedBills.RemoveAll(bill => bill == null || bill.DeletedOrDereferenced);
 
             foreach (var bill in _copiedBills)
             {
-                if (!CanWorkTableDoRecipeNow(workTable, bill.recipe))
+                if (!CanWorkTableDoRecipeNow(bills, recipes, bill.recipe))
                 {
                     return false;
                 }
@@ -67,18 +67,18 @@ namespace ImprovedWorkbenches
             return _copiedBills.Count == 1 && _copiedBills.First() != targetBill;
         }
 
-        public void DoPasteInto(Building_WorkTable workTable, bool link)
+        public void DoPasteInto(BillStack bills, IEnumerable<RecipeDef> recipes, bool link)
         {
             foreach (var sourceBill in _copiedBills)
             {
                 if (sourceBill.DeletedOrDereferenced)
                     continue;
 
-                if (!CanWorkTableDoRecipeNow(workTable, sourceBill.recipe))
+                if (!CanWorkTableDoRecipeNow(bills, recipes, sourceBill.recipe))
                     continue;
 
                 var newBill = (Bill_Production)sourceBill.recipe.MakeNewBill();
-                workTable.BillStack.AddBill(newBill);
+                bills.AddBill(newBill);
 
                 Main.Instance.GetExtendedBillDataStorage().MirrorBills(sourceBill, newBill, false);
 
@@ -98,13 +98,12 @@ namespace ImprovedWorkbenches
             Main.Instance.GetExtendedBillDataStorage().MirrorBills(sourceBill, targetBill, true);
         }
 
-
-        private static bool CanWorkTableDoRecipeNow(Building_WorkTable workTable, RecipeDef recipe)
+        private static bool CanWorkTableDoRecipeNow(BillStack bills, IEnumerable<RecipeDef> recipes, RecipeDef recipe)
         {
-            return workTable.BillStack.Count < Main.Instance.GetMaxBills() &&
+            return bills.Count < Main.Instance.GetMaxBills() &&
                 recipe.AvailableNow &&
-                workTable.def.AllRecipes != null &&
-                workTable.def.AllRecipes.Contains(recipe);
+                recipes != null &&
+                recipes.Contains(recipe);
         }
     }
 }
