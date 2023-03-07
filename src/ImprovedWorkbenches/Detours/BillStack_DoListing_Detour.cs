@@ -87,7 +87,6 @@ namespace ImprovedWorkbenches
                     found = true;
                 }
                 //Project RimFactory
-                //TODO: use interface IBillTab once PRF PR #689 completed AND released
                 else if (Main.Instance.IsOfTypeRimFactoryBuilding(selectedThing))
                 {
                     //reflection pain to get the BillStack
