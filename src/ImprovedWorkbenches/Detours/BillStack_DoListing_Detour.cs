@@ -1,4 +1,6 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Collections.Generic;
+using System.Reflection;
 using HarmonyLib;
 using RimWorld;
 using UnityEngine;
@@ -35,6 +37,7 @@ namespace ImprovedWorkbenches
             if (billGiver == null)
                 return true;
 
+            //if this is not a workable table or an automated building, exit
             if (!(selectedThing is Building_WorkTable) && !Main.Instance.IsOfTypeRimFactoryBuilding(selectedThing))
                 return true;
 
@@ -52,19 +55,58 @@ namespace ImprovedWorkbenches
             var buttonWidth = (float) PasteSizeGetter.GetValue(null);
             _vanillaPasteRect = new Rect(winSize.x - pasteX, pasteY, buttonWidth, buttonWidth);
 
-            if (!(selectedThing is Building_WorkTable workTable))
+            //exit pasting if not a worktable or automated variant
+            if (!GetBillsAndRecipes(selectedThing, out BillStack bills, out List<RecipeDef> recipes))
                 return true;
 
             var billCopyPasteHandler = Main.Instance.BillCopyPasteHandler;
-            if (!billCopyPasteHandler.CanPasteInto(workTable))
+            if (!billCopyPasteHandler.CanPasteInto(bills, recipes))
                 return true;
 
             if (Widgets.ButtonImageFitted(_vanillaPasteRect, Resources.PasteButton, Color.white))
             {
-                billCopyPasteHandler.DoPasteInto(workTable, false);
+                billCopyPasteHandler.DoPasteInto(bills, recipes, false);
             }
 
             return true;
+        }
+
+        static bool GetBillsAndRecipes(Thing selectedThing, out BillStack bills, out List<RecipeDef> recipes)
+        {
+            bool found = false;
+            bills = null;
+            recipes = null;
+
+            try
+            {
+                //work bench
+                if (selectedThing is Building_WorkTable workTable)
+                {
+                    bills = workTable.BillStack;
+                    recipes = workTable.def.AllRecipes;
+                    found = true;
+                }
+                //Project RimFactory
+                else if (Main.Instance.IsOfTypeRimFactoryBuilding(selectedThing))
+                {
+                    //reflection pain to get the BillStack
+                    var type = selectedThing.GetType();
+                    var prop = type.GetProperty("BillStack");
+                    bills = prop.GetValue(selectedThing) as BillStack;
+
+                    //common to all Thing instances
+                    recipes = selectedThing.def.AllRecipes;
+                    found = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                Main.Instance.Logger.Error("Exception while trying to extract selected item bills and recipes:");
+                Main.Instance.Logger.Error(ex.Message);
+                Main.Instance.Logger.Error(ex.StackTrace);
+            }
+
+            return found;
         }
 
         static void ReorderBillInStack(BillStack stack, int from, int to)
@@ -82,7 +124,8 @@ namespace ImprovedWorkbenches
 
         public static void Postfix(ref Rect rect)
         {
-            if (!(Find.Selector.SingleSelectedThing is Building_WorkTable workTable))
+            //exit pasting if not a worktable or automated variant
+            if (!GetBillsAndRecipes(Find.Selector.SingleSelectedThing, out BillStack bills, out List<RecipeDef> recipes))
                 return;
 
             var gap = 4f;
@@ -93,11 +136,11 @@ namespace ImprovedWorkbenches
             buttonRect.xMax -= buttonWidth + gap;
 
             var billCopyPasteHandler = Main.Instance.BillCopyPasteHandler;
-            if (workTable.BillStack != null && workTable.BillStack.Count > 0)
+            if (bills != null && bills.Count > 0)
             {
                 if (Widgets.ButtonImageFitted(buttonRect, Resources.CopyButton, Color.white))
                 {
-                    billCopyPasteHandler.DoCopy(workTable);
+                    billCopyPasteHandler.DoCopy(bills);
 					SoundDefOf.Tick_Low.PlayOneShotOnCamera();
                 }
                 TooltipHandler.TipRegion(buttonRect, "IW.CopyAllTip".Translate());
@@ -105,18 +148,18 @@ namespace ImprovedWorkbenches
                 buttonRect.xMax -= buttonWidth + gap;
             }
 
-            if (!billCopyPasteHandler.CanPasteInto(workTable))
+            if (!billCopyPasteHandler.CanPasteInto(bills, recipes))
                 return;
 
             var rectPaste = new Rect(_vanillaPasteRect);
             if (Widgets.ButtonImageFitted(rectPaste, Resources.PasteButton, Color.white))
             {
-                billCopyPasteHandler.DoPasteInto(workTable, false);
+                billCopyPasteHandler.DoPasteInto(bills, recipes, false);
             }
 
             if (Widgets.ButtonImageFitted(buttonRect, Resources.Link, Color.white))
             {
-                billCopyPasteHandler.DoPasteInto(workTable, true);
+                billCopyPasteHandler.DoPasteInto(bills, recipes, true);
             }
             TooltipHandler.TipRegion(buttonRect, "IW.PasteLinkTip".Translate());
         }
