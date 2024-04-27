@@ -198,7 +198,7 @@ namespace ImprovedWorkbenches
 
             destinationBill.ingredientSearchRadius = sourceBill.ingredientSearchRadius;
             destinationBill.allowedSkillRange = sourceBill.allowedSkillRange;
-            destinationBill.SetStoreMode(sourceBill.GetStoreMode(), sourceBill.GetStoreZone());
+            destinationBill.SetStoreMode(sourceBill.GetStoreMode(), sourceBill.GetSlotGroup());
             destinationBill.paused = sourceBill.paused;
             destinationBill.SetPawnRestriction(sourceBill.PawnRestriction);
 
@@ -222,7 +222,7 @@ namespace ImprovedWorkbenches
                 destinationBill.targetCount = sourceBill.targetCount;
                 destinationBill.pauseWhenSatisfied = sourceBill.pauseWhenSatisfied;
                 destinationBill.unpauseWhenYouHave = sourceBill.unpauseWhenYouHave;
-                destinationBill.includeFromZone = sourceBill.includeFromZone;
+                destinationBill.SetIncludeGroup(sourceBill.GetIncludeSlotGroup());
                 destinationBill.hpRange = sourceBill.hpRange;
 
                 var sourceThingDef = sourceBill.recipe.ProducedThingDef;
