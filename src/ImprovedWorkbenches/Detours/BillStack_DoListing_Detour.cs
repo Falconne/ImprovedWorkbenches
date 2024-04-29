@@ -69,14 +69,15 @@ namespace ImprovedWorkbenches
 
         static void ReorderBillInStack(BillStack stack, int from, int to)
         {
-            if (to >= stack.Count)
-                to = stack.Count - 1;
-
             if (from == to)
                 return;
 
             var bill = stack[from];
             var offset = to - from;
+
+            //.Reorder function deletes first old bill position -> reduce offset by one, if old position is above new position
+            if (from < to)
+                offset--;
             stack.Reorder(bill, offset);
         }
 

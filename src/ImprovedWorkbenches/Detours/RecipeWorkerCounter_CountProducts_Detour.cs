@@ -31,7 +31,7 @@ namespace ImprovedWorkbenches
                 && productThingDef.CountAsResource
                 && !bill.includeEquipped
                 && (bill.includeTainted || !productThingDef.IsApparel || !productThingDef.apparel.careIfWornByCorpse)
-                && bill.includeFromZone == null
+                && bill.GetIncludeSlotGroup() == null
                 && bill.hpRange.min == 0f
                 && bill.hpRange.max == 1f
                 && bill.qualityRange.min == QualityCategory.Awful
@@ -133,7 +133,15 @@ namespace ImprovedWorkbenches
                 if (def == defaultProductDef) continue;
 
                 //Same as CountProducts but now with other products
-                if (def.CountAsResource && !bill.includeEquipped && (bill.includeTainted || !def.IsApparel || !def.apparel.careIfWornByCorpse) && bill.includeFromZone == null && bill.hpRange.min == 0f && bill.hpRange.max == 1f && bill.qualityRange.min == QualityCategory.Awful && bill.qualityRange.max == QualityCategory.Legendary && !bill.limitToAllowedStuff)
+                if (def.CountAsResource 
+                    && !bill.includeEquipped 
+                    && (bill.includeTainted || !def.IsApparel || !def.apparel.careIfWornByCorpse) 
+                    && (bill.GetIncludeSlotGroup() == null) 
+                    && bill.hpRange.min == 0f 
+                    && bill.hpRange.max == 1f 
+                    && bill.qualityRange.min == QualityCategory.Awful 
+                    && bill.qualityRange.max == QualityCategory.Legendary 
+                    && !bill.limitToAllowedStuff)
                 {
                     count += map.resourceCounter.GetCount(def);
                     foreach (Pawn pawn in map.mapPawns.FreeColonistsSpawned)
@@ -146,7 +154,7 @@ namespace ImprovedWorkbenches
                         count += GetMatchingItemCountOutsideStockpiles(bill, def);
                     }
                 }
-                else if (bill.includeFromZone == null)
+                else if (bill.GetIncludeSlotGroup() == null)
                 {
                     count += counter.CountValidThings(map.listerThings.ThingsOfDef(def), bill, def);
                     if (def.Minifiable)
@@ -173,7 +181,7 @@ namespace ImprovedWorkbenches
                 }
                 else
                 {
-                    foreach (Thing current in bill.includeFromZone.AllContainedThings)
+                    foreach (Thing current in bill.GetIncludeSlotGroup().HeldThings)
                     {
                         Thing innerIfMinified = current.GetInnerIfMinified();
                         if (counter.CountValidThing(innerIfMinified, bill, def))

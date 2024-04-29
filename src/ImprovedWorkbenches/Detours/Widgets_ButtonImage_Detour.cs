@@ -15,7 +15,7 @@ namespace ImprovedWorkbenches
             try
             {
                 return AccessTools.Method(typeof(Widgets), "ButtonImage",
-                    new[] { typeof(Rect), typeof(Texture2D), typeof(Color), typeof(bool) });
+                    new[] { typeof(Rect), typeof(Texture2D), typeof(Color), typeof(bool), typeof(string) });
 
             }
             catch (Exception )
