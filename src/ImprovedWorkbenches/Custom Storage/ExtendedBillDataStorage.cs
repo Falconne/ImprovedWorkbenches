@@ -209,7 +209,8 @@ namespace ImprovedWorkbenches
 
             var outputCanBeFiltered =
                 CanOutputBeFiltered(destinationBill)
-                || destinationBill.recipe?.WorkerCounter is RecipeWorkerCounter_MakeStoneBlocks;
+                || destinationBill.recipe?.WorkerCounter is RecipeWorkerCounter_MakeStoneBlocks
+                || destinationBill.recipe?.WorkerCounter is RecipeWorkerCounter_ButcherAnimals;
 
             if (sourceBill.repeatMode != BillRepeatModeDefOf.TargetCount || outputCanBeFiltered)
             {
