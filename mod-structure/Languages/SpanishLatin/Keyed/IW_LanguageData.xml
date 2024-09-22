@@ -47,6 +47,8 @@
 
   <IW.CountAwayLabel>Contar cuando esté fuera</IW.CountAwayLabel>
   <IW.CountAwayDesc>Contar también los artículos de cualquier colono o animal enviado en una caravana, cápsulas de transporte, sarcófago de criptosueño o que no estén disponibles por otros motivos.</IW.CountAwayDesc>
+  <IW.OutputFilterLabel>Contar artículos adicionales</IW.OutputFilterLabel>
+  <IW.OutputFilterTitle>Contar también estos productos:</IW.OutputFilterTitle>
 
   <IW.CountInstalledLabel>Contar los objetos instalados</IW.CountInstalledLabel>
   <IW.CountInstalledDesc>Cuente también los objetos que se han instalado como una construcción</IW.CountInstalledDesc>
@@ -90,4 +92,7 @@
 
   <IW.ShowExtraUIButtons>Mostrar botones adicionales en la interfaz de usuario</IW.ShowExtraUIButtons>
   <IW.ShowExtraUIButtonsDesc>Mostrar botones que le permiten establecer valores de "recuento objetivo" y "nivel de reanudación" en los detalles de la factura a través del teclado. Deshabilitar si se dispone de un mod o idioma que haga que estos botones se desubiquen.</IW.ShowExtraUIButtonsDesc>
+  <IW.CountOutsideStockpiles>Contar recursos fuera de los almacenes</IW.CountOutsideStockpiles>
+  <IW.CountOutsideStockpilesDesc>Un error en el juego base impide que se cuenten los "artículos de recursos" (por ejemplo, comidas y medicinas) si no están en los almacenes. Activa esta opción para corregirlo, o desactívala si estás utilizando otro mod para hacerlo.</IW.CountOutsideStockpilesDesc>
+
 </LanguageData>
