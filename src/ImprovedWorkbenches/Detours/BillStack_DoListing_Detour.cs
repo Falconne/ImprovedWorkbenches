@@ -35,6 +35,7 @@ namespace ImprovedWorkbenches
             if (billGiver == null)
                 return true;
 
+            //if this is not a workable table or an automated building, exit
             if (!(selectedThing is Building_WorkTable) && !Main.Instance.IsOfTypeRimFactoryBuilding(selectedThing))
                 return true;
 
@@ -51,7 +52,9 @@ namespace ImprovedWorkbenches
             var pasteY = (float) PasteYGetter.GetValue(null);
             var buttonWidth = (float) PasteSizeGetter.GetValue(null);
             _vanillaPasteRect = new Rect(winSize.x - pasteX, pasteY, buttonWidth, buttonWidth);
-
+            
+            //exit pasting if not a worktable -- why shouldn't we paste bills for PRF??
+            //Answer: because the code doesn't like PRF's non-work table paths. Lame.
             if (!(selectedThing is Building_WorkTable workTable))
                 return true;
 
@@ -83,6 +86,7 @@ namespace ImprovedWorkbenches
 
         public static void Postfix(ref Rect rect)
         {
+            //again, exit if PRF for some reason -- makes sense for non-bill stations, but not excluding PRF
             if (!(Find.Selector.SingleSelectedThing is Building_WorkTable workTable))
                 return;
 

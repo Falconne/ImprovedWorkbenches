@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using HarmonyLib;
 using HugsLib.Settings;
 using HugsLib.Utils;
 using RimWorld;
-using UnityEngine;
 using Verse;
 
 namespace ImprovedWorkbenches
@@ -88,13 +88,23 @@ namespace ImprovedWorkbenches
             _isRimfactoryLoaded = false;
             try
             {
-                _rimFactoryBillsTabType = GenTypes.GetTypeInAnyAssembly("ProjectRimFactory.SAL3.UI.ITab_SAL3Bills");
-                if (_rimFactoryBillsTabType == null)
+                var assemblers = GenTypes.GetTypeInAnyAssembly(
+                    "ProjectRimFactory.SAL3.Things.Assemblers.Building_DynamicBillGiver");
+                var drills = GenTypes.GetTypeInAnyAssembly(
+                    "ProjectRimFactory.AutoMachineTool.Building_Miner");
+
+                //quick exit: if we don't find types, we aren't going to integrate
+                if (assemblers is null && drills is null)
                     return;
 
                 Logger.Message("Adding support for ProjectRimFactory");
-                _rimFactoryBuildingType = GenTypes.GetTypeInAnyAssembly(
-                    "ProjectRimFactory.SAL3.Things.Assemblers.Building_DynamicBillGiver");
+
+                //register the buildings
+                if (assemblers != null)
+                    _rimFactoryBuildings.Add(assemblers);
+                if (drills != null)
+                    _rimFactoryBuildings.Add(drills);
+
                 _isRimfactoryLoaded = true;
             }
             catch (Exception e)
@@ -103,7 +113,6 @@ namespace ImprovedWorkbenches
                 Logger.Error(e.Message);
                 Logger.Error(e.StackTrace);
             }
-
         }
 
         private void IntegrateWithNoMaxBills()
@@ -124,15 +133,10 @@ namespace ImprovedWorkbenches
             }
         }
 
-        public bool IsOfTypeRimFactoryBillsTab(InspectTabBase tab)
-        {
-            return _isRimfactoryLoaded && tab?.GetType() == _rimFactoryBillsTabType;
-        }
-
         public bool IsOfTypeRimFactoryBuilding(Thing obj)
         {
-            return _isRimfactoryLoaded && (obj?.GetType().IsSubclassOf(_rimFactoryBuildingType) ?? false);
-
+            var type = obj?.GetType();
+            return _isRimfactoryLoaded && _rimFactoryBuildings.Any(x => x == type || (type?.IsSubclassOf(x) ?? false));
         }
 
         public bool ShouldExpandBillsTab()
@@ -199,9 +203,7 @@ namespace ImprovedWorkbenches
         // RImFactory support
         private bool _isRimfactoryLoaded;
 
-        private Type _rimFactoryBillsTabType;
-
-        private Type _rimFactoryBuildingType;
+        private List<Type> _rimFactoryBuildings = new List<Type>();
 
         private bool _isNoMaxBillsLoaded;
     }
