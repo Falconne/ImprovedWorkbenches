@@ -41,6 +41,9 @@ namespace ImprovedWorkbenches
                 __result += GetMatchingItemCountOutsideStockpiles(bill, productThingDef);
             }
 
+            if (Main.Instance.ShouldCountCarriedByNonHumans())
+                __result += CountInHonHumanInventory(bill.Map, __instance, bill, productThingDef);
+
             if (!bill.includeEquipped)
                 return;
 
@@ -67,6 +70,28 @@ namespace ImprovedWorkbenches
             }
 
             return result;
+        }
+
+        private static int CountInHonHumanInventory(Map billMap, RecipeWorkerCounter counter, Bill_Production bill, ThingDef productThingDef)
+        {
+            int count = 0;
+            foreach( var pawn in billMap.mapPawns.SpawnedColonyAnimals)
+                count += CountPawnThings(pawn, counter, bill, productThingDef);
+            foreach( var pawn in billMap.mapPawns.SpawnedColonyMechs)
+                count += CountPawnThings(pawn, counter, bill, productThingDef);
+            foreach( var pawn in billMap.mapPawns.SpawnedColonyMutantsPlayerControlled)
+                count += CountPawnThings(pawn, counter, bill, productThingDef);
+            return count;
+        }
+
+        private static IEnumerable<Pawn> AllPawnsToCount(MapPawns mapPawns)
+        {
+            if (!Main.Instance.ShouldCountCarriedByNonHumans())
+                return mapPawns.FreeColonistsSpawned;
+            return mapPawns.FreeColonistsSpawned
+                .Concat(mapPawns.SpawnedColonyAnimals)
+                .Concat(mapPawns.SpawnedColonyMechs)
+                .Concat(mapPawns.SpawnedColonyMutantsPlayerControlled);
         }
 
         private static int CountAway(Map billMap, RecipeWorkerCounter counter, Bill_Production bill, ThingDef productThingDef)
@@ -144,7 +169,7 @@ namespace ImprovedWorkbenches
                     && !bill.limitToAllowedStuff)
                 {
                     count += map.resourceCounter.GetCount(def);
-                    foreach (Pawn pawn in map.mapPawns.FreeColonistsSpawned)
+                    foreach (Pawn pawn in AllPawnsToCount(map.mapPawns))
                     {
                         count += CountPawnThings(pawn, counter, bill, def, true);
                     }
@@ -173,7 +198,7 @@ namespace ImprovedWorkbenches
                     if (!bill.includeEquipped)
                     {
                         //Still count Carried Things
-                        foreach (Pawn pawn in map.mapPawns.FreeColonistsSpawned)
+                        foreach (Pawn pawn in AllPawnsToCount(map.mapPawns))
                         {
                             count += CountPawnThings(pawn, counter, bill, def, true);
                         }
@@ -193,7 +218,7 @@ namespace ImprovedWorkbenches
 
                 if (bill.includeEquipped)
                 {
-                    foreach (Pawn pawn in map.mapPawns.FreeColonistsSpawned)
+                    foreach (Pawn pawn in AllPawnsToCount(map.mapPawns))
                     {
                         count += CountPawnThings(pawn, counter, bill, def);
                     }
