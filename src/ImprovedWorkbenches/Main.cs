@@ -52,10 +52,6 @@ namespace ImprovedWorkbenches
                 "countOutsideStockpiles", "IW.CountOutsideStockpiles".Translate(),
                 "IW.CountOutsideStockpilesDesc".Translate(), true);
 
-            _countCarriedByNonHumans = Settings.GetHandle(
-                "countCarriedByNonHumans", "IW.CountCarriedByNonHumans".Translate(),
-                "IW.CountCarriedByNonHumansDesc".Translate(), true);
-
             // Integration with other mods
 
             IntegrateWithOutfitter();
@@ -164,11 +160,6 @@ namespace ImprovedWorkbenches
             return _countOutsideStockpiles;
         }
 
-        public bool ShouldCountCarriedByNonHumans()
-        {
-            return _countCarriedByNonHumans;
-        }
-
         public ExtendedBillDataStorage GetExtendedBillDataStorage()
         {
             return _extendedBillDataStorage;
@@ -202,8 +193,6 @@ namespace ImprovedWorkbenches
         private SettingHandle<bool> _dropOnFloorByDefault;
 
         private SettingHandle<bool> _countOutsideStockpiles;
-
-        private SettingHandle<bool> _countCarriedByNonHumans;
 
         private ExtendedBillDataStorage _extendedBillDataStorage;
 
