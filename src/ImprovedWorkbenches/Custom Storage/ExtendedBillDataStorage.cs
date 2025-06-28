@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -201,6 +202,36 @@ namespace ImprovedWorkbenches
             destinationBill.SetStoreMode(sourceBill.GetStoreMode(), sourceBill.GetSlotGroup());
             destinationBill.paused = sourceBill.paused;
             destinationBill.SetPawnRestriction(sourceBill.PawnRestriction);
+
+            // Colony Groups integration
+            if (Main.Instance.ColonyGroupsBillToPawnGroupDictGetter != null)
+            {
+                try
+                {
+                    var billToPawnGroupDict = Main.Instance.ColonyGroupsBillToPawnGroupDictGetter();
+
+                    if (billToPawnGroupDict.Contains(sourceBill))
+                    {
+                        var pawnGroup = billToPawnGroupDict[sourceBill];
+                        // Main.Instance.Logger.Message(
+                        //     $"Setting PawnGroup of bill {destinationBill} to that of {sourceBill} ({pawnGroup})");
+                        billToPawnGroupDict[destinationBill] = pawnGroup;
+                    }
+                    else
+                    {
+                        // Main.Instance.Logger.Message(
+                        //     $"Removing PawnGroup assignment of bill {destinationBill} to mirror bill {sourceBill}");
+                        billToPawnGroupDict.Remove(destinationBill);
+                    }
+                }
+                catch (Exception e)
+                {
+                    Main.Instance.Logger.ReportException(
+                        e, reportOnceOnly: true,
+                        location:
+                        "attempt to copy pawn group assignment of a bill to another bill (ColonyGroups integration)");
+                }
+            }
 
             if (Main.Instance.ShouldMirrorSuspendedStatus())
             {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using HarmonyLib;
 using RimWorld;
 using RimWorld.Planet;
@@ -20,6 +21,8 @@ namespace ImprovedWorkbenches
             IntegrateWithRimFactory();
 
             IntegrateWithNoMaxBills();
+
+            IntegrateWithColonyGroups();
         }
 
         [HarmonyPatch(typeof(World), nameof(World.FinalizeInit))]
@@ -95,6 +98,29 @@ namespace ImprovedWorkbenches
             }
         }
 
+        private void IntegrateWithColonyGroups()
+        {
+            try
+            {
+                var groupBillsType = GenTypes.GetTypeInAnyAssembly("TacticalGroups.HarmonyPatches_GroupBills");
+
+                if (groupBillsType == null) { return; }
+
+                Logger.Message("Adding support for Colony Groups");
+
+                var getterMethodInfo = AccessTools.Property(groupBillsType, "BillsSelectedGroup").GetMethod;
+
+                ColonyGroupsBillToPawnGroupDictGetter =
+                    AccessTools.MethodDelegate<Func<IDictionary>>(getterMethodInfo);
+            }
+            catch (Exception e)
+            {
+                Logger.Error("Exception while trying to detect the Colony Groups mod:");
+                Logger.Error(e.Message);
+                Logger.Error(e.StackTrace);
+            }
+        }
+
         public bool IsOfTypeRimFactoryBillsTab(InspectTabBase tab)
         {
             return _isRimfactoryLoaded && tab?.GetType() == _rimFactoryBillsTabType;
@@ -158,7 +184,7 @@ namespace ImprovedWorkbenches
 
         private ExtendedBillDataStorage _extendedBillDataStorage;
 
-        // RImFactory support
+        // RimFactory support
         private bool _isRimfactoryLoaded;
 
         private Type _rimFactoryBillsTabType;
@@ -166,5 +192,15 @@ namespace ImprovedWorkbenches
         private Type _rimFactoryBuildingType;
 
         private bool _isNoMaxBillsLoaded;
+
+        /// <summary>
+        /// For integration with Colony Groups. null if Colony Groups is not loaded.
+        ///
+        /// This refers to the getter of <c>TacticalGroups.HarmonyPatches_GroupBills.BillsSelectedGroup</c>, which contains
+        /// the pawn group to which a bill is restricted, if any.
+        ///
+        /// Actual returned type is <c>Dictionary&lt;Bill_Production, PawnGroup></c>.
+        /// </summary>
+        public Func<IDictionary> ColonyGroupsBillToPawnGroupDictGetter { get; private set; }
     }
 }
