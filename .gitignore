@@ -291,3 +291,13 @@ __pycache__/
 ThirdParty/HugsLib.xml
 dist/
 /ThirdParty/
+
+# VS Code 
+/.vscode/obj
+/.vscode/bin
+/.vscode/debugFiles
+/.vscode/settings.json
+
+/output
+/localDependencies
+/mod-structure/**/*.pdb

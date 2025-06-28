@@ -1,0 +1,138 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "clean",
+      "type": "shell",
+      "command": "${workspaceFolder}/.vscode/build_shell_selector.cmd",
+      "args": [
+        ".vscode/build.ps1",
+        "-Command",
+        "Clean"
+      ]
+    },
+    {
+      "label": "_copyDependencies",
+      "type": "shell",
+      "command": "${workspaceFolder}/.vscode/build_shell_selector.cmd",
+      "args": [
+        ".vscode/build.ps1",
+        "-Command",
+        "CopyDependencies"
+      ]
+    },
+    {
+      "label": "_compile",
+      "type": "shell",
+      "command": "${workspaceFolder}/.vscode/build_shell_selector.cmd",
+      "args": [
+        ".vscode/build.ps1",
+        "-Command",
+        "Compile"
+      ]
+    },
+    {
+      "label": "_compile [dev]",
+      "type": "shell",
+      "command": "${workspaceFolder}/.vscode/build_shell_selector.cmd",
+      "args": [
+        ".vscode/build.ps1",
+        "-Command",
+        "Compile",
+        "-VSConfiguration",
+        "DEBUG"
+      ]
+    },
+    {
+      "label": "_postbuild",
+      "type": "shell",
+      "command": "${workspaceFolder}/.vscode/build_shell_selector.cmd",
+      "args": [
+        ".vscode/build.ps1",
+        "-Command",
+        "PostBuild"
+      ]
+    },
+    {
+      "label": "build",
+      "type": "shell",
+      "command": "${workspaceFolder}/.vscode/build_shell_selector.cmd",
+      "args": [
+        ".vscode/build.ps1",
+        "-Command",
+        "Build"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "build [dev]",
+      "type": "shell",
+      "command": "${workspaceFolder}/.vscode/build_shell_selector.cmd",
+      "args": [
+        ".vscode/build.ps1",
+        "-Command",
+        "Build",
+        "-VSConfiguration",
+        "DEBUG"
+      ]
+    },
+    {
+      "label": "build [dev] and start RimWorld",
+      "type": "shell",
+      "command": ".vscode/build.ps1 -Command 'BuildAndStartRimWorld' -VSConfiguration 'DEBUG'",
+    },
+    {
+      "label": "start RimWorld",
+      "type": "shell",
+      "command": "${workspaceFolder}/.vscode/build_shell_selector.cmd",
+      "args": [
+        ".vscode/build.ps1",
+        "-Command",
+        "StartRimWorld"
+      ]
+    },
+    {
+      "label": "start RimWorld -quicktest",
+      "type": "shell",
+      "command": "${workspaceFolder}/.vscode/build_shell_selector.cmd",
+      "args": [
+        ".vscode/build.ps1",
+        "-Command",
+        "StartRimWorldQuickTest"
+      ]
+    },
+    {
+      "label": "install RimWorld debug",
+      "type": "shell",
+      "command": "${workspaceFolder}/.vscode/build_shell_selector.cmd",
+      "args": [
+        ".vscode/build_utility_debug.ps1",
+        "-Command",
+        "InstallRimWorldDebug"
+      ]
+    },
+    {
+      "label": "remove RimWorld debug",
+      "type": "shell",
+      "command": "${workspaceFolder}/.vscode/build_shell_selector.cmd",
+      "args": [
+        ".vscode/build_utility_debug.ps1",
+        "-Command",
+        "RemoveRimWorldDebug"
+      ]
+    },
+    {
+      "label": "start dnSPY",
+      "type": "shell",
+      "command": "${workspaceFolder}/.vscode/build_shell_selector.cmd",
+      "args": [
+        ".vscode/build.ps1",
+        "-Command",
+        "StartDNSPY"
+      ]
+    }
+  ]
+}
