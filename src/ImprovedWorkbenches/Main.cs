@@ -1,71 +1,38 @@
 ﻿using System;
 using HarmonyLib;
-using HugsLib.Settings;
-using HugsLib.Utils;
 using RimWorld;
+using RimWorld.Planet;
 using UnityEngine;
 using Verse;
+using static ImprovedWorkbenches.ModSettings_ImprovedWorkbenches;
 
 namespace ImprovedWorkbenches
 {
-    public class Main : HugsLib.ModBase
+    [StaticConstructorOnStartup]
+    public class Main
     {
-        public Main()
+        public Main(Harmony harmony)
         {
             Instance = this;
-        }
-
-        public override void WorldLoaded()
-        {
-            base.WorldLoaded();
-            _extendedBillDataStorage = Find.World.GetComponent<ExtendedBillDataStorage>();
-            BillCopyPasteHandler.Clear();
-        }
-
-        public override void DefsLoaded()
-        {
-            _expandBillsTab = Settings.GetHandle(
-                "expandBillsTab", "IW.AutoOpenBillTabLabel".Translate(),
-                "IW.AutoOpenBillTabDesc".Translate(), true);
-
-            _enableDragToReorder = Settings.GetHandle(
-                "enableDragToReorder", "IW.EnableDragToReorder".Translate(),
-                "IW.EnableDragToReorderDesc".Translate(), true);
-
-            _mirrorSuspendedStatus = Settings.GetHandle(
-                "mirrorSuspendedStatus", "IW.MirrorSuspendedStatus".Translate(),
-                "IW.MirrorSuspendedStatusDesc".Translate(), true);
-
-            _mirrorSuspendedStatus.ValueChanged += handle =>
-            {
-                if (_mirrorSuspendedStatus.Value)
-                {
-                    _extendedBillDataStorage?.UpdateAllLinkedBills();
-                }
-            };
-
-            _dropOnFloorByDefault = Settings.GetHandle(
-                "dropOnFloorByDefault", "IW.DropOnFloorByDefault".Translate(),
-                "IW.DropOnFloorByDefaultDesc".Translate(), false);
-
-            _countOutsideStockpiles = Settings.GetHandle(
-                "countOutsideStockpiles", "IW.CountOutsideStockpiles".Translate(),
-                "IW.CountOutsideStockpilesDesc".Translate(), true);
-
-            _countCarriedByNonHumans = Settings.GetHandle(
-                "countCarriedByNonHumans", "IW.CountCarriedByNonHumans".Translate(),
-                "IW.CountCarriedByNonHumansDesc".Translate(), true);
-
             // Integration with other mods
-
-            IntegrateWithOutfitter();
+            IntegrateWithOutfitter(harmony);
 
             IntegrateWithRimFactory();
 
             IntegrateWithNoMaxBills();
         }
 
-        private void IntegrateWithOutfitter()
+        [HarmonyPatch(typeof(World), nameof(World.FinalizeInit))]
+        static class Patch_FinalizeInit
+        {
+            static void Postfix()
+            {
+                Main.Instance._extendedBillDataStorage = Find.World.GetComponent<ExtendedBillDataStorage>();
+                Main.Instance.BillCopyPasteHandler.Clear();
+            }
+        }
+
+        private void IntegrateWithOutfitter(Harmony harmony)
         {
             try
             {
@@ -73,17 +40,17 @@ namespace ImprovedWorkbenches
                 if (outfitterBillsPatcher == null)
                     return;
 
-                Logger.Message("Adding support for Outfitter");
+                Log.Message("[Better Workbench Management] Adding support for Outfitter");
                 var outfitterPatchedMethod = outfitterBillsPatcher.GetMethod("DoListing");
                 var ourPrefix = typeof(BillStack_DoListing_Detour).GetMethod("Prefix");
                 var ourPostfix = typeof(BillStack_DoListing_Detour).GetMethod("Postfix");
-                HarmonyInst.Patch(outfitterPatchedMethod, new HarmonyMethod(ourPrefix), new HarmonyMethod(ourPostfix));
+                harmony.Patch(outfitterPatchedMethod, new HarmonyMethod(ourPrefix), new HarmonyMethod(ourPostfix));
             }
             catch (Exception e)
             {
-                Logger.Error("Exception while trying to detect Outfitter:");
-                Logger.Error(e.Message);
-                Logger.Error(e.StackTrace);
+                Log.Message("[Better Workbench Management] Exception while trying to detect Outfitter:");
+                Log.Error("[Better Workbench Management] " + e.Message);
+                Log.Error("[Better Workbench Management] " + e.StackTrace);
             }
         }
 
@@ -96,16 +63,16 @@ namespace ImprovedWorkbenches
                 if (_rimFactoryBillsTabType == null)
                     return;
 
-                Logger.Message("Adding support for ProjectRimFactory");
+                Log.Message("[Better Workbench Management] Adding support for ProjectRimFactory");
                 _rimFactoryBuildingType = GenTypes.GetTypeInAnyAssembly(
                     "ProjectRimFactory.SAL3.Things.Assemblers.Building_DynamicBillGiver");
                 _isRimfactoryLoaded = true;
             }
             catch (Exception e)
             {
-                Logger.Error("Exception while trying to detect RimFactory:");
-                Logger.Error(e.Message);
-                Logger.Error(e.StackTrace);
+                Log.Message("[Better Workbench Management] Exception while trying to detect RimFactory:");
+                Log.Error("[Better Workbench Management] " + e.Message);
+                Log.Error("[Better Workbench Management] " + e.StackTrace);
             }
 
         }
@@ -117,14 +84,14 @@ namespace ImprovedWorkbenches
                 if (GenTypes.GetTypeInAnyAssembly("NoMaxBills.Patch_BillStack_DoListing") == null)
                     return;
 
-                Logger.Message("Adding support for No Max Bills");
+                Log.Message("[Better Workbench Management] Adding support for No Max Bills");
                 _isNoMaxBillsLoaded = true;
             }
             catch (Exception e)
             {
-                Logger.Error("Exception while trying to detect NoMaxBills:");
-                Logger.Error(e.Message);
-                Logger.Error(e.StackTrace);
+                Log.Message("[Better Workbench Management] Exception while trying to detect NoMaxBills:");
+                Log.Error("[Better Workbench Management] " + e.Message);
+                Log.Error("[Better Workbench Management] " + e.StackTrace);
             }
         }
 
@@ -185,25 +152,9 @@ namespace ImprovedWorkbenches
             return _isNoMaxBillsLoaded ? 125 : BillStack.MaxCount;
         }
 
-        internal new ModLogger Logger => base.Logger;
-
         internal static Main Instance { get; private set; }
 
         public readonly BillCopyPaste BillCopyPasteHandler = new BillCopyPaste();
-
-        public override string ModIdentifier => "ImprovedWorkbenches";
-
-        private SettingHandle<bool> _expandBillsTab;
-
-        private SettingHandle<bool> _enableDragToReorder;
-
-        private SettingHandle<bool> _mirrorSuspendedStatus;
-
-        private SettingHandle<bool> _dropOnFloorByDefault;
-
-        private SettingHandle<bool> _countOutsideStockpiles;
-
-        private SettingHandle<bool> _countCarriedByNonHumans;
 
         private ExtendedBillDataStorage _extendedBillDataStorage;
 

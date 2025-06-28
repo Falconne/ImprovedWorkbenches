@@ -27,6 +27,9 @@ namespace ImprovedWorkbenches
             _extendedBill.Name = name;
         }
 
-
+        protected override AcceptanceReport NameIsValid(string name)
+        {
+            return true;
+        }
     }
 }
