@@ -106,18 +106,19 @@ namespace ImprovedWorkbenches
 
                 if (groupBillsType == null) { return; }
 
-                Logger.Message("Adding support for Colony Groups");
+                Log.Message("Adding support for Colony Groups");
 
                 var getterMethodInfo = AccessTools.Property(groupBillsType, "BillsSelectedGroup").GetMethod;
+                Log.Message("getterMethodInfo: " + getterMethodInfo);
 
-                ColonyGroupsBillToPawnGroupDictGetter =
-                    AccessTools.MethodDelegate<Func<IDictionary>>(getterMethodInfo);
+                ColonyGroupsBillToPawnGroupDictGetter = 
+                    (Func<IDictionary>)Delegate.CreateDelegate(typeof(Func<IDictionary>), getterMethodInfo);
             }
             catch (Exception e)
             {
-                Logger.Error("Exception while trying to detect the Colony Groups mod:");
-                Logger.Error(e.Message);
-                Logger.Error(e.StackTrace);
+                Log.Error("Exception while trying to detect the Colony Groups mod:");
+                Log.Error(e.Message);
+                Log.Error(e.StackTrace);
             }
         }
 
