@@ -31,8 +31,7 @@ namespace ImprovedWorkbenches
         public static bool Prefix()
         {
             var selectedThing = Find.Selector.SingleSelectedThing;
-            var billGiver = selectedThing as IBillGiver;
-            if (billGiver == null)
+            if (!(selectedThing is IBillGiver billGiver))
                 return true;
 
             if (!(selectedThing is Building_WorkTable) && !Main.Instance.IsOfTypeRimFactoryBuilding(selectedThing))
@@ -81,7 +80,7 @@ namespace ImprovedWorkbenches
             stack.Reorder(bill, offset);
         }
 
-        public static void Postfix(ref Rect rect)
+        public static void Postfix()
         {
             if (!(Find.Selector.SingleSelectedThing is Building_WorkTable workTable))
                 return;
