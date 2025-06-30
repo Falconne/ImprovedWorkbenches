@@ -46,7 +46,7 @@ namespace ImprovedWorkbenches
             }
         }
 
-        public override void FinalizeInit()
+        public override void FinalizeInit(bool fromLoad)
         {
             this.MigrateLegacyBillStore();
         }
