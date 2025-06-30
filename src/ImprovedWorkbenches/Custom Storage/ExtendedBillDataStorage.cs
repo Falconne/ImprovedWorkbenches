@@ -201,7 +201,17 @@ namespace ImprovedWorkbenches
             destinationBill.allowedSkillRange = sourceBill.allowedSkillRange;
             destinationBill.SetStoreMode(sourceBill.GetStoreMode(), sourceBill.GetSlotGroup());
             destinationBill.paused = sourceBill.paused;
-            destinationBill.SetPawnRestriction(sourceBill.PawnRestriction);
+
+            if (sourceBill.PawnRestriction != null)
+                destinationBill.SetPawnRestriction(sourceBill.PawnRestriction);
+            else if (sourceBill.SlavesOnly)
+                destinationBill.SetAnySlaveRestriction();
+            else if (sourceBill.MechsOnly)
+                destinationBill.SetAnyMechRestriction();
+            else if (sourceBill.NonMechsOnly)
+                destinationBill.SetAnyNonMechRestriction();
+            else
+                destinationBill.SetAnyPawnRestriction();
 
             // Colony Groups integration
             if (Main.Instance.ColonyGroupsBillToPawnGroupDictGetter != null)
