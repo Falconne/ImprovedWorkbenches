@@ -59,11 +59,12 @@ namespace ImprovedWorkbenches
             foreach (var thing in thingsOnMap)
             {
                 if (thing.Position == IntVec3.Invalid || thing.IsNotFresh())
-                {
                     continue;
-                }
 
                 if (thing.GetSlotGroup() != null)
+                    continue;
+
+                if (thing.Fogged())
                     continue;
 
                 result += thing.stackCount;
