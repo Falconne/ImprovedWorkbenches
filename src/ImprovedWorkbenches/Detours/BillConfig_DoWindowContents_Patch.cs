@@ -80,33 +80,45 @@ namespace ImprovedWorkbenches
                 TooltipHandler.TipRegion(renameRect, "IW.RenameBillTip".Translate());
             }
 
-            const float columnWidth = 180f;
+            float columnWidth = (inRect.width - 34f) / 3f;
+            float buttonHight = Text.CalcHeight("IW.CountAwayLabel".Translate(), columnWidth) + 8f;
+            float optionsHeight = buttonHight + 2f + 2f + Text.LineHeight + 2f + 4f + 1f + 8f + Text.LineHeight;
+            float optionsOffset = inRect.height - 50f - optionsHeight;
 
-            if (!ExtendedBillDataStorage.CanOutputBeFiltered(billRaw))
-                return;
-
-            if (billRaw.repeatMode != BillRepeatModeDefOf.TargetCount)
-                return;
-            
             Listing_Standard optionsList = new Listing_Standard();
-            float optionsHeight = 120;
-            optionsList.Begin(new Rect(0, inRect.height - optionsHeight, columnWidth, optionsHeight));
-
-            // Inventory Filter
-            if (billRaw.includeEquipped)
-            {
-                optionsList.CheckboxLabeled("IW.CountAwayLabel".Translate(), ref extendedBillData.CountAway, "IW.CountAwayDesc".Translate());
-            }
-            else
-                optionsList.Gap(Text.LineHeight + optionsList.verticalSpacing);
+            optionsList.Begin(new Rect(0, optionsOffset, columnWidth, optionsHeight));
 
             // Output Filter
-            if(optionsList.ButtonText("IW.OutputFilterLabel".Translate()))
+            if (ExtendedBillDataStorage.CanOutputBeFiltered(billRaw) && (billRaw.repeatMode == BillRepeatModeDefOf.TargetCount))
             {
-                Window temp = Find.WindowStack.currentlyDrawnWindow;
-                temp.Close();
-                Find.WindowStack.Add(new Dialog_ThingFilter(extendedBillData, temp));
+                if (optionsList.ButtonText("IW.OutputFilterLabel".Translate()))
+                {
+                    Window temp = Find.WindowStack.currentlyDrawnWindow;
+                    temp.Close();
+                    Find.WindowStack.Add(new Dialog_ThingFilter(extendedBillData, temp));
+                }
+                optionsList.Gap(2f);
+                optionsList.CheckboxLabeled("IW.CountAwayLabel".Translate(), ref extendedBillData.CountAway, "IW.CountAwayDesc".Translate());
+                optionsList.Gap(4f);
+                optionsList.GapLine(1f);
             }
+            else
+            {
+                optionsList.Gap(buttonHight + optionsList.verticalSpacing);
+                optionsList.Gap(2f);
+                optionsList.Gap(Text.LineHeight + optionsList.verticalSpacing);
+                optionsList.Gap(4f);
+                optionsList.Gap(1f);
+            }
+
+
+            optionsList.Gap(8f);
+
+            // Workbench Restriction
+            Building_WorkTable workTable = Find.Selector.SingleSelectedThing as Building_WorkTable;
+            WorktableRestrictionData workbenchRestrictionData = Find.World.GetComponent<WorktableRestrictionDataStorage>()?.GetWorktableRestrictionData(workTable.thingIDNumber);
+            if (workbenchRestrictionData != null)
+                optionsList.CheckboxLabeled("IW.WorkbenchRestrictionLabel".Translate(), ref workbenchRestrictionData.isRestricted, "IW.WorkbenchRestrictionDesc".Translate());
 
             optionsList.End();
         }

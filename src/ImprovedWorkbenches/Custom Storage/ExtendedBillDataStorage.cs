@@ -21,6 +21,7 @@ namespace ImprovedWorkbenches
 
 
         private List<LinkedBillsSet> _linkedBillsSets = new List<LinkedBillsSet>();
+        private List<WorktableRestrictionData> _worktableRestrictionData = new List<WorktableRestrictionData>();
 
         public override void ExposeData()
         {
