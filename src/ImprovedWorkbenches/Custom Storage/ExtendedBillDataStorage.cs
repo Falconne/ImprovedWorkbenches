@@ -47,7 +47,7 @@ namespace ImprovedWorkbenches
             }
         }
 
-        public override void FinalizeInit()
+        public override void FinalizeInit(bool fromLoad)
         {
             this.MigrateLegacyBillStore();
         }
@@ -202,7 +202,17 @@ namespace ImprovedWorkbenches
             destinationBill.allowedSkillRange = sourceBill.allowedSkillRange;
             destinationBill.SetStoreMode(sourceBill.GetStoreMode(), sourceBill.GetSlotGroup());
             destinationBill.paused = sourceBill.paused;
-            destinationBill.SetPawnRestriction(sourceBill.PawnRestriction);
+
+            if (sourceBill.PawnRestriction != null)
+                destinationBill.SetPawnRestriction(sourceBill.PawnRestriction);
+            else if (sourceBill.SlavesOnly)
+                destinationBill.SetAnySlaveRestriction();
+            else if (sourceBill.MechsOnly)
+                destinationBill.SetAnyMechRestriction();
+            else if (sourceBill.NonMechsOnly)
+                destinationBill.SetAnyNonMechRestriction();
+            else
+                destinationBill.SetAnyPawnRestriction();
 
             // Colony Groups integration
             if (Main.Instance.ColonyGroupsBillToPawnGroupDictGetter != null)
@@ -226,70 +236,70 @@ namespace ImprovedWorkbenches
                     Log.Error("attempt to copy pawn group assignment of a bill to another bill (ColonyGroups integration)");
                     Log.Error(e.Message);
                 }
+            }
+            if (Main.Instance.ShouldMirrorSuspendedStatus())
+            {
+                destinationBill.suspended = sourceBill.suspended;
+            }
 
-                if (Main.Instance.ShouldMirrorSuspendedStatus())
+            var outputCanBeFiltered =
+                CanOutputBeFiltered(destinationBill)
+                || destinationBill.recipe?.WorkerCounter is RecipeWorkerCounter_MakeStoneBlocks
+                || destinationBill.recipe?.WorkerCounter is RecipeWorkerCounter_ButcherAnimals;
+
+            if (sourceBill.repeatMode != BillRepeatModeDefOf.TargetCount || outputCanBeFiltered)
+            {
+                destinationBill.repeatMode = sourceBill.repeatMode;
+            }
+
+            if (outputCanBeFiltered)
+            {
+                destinationBill.repeatCount = sourceBill.repeatCount;
+                destinationBill.targetCount = sourceBill.targetCount;
+                destinationBill.pauseWhenSatisfied = sourceBill.pauseWhenSatisfied;
+                destinationBill.unpauseWhenYouHave = sourceBill.unpauseWhenYouHave;
+                destinationBill.SetIncludeGroup(sourceBill.GetIncludeSlotGroup());
+                destinationBill.hpRange = sourceBill.hpRange;
+
+                var sourceThingDef = sourceBill.recipe.ProducedThingDef;
+                var producedThingDef = destinationBill.recipe.ProducedThingDef;
+                if (sourceThingDef != null && producedThingDef != null)
                 {
-                    destinationBill.suspended = sourceBill.suspended;
-                }
-
-                var outputCanBeFiltered =
-                    CanOutputBeFiltered(destinationBill)
-                    || destinationBill.recipe?.WorkerCounter is RecipeWorkerCounter_MakeStoneBlocks
-                    || destinationBill.recipe?.WorkerCounter is RecipeWorkerCounter_ButcherAnimals;
-
-                if (sourceBill.repeatMode != BillRepeatModeDefOf.TargetCount || outputCanBeFiltered)
-                {
-                    destinationBill.repeatMode = sourceBill.repeatMode;
-                }
-
-                if (outputCanBeFiltered)
-                {
-                    destinationBill.repeatCount = sourceBill.repeatCount;
-                    destinationBill.targetCount = sourceBill.targetCount;
-                    destinationBill.pauseWhenSatisfied = sourceBill.pauseWhenSatisfied;
-                    destinationBill.unpauseWhenYouHave = sourceBill.unpauseWhenYouHave;
-                    destinationBill.SetIncludeGroup(sourceBill.GetIncludeSlotGroup());
-                    destinationBill.hpRange = sourceBill.hpRange;
-
-                    var sourceThingDef = sourceBill.recipe.ProducedThingDef;
-                    var producedThingDef = destinationBill.recipe.ProducedThingDef;
-                    if (sourceThingDef != null && producedThingDef != null)
+                    if ((sourceThingDef.IsWeapon || sourceThingDef.IsApparel) &&
+                        (producedThingDef.IsWeapon || producedThingDef.IsApparel))
                     {
-                        if ((sourceThingDef.IsWeapon || sourceThingDef.IsApparel) &&
-                            (producedThingDef.IsWeapon || producedThingDef.IsApparel))
-                        {
-                            destinationBill.includeEquipped = sourceBill.includeEquipped;
-                        }
+                        destinationBill.includeEquipped = sourceBill.includeEquipped;
+                    }
 
-                        if (sourceThingDef.IsApparel && sourceThingDef.apparel.careIfWornByCorpse &&
-                            producedThingDef.IsApparel && producedThingDef.apparel.careIfWornByCorpse)
-                        {
-                            destinationBill.includeTainted = sourceBill.includeTainted;
-                        }
+                    if (sourceThingDef.IsApparel && sourceThingDef.apparel.careIfWornByCorpse &&
+                        producedThingDef.IsApparel && producedThingDef.apparel.careIfWornByCorpse)
+                    {
+                        destinationBill.includeTainted = sourceBill.includeTainted;
+                    }
 
-                        if (sourceThingDef.HasComp(typeof(CompQuality)) &&
-                            producedThingDef.HasComp(typeof(CompQuality)))
-                        {
-                            destinationBill.qualityRange = sourceBill.qualityRange;
-                        }
+                    if (sourceThingDef.HasComp(typeof(CompQuality)) &&
+                        producedThingDef.HasComp(typeof(CompQuality)))
+                    {
+                        destinationBill.qualityRange = sourceBill.qualityRange;
+                    }
 
-                        if (sourceThingDef.MadeFromStuff && producedThingDef.MadeFromStuff)
-                        {
-                            destinationBill.limitToAllowedStuff = sourceBill.limitToAllowedStuff;
-                        }
+                    if (sourceThingDef.MadeFromStuff && producedThingDef.MadeFromStuff)
+                    {
+                        destinationBill.limitToAllowedStuff = sourceBill.limitToAllowedStuff;
                     }
                 }
-
-                var sourceExtendedData = GetOrCreateExtendedDataFor(sourceBill);
-
-                if (sourceExtendedData == null)
-                    return;
-
-                var destinationExtendedData = GetOrCreateExtendedDataFor(destinationBill);
-
-                destinationExtendedData?.CloneFrom(sourceExtendedData, !preserveTargetProduct);
             }
+
+            var sourceExtendedData = GetOrCreateExtendedDataFor(sourceBill);
+
+            if (sourceExtendedData == null)
+                return;
+
+            var destinationExtendedData = GetOrCreateExtendedDataFor(destinationBill);
+
+            destinationExtendedData?.CloneFrom(sourceExtendedData, !preserveTargetProduct);
         }
+
         // Figure out if output of bill produces a "thing" we care about
         public static bool CanOutputBeFiltered(Bill_Production bill)
         {

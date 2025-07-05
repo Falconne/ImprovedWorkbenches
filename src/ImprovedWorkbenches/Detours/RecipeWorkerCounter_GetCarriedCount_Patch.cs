@@ -15,10 +15,10 @@ namespace ImprovedWorkbenches
         public static IEnumerable<CodeInstruction> GetCarriedCount(IEnumerable<CodeInstruction> instructions)
         {
             bool found = false;
-            foreach( var instruction in instructions )
+            foreach (var instruction in instructions)
             {
-                if( instruction.opcode == OpCodes.Callvirt
-                    && instruction.operand.ToString().EndsWith( "Verse.MapPawns::get_FreeColonistsSpawned()" ))
+                if (instruction.opcode == OpCodes.Callvirt
+                    && instruction.operand.ToString().EndsWith("Verse.MapPawns::get_FreeColonistsSpawned()"))
                 {
                     found = true;
                     yield return new CodeInstruction(OpCodes.Call,
@@ -27,8 +27,8 @@ namespace ImprovedWorkbenches
                 else
                     yield return instruction;
             }
-            if( !found )
-                Log.Error( "ImprovedWorkbenches: GetCarriedCount transpiller failed." );
+            if (!found)
+                Log.Error("ImprovedWorkbenches: GetCarriedCount transpiller failed.");
         }
 
         private static List<Pawn> cachedResult = new List<Pawn>();
@@ -41,7 +41,7 @@ namespace ImprovedWorkbenches
             cachedResult.AddRange(mapPawns.FreeColonistsSpawned);
             cachedResult.AddRange(mapPawns.SpawnedColonyAnimals);
             cachedResult.AddRange(mapPawns.SpawnedColonyMechs);
-            cachedResult.AddRange(mapPawns.SpawnedColonyMutantsPlayerControlled);
+            cachedResult.AddRange(mapPawns.SpawnedColonySubhumansPlayerControlled);
             return cachedResult;
         }
     }

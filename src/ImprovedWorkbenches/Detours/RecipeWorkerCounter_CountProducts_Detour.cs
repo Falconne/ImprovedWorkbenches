@@ -80,7 +80,7 @@ namespace ImprovedWorkbenches
                 count += CountPawnThings(pawn, counter, bill, productThingDef);
             foreach( var pawn in billMap.mapPawns.SpawnedColonyMechs)
                 count += CountPawnThings(pawn, counter, bill, productThingDef);
-            foreach( var pawn in billMap.mapPawns.SpawnedColonyMutantsPlayerControlled)
+            foreach( var pawn in billMap.mapPawns.SpawnedColonySubhumansPlayerControlled)
                 count += CountPawnThings(pawn, counter, bill, productThingDef);
             return count;
         }
@@ -92,14 +92,14 @@ namespace ImprovedWorkbenches
             return mapPawns.FreeColonistsSpawned
                 .Concat(mapPawns.SpawnedColonyAnimals)
                 .Concat(mapPawns.SpawnedColonyMechs)
-                .Concat(mapPawns.SpawnedColonyMutantsPlayerControlled);
+                .Concat(mapPawns.SpawnedColonySubhumansPlayerControlled);
         }
 
         private static int CountAway(Map billMap, RecipeWorkerCounter counter, Bill_Production bill, ThingDef productThingDef)
         {
             int count = 0;
             // Look for matching items in colonists and animals away from base
-            foreach (var pawn in PawnsFinder.AllMapsCaravansAndTravelingTransportPods_Alive_OfPlayerFaction)
+            foreach (var pawn in PawnsFinder.AllMapsCaravansAndTravellingTransporters_Alive_OfPlayerFaction)
             {
                 if (pawn.GetOriginMap() == billMap)
                     // OriginMap is only set on our pawns who are away from base
