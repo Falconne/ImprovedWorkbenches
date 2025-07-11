@@ -28,6 +28,8 @@ This mod adds some QoL (Quality of Life) features to the workbench and bills ove
 
 - Fixes an inconsistency in vanilla where items without quality or hitpoints, like meals and medicine, are not counted if they are not in a stockpile.
 
+- You can set a bill restriction that applies to the entire workbench, so all bills on that workbench share the same restriction. New bills and copied bills will automatically inherit this restriction.
+
 - Can be added to an existing save.
 
 # Installation
