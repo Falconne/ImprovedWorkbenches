@@ -185,11 +185,11 @@ namespace ImprovedWorkbenches
                 if (linkedBill == sourceBill)
                     continue;
 
-                MirrorBills(sourceBill, linkedBill, false);
+                MirrorBills(sourceBill, linkedBill, false, false);
             }
         }
 
-        public void MirrorBills(Bill_Production sourceBill, Bill_Production destinationBill, bool preserveTargetProduct)
+        public void MirrorBills(Bill_Production sourceBill, Bill_Production destinationBill, bool preserveTargetProduct, bool initialCopy = true)
         {
             if (!preserveTargetProduct || DoFiltersMatch(sourceBill, destinationBill))
             {
@@ -198,44 +198,56 @@ namespace ImprovedWorkbenches
             }
 
             destinationBill.ingredientSearchRadius = sourceBill.ingredientSearchRadius;
-            destinationBill.allowedSkillRange = sourceBill.allowedSkillRange;
             destinationBill.SetStoreMode(sourceBill.GetStoreMode(), sourceBill.GetSlotGroup());
             destinationBill.paused = sourceBill.paused;
 
-            if (sourceBill.PawnRestriction != null)
-                destinationBill.SetPawnRestriction(sourceBill.PawnRestriction);
-            else if (sourceBill.SlavesOnly)
-                destinationBill.SetAnySlaveRestriction();
-            else if (sourceBill.MechsOnly)
-                destinationBill.SetAnyMechRestriction();
-            else if (sourceBill.NonMechsOnly)
-                destinationBill.SetAnyNonMechRestriction();
-            else
-                destinationBill.SetAnyPawnRestriction();
-
-            // Colony Groups integration
-            if (Main.Instance.ColonyGroupsBillToPawnGroupDictGetter != null)
+            WorktableRestrictionData destinationBillRestrictionData = Find.World.GetComponent<WorktableRestrictionDataStorage>()?.GetWorktableRestrictionData(destinationBill);
+            WorktableRestrictionData sourceBillRestrictionData = Find.World.GetComponent<WorktableRestrictionDataStorage>()?.GetWorktableRestrictionData(sourceBill);
+            if (destinationBillRestrictionData?.isRestricted == true)
             {
-                try
-                {
-                    var billToPawnGroupDict = Main.Instance.ColonyGroupsBillToPawnGroupDictGetter();
+                destinationBillRestrictionData.SetWorktableRestrictionToBill(destinationBill);
+            }
+            else if (initialCopy || (sourceBillRestrictionData?.isRestricted != true))
+            {
+                if (sourceBill.PawnRestriction != null)
+                    destinationBill.SetPawnRestriction(sourceBill.PawnRestriction);
+                else if (sourceBill.SlavesOnly)
+                    destinationBill.SetAnySlaveRestriction();
+                else if (sourceBill.MechsOnly)
+                    destinationBill.SetAnyMechRestriction();
+                else if (sourceBill.NonMechsOnly)
+                    destinationBill.SetAnyNonMechRestriction();
+                else
+                    destinationBill.SetAnyPawnRestriction();
 
-                    if (billToPawnGroupDict.Contains(sourceBill))
-                    {
-                        var pawnGroup = billToPawnGroupDict[sourceBill];
-                        billToPawnGroupDict[destinationBill] = pawnGroup;
-                    }
-                    else
-                    {
-                        billToPawnGroupDict.Remove(destinationBill);
-                    }
-                }
-                catch (Exception e)
+                destinationBill.allowedSkillRange = sourceBill.allowedSkillRange;
+
+                // Colony Groups integration
+                if (Main.Instance.ColonyGroupsBillToPawnGroupDictGetter != null)
                 {
-                    Log.Error("attempt to copy pawn group assignment of a bill to another bill (ColonyGroups integration)");
-                    Log.Error(e.Message);
+                    try
+                    {
+                        var billToPawnGroupDict = Main.Instance.ColonyGroupsBillToPawnGroupDictGetter();
+
+                        if (billToPawnGroupDict.Contains(sourceBill))
+                        {
+                            var pawnGroup = billToPawnGroupDict[sourceBill];
+                            billToPawnGroupDict[destinationBill] = pawnGroup;
+                        }
+                        else
+                        {
+                            billToPawnGroupDict.Remove(destinationBill);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Log.Error("attempt to copy pawn group assignment of a bill to another bill (ColonyGroups integration)");
+                        Log.Error(e.Message);
+                    }
                 }
             }
+
+
             if (Main.Instance.ShouldMirrorSuspendedStatus())
             {
                 destinationBill.suspended = sourceBill.suspended;

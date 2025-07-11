@@ -11,6 +11,11 @@ namespace ImprovedWorkbenches
         {
             if (__instance is Building_WorkTable workTable)
             {
+                // Clean up WorktableRestrictionData from WorldComponent
+                var worldComp = Find.World.GetComponent<WorktableRestrictionDataStorage>();
+                worldComp?.RemoveWorktableRestrictionData(workTable.thingIDNumber);
+
+                // Clean up bill data 
                 foreach (var bill in workTable.BillStack.Bills)
                 {
                     if (bill is Bill_Production billProduction)

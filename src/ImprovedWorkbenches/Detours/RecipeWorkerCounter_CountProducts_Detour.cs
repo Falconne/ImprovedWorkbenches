@@ -103,7 +103,7 @@ namespace ImprovedWorkbenches
             {
                 if (pawn.GetOriginMap() == billMap)
                     // OriginMap is only set on our pawns who are away from base
-                    count += CountPawnThings(pawn, counter, bill, productThingDef);
+                    count += CountPawnThings(pawn, counter, bill, productThingDef, !bill.includeEquipped);
             }
             return count;
         }
@@ -117,7 +117,8 @@ namespace ImprovedWorkbenches
             if (pawn.equipment != null && !onlyCarry)
                 count += CountMatchingThingsIn(pawn.equipment.AllEquipmentListForReading.Cast<Thing>(), counter, bill, productThingDef);
 
-            if (pawn.inventory != null && !onlyCarry)
+            //Bill products in inventory should be counted (PickupandHaul compatible)
+            if (pawn.inventory != null)
                 count += CountMatchingThingsIn(pawn.inventory.innerContainer, counter, bill, productThingDef);
 
             if (pawn.carryTracker != null) //Bill product immediately carried to stockpile should be counted
