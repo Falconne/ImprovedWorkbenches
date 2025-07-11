@@ -29,7 +29,7 @@ namespace ImprovedWorkbenches
             // Bill navigation buttons
             DrawWorkTableNavigation(__instance, billRaw, inRect);
 
-            var nextConfigButtonX = inRect.xMin + 28f;
+            var nextConfigButtonX = inRect.xMin + 65f;
 
             // Copy bill button
             {
@@ -68,16 +68,6 @@ namespace ImprovedWorkbenches
                     extendedBillDataStorage.RemoveBillFromLinkSets(billRaw);
                 }
                 TooltipHandler.TipRegion(unlinkRect, "IW.BreakLinkToOtherBillsTip".Translate());
-            }
-
-            // Bill renaming
-            {
-                var renameRect = new Rect(inRect.xMax - 75f, inRect.yMin + 4f, 24f, 24f);
-                if (Widgets.ButtonImage(renameRect, Resources.Rename))
-                {
-                    Find.WindowStack.Add(new Dialog_RenameBill(extendedBillData, billRaw));
-                }
-                TooltipHandler.TipRegion(renameRect, "IW.RenameBillTip".Translate());
             }
 
             float columnWidth = (inRect.width - 34f) / 3f;

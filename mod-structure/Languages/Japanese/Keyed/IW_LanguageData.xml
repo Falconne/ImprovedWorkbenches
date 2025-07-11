@@ -100,4 +100,6 @@
 
     <IW.WorkbenchRestrictionLabel>作業台を制限</IW.WorkbenchRestrictionLabel>
     <IW.WorkbenchRestrictionDesc>この加工命令の制限を作業台内のすべての加工命令に適用する</IW.WorkbenchRestrictionDesc>
+    <IW.CountCarriedByNonHumans>人間以外の生物が運ぶ資源を数える</IW.CountCarriedByNonHumans>
+    <IW.CountCarriedByNonHumansDesc>バニラ版のバグにより,動物やメカノイドが運搬したり,キャラバンで出発する動物など,人間以外の存在が「資源アイテム(例: 食料や医薬品)」を運んだ場合,そのアイテムがカウントされません.このオプションを有効にすると,このバグが修正されます.</IW.CountCarriedByNonHumansDesc>
 </LanguageData>
