@@ -14,6 +14,7 @@
 		<DebugType>none</DebugType>
 		<DebugSymbols>false</DebugSymbols>
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<OutputPath>bin\</OutputPath>
 	</PropertyGroup>
 
 
@@ -28,7 +29,7 @@
 	<ItemGroup>
 		<!-- Mod -->
 		<Compile Include="..\src\**\*.*" />
-		<None Remove ="**\*.*" />
+		<None Remove="**\*.*" />
 
 		<!-- Rimworld -->
 		<Reference Include="..\localDependencies\*.dll">
@@ -36,4 +37,12 @@
 		</Reference>
 
 	</ItemGroup>
+
+	<Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+		<Exec Command="powershell -ExecutionPolicy Bypass -NoProfile -File $(ProjectDir)build.ps1 -Command CopyDependencies" />
+	</Target>
+
+	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
+		<Exec Command="powershell -ExecutionPolicy Bypass -NoProfile -File $(ProjectDir)build.ps1 -Command PostBuild" />
+	</Target>
 </Project>
