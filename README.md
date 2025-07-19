@@ -45,37 +45,18 @@ More info: https://rimworldwiki.com/wiki/Installing_mods
 
 # Building from source
 
-This project uses Visual Studio Code.
+This project can be built with Visual Studio or Visual Studio Code
 
-### Setup
+### Visual Studio
+- Just open the .slnx in Visual Studio
+- Change the path to the ThirdPartyDependencies (Harmony) in the ThirdPartyDependencies.ps1 file in the build folder.
+- If you are not using Steam or RimWorld is not installed in the default location (C:\Program Files (x86)\Steam\steamapps\common\RimWorld), you need to set an environment variable for the path to the RimWorld folder. 
+With PowerShell, you can do this by running the following command: [System.Environment]::SetEnvironmentVariable("path_RimWorld", "D:\Games\RimWorld", [System.EnvironmentVariableTarget]::User)
+- Change the Version `<VersionPrefix>` in the .csproj file. (The first 2 numbers indicate the RimWorld version, the third number for major mod updates, the last number for minor mod updates)
+- build the project
+- The mod will be in the `dist` directory at the root of the repo and copied to the RimWorld Mods folder.
+- Start RimWorld and select the mod in the mod list.
 
-1. Download and install:
+### Visual Studio Code
 
-   - [Visual Studio Code](https://code.visualstudio.com/)
-   - [.NET SDK](https://dotnet.microsoft.com/download/dotnet-core) 8.0 or 9.0 (only needed for the dotnet build tool)
-   - [.Net Framework 4.7.2 Developer Pack](https://dotnet.microsoft.com/download/dotnet-framework/net472). RimWorld Framework
-
-2. Clone or download this repository.
-
-3. Install VS Code Extensions:
-
-   - [C# extension](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp) - Basic C# support
-
-   Optional:
-   
-   - [Task Explorer](https://marketplace.visualstudio.com/items?itemName=spmeesseman.vscode-taskexplorer) - Easy UI for running tasks.
-   - [C# Dev Kit](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csdevkit) - Solution Explorer
-
-
-### First Steps
-
-Errors and missing dependencies are resolved during the first build.
-
-1. Build Mod `CTRL + SHIFT + B` or run task `build` in [Task Explorer](https://marketplace.visualstudio.com/items?itemName=spmeesseman.vscode-taskexplorer)
-2. Launch RimWorld
-
-#### Troubleshooting
-
-- **ThirdPartyDependencies**: Ensure paths to third-party DLLs in `ThirdPartyDependencies.ps1` are correctly specified and enclosed in quotes.
-- **Environment variables**: Verify that the environment variable for RimWorld, `RimWorldInstallationPath`, is correctly configured. If the path is not set, the script will prompt you to set one. If the game is installed in the standard Steam folder on C:, the environment variable is set automatically.
-- For more information: [RimWorld VSCode Template](https://github.com/ArcticOwl-Dev/RimWorld_Mod_Template_VSCode/blob/main/README.md)
+Check the [VSCodeSetup.md](.vscode/VSCodeSetup.md) file for setup instructions.

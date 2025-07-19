@@ -1,0 +1,44 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFramework>net472</TargetFramework>
+    <PlatformTarget>x64</PlatformTarget>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <Optimize>True</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <!-- Modify [RootNamespace], [AssemblyName] to your mod name -->
+    <RootNamespace>ImprovedWorkbenches</RootNamespace>
+    <AssemblyName>ImprovedWorkbenches</AssemblyName>
+    <!-- Modify [VersionPrefix] to your mod Version-->
+    <VersionPrefix>1.6.1.1</VersionPrefix>
+    <!-- Do not generate pdb file on standard configuration -->
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <!-- Possible to compile spezific code only on configuration debug `#if DEBUG` and `#endif`  -->
+    <DefineConstants>DEBUG</DefineConstants>
+    <!-- generate pdb file for debugging-->
+    <DebugType>pdbonly</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <Optimize>False</Optimize>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- Include all dlls in the lib folder -->
+    <Reference Include="..\..\lib\*.dll">
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <Target Name="CopyDependencies" BeforeTargets="ResolveReferences">
+    <Exec Command="powershell -ExecutionPolicy Bypass -NoProfile -File ..\..\build\build.ps1 -Command CopyDependencies" />
+  </Target>
+  <Target Name="PreBuild" BeforeTargets="BeforeBuild">
+    <Exec Command="powershell -ExecutionPolicy Bypass -NoProfile -File ..\..\build\build.ps1 -Command PreBuild -VSConfiguration $(Configuration)" />
+  </Target>
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="powershell -ExecutionPolicy Bypass -NoProfile -File ..\..\build\build.ps1 -Command PostBuild -VSConfiguration $(Configuration)" />
+  </Target>
+  <Target Name="PreClean" BeforeTargets="BeforeClean">
+    <Exec Command="powershell -ExecutionPolicy Bypass -NoProfile -File ..\..\build\build.ps1 -Command Clean" />
+  </Target>
+</Project>

@@ -288,16 +288,17 @@ __pycache__/
 *.odx.cs
 *.xsd.cs
 
-ThirdParty/HugsLib.xml
-dist/
-/ThirdParty/
-
 # VS Code 
-/.vscode/obj
-/.vscode/bin
-/.vscode/debugFiles
 /.vscode/settings.json
 
-/output
-/localDependencies
+# Temp files install debug
+/build/debugFiles
+
+# Distribution folder
+/dist
+
+# External .dll libraries
+/lib
+
+# PDB files
 /mod-structure/**/*.pdb
