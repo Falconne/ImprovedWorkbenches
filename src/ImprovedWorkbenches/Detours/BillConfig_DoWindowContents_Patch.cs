@@ -71,12 +71,13 @@ namespace ImprovedWorkbenches
             }
 
             float columnWidth = (inRect.width - 34f) / 3f;
-            float buttonHight = Text.CalcHeight("IW.CountAwayLabel".Translate(), columnWidth) + 8f;
-            float optionsHeight = buttonHight + 2f + 2f + Text.LineHeight + 2f + 4f + 1f + 8f + Text.LineHeight;
-            float optionsOffset = inRect.height - 50f - optionsHeight;
+            float buttonHeight = Text.CalcHeight("IW.CountAwayLabel".Translate(), columnWidth) + 8f;
+            //OPTIONS HEIGHT = Count additional + Gap + Count away + Gap + GapLine + Gap + Restrict workbench + Gap + overflow
+            float optionsHeight = buttonHeight + 4f + Text.LineHeight + 6f + 1f + 8f + Text.LineHeight + 6f + 25f;
+            float optionsOffset = inRect.height - 50f - 100f;
 
             Listing_Standard optionsList = new Listing_Standard();
-            optionsList.Begin(new Rect(0, optionsOffset, columnWidth, optionsHeight));
+            optionsList.Begin(new Rect(0, optionsOffset, columnWidth, optionsHeight + 25f)); // +25f to make room for overflow
 
             // Output Filter
             if (ExtendedBillDataStorage.CanOutputBeFiltered(billRaw) && (billRaw.repeatMode == BillRepeatModeDefOf.TargetCount))
@@ -87,17 +88,17 @@ namespace ImprovedWorkbenches
                     temp.Close();
                     Find.WindowStack.Add(new Dialog_ThingFilter(extendedBillData, temp));
                 }
-                optionsList.Gap(2f);
-                optionsList.CheckboxLabeled("IW.CountAwayLabel".Translate(), ref extendedBillData.CountAway, "IW.CountAwayDesc".Translate());
                 optionsList.Gap(4f);
+                optionsList.CheckboxLabeled("IW.CountAwayLabel".Translate(), ref extendedBillData.CountAway, "IW.CountAwayDesc".Translate());
+                optionsList.Gap(6f);
                 optionsList.GapLine(1f);
             }
             else
             {
-                optionsList.Gap(buttonHight + optionsList.verticalSpacing);
-                optionsList.Gap(2f);
-                optionsList.Gap(Text.LineHeight + optionsList.verticalSpacing);
+                optionsList.Gap(buttonHeight + optionsList.verticalSpacing);
                 optionsList.Gap(4f);
+                optionsList.Gap(Text.LineHeight + optionsList.verticalSpacing);
+                optionsList.Gap(6f);
                 optionsList.Gap(1f);
             }
 
