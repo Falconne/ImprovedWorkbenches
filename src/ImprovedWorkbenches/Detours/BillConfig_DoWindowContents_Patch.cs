@@ -107,9 +107,12 @@ namespace ImprovedWorkbenches
 
             // Workbench Restriction
             Building_WorkTable workTable = Find.Selector.SingleSelectedThing as Building_WorkTable;
-            WorktableRestrictionData workbenchRestrictionData = Find.World.GetComponent<WorktableRestrictionDataStorage>()?.GetWorktableRestrictionData(workTable.thingIDNumber);
-            if (workbenchRestrictionData != null)
-                optionsList.CheckboxLabeled("IW.WorkbenchRestrictionLabel".Translate(), ref workbenchRestrictionData.isRestricted, "IW.WorkbenchRestrictionDesc".Translate());
+            if (workTable != null)
+            {
+                WorktableRestrictionData workbenchRestrictionData = Find.World.GetComponent<WorktableRestrictionDataStorage>()?.GetWorktableRestrictionData(workTable.thingIDNumber);
+                if (workbenchRestrictionData != null)
+                    optionsList.CheckboxLabeled("IW.WorkbenchRestrictionLabel".Translate(), ref workbenchRestrictionData.isRestricted, "IW.WorkbenchRestrictionDesc".Translate());
+            }
 
             optionsList.End();
         }
