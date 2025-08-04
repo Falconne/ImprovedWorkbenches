@@ -213,23 +213,33 @@ function CreateModFolder {
     }
     else {
         Copy-Item -Recurse -Force "$script:path_mod_structure\*" "$script:path_modOutput\$script:ModName\" 
-        $AboutFilePath = "$script:path_modOutput\$script:ModName\About\About.xml"
-
-        # Get the current timestamp in the desired format
-        $timestamp = Get-Date -Format "HH:mm - dd.MM.yyyy"
-
-        # Read the file content
-        [xml]$AboutFile = Get-Content -Path $AboutFilePath
-
-        # Modify the <description> element by adding current timestamp at the beginning
-        $AboutFile.ModMetaData.description = "Buildtime: $timestamp `r`n" + $AboutFile.ModMetaData.description
-
-        # Save the modified XML back to the file
-        $AboutFile.Save($AboutFilePath)
-
-        Write-Host " -> About file updated with buildtime."
     }
+
+    # Update About.xml file with modVersion
+    $AboutFilePath = "$script:path_modOutput\$script:ModName\About\About.xml"
+    [xml]$AboutFile = Get-Content -Path $AboutFilePath
+
+    [xml]$csproj = Get-Content $script:file_modcsproj
+    $version = $csproj.Project.PropertyGroup[0].VersionPrefix
+
+    $modVersionNode = $AboutFile.ModMetaData.SelectSingleNode("modVersion")
+    if ($modVersionNode) {
+        if ($VSConfiguration -ne "Release") {
+            $timestamp = Get-Date -Format "dd.MM-HH:mm"
+            $modVersionNode.InnerText = "$version - $timestamp"
+        }
+        else {
+            $modVersionNode.InnerText = $version
+        }
+    }
+    else {
+        Write-Host " -> Warning: modVersion node not found in About.xml"
+    }
+
+    $AboutFile.Save($AboutFilePath)
+    Write-Host " -> About file updated"
 }
+
 
 # subcomponents from PostBuild
 function CreateModZipFile {

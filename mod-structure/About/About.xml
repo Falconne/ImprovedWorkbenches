@@ -35,4 +35,5 @@
         <li>Ludeon.RimWorld</li>
         <li>brrainz.harmony</li>
     </loadAfter>
+    <modVersion IgnoreIfNoMatchingField="True">Set by PostBuild (same as .csproj VersionPrefix)</modVersion>
 </ModMetaData>
