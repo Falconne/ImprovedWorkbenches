@@ -42,9 +42,6 @@
     <IW.CountCorpseClothesLabel>计入尸体的衣物</IW.CountCorpseClothesLabel>
     <IW.CountCorpseClothesDesc>从尸体上扒下来的衣物也会被计入</IW.CountCorpseClothesDesc>
 
-    <IW.CountInventoryLabel>计入殖民者神杀的物品</IW.CountInventoryLabel>
-    <IW.CountInventoryDesc>殖民者或养殖的动物身上所装备或持有的的物品也会被计入</IW.CountInventoryDesc>
-
     <IW.CountAwayLabel>……甚至暂时离开的也算上</IW.CountAwayLabel>
     <IW.CountAwayDesc>就算是殖民者或者动物被送去远行、在运输仓内、低温休眠仓内或者其他任何原因暂时不可用，也会被计入</IW.CountAwayDesc>
 
@@ -93,4 +90,6 @@
 
     <IW.WorkbenchRestrictionLabel>限制工作台</IW.WorkbenchRestrictionLabel>
     <IW.WorkbenchRestrictionDesc>将此任务清单的限制应用到工作台中的所有任务清单</IW.WorkbenchRestrictionDesc>
+    <IW.CountInventory>计入库存 (拾取和搬运 兼容性)</IW.CountInventory>
+    <IW.CountInventoryDesc>计算殖民者库存中拥有或携带的物品。这是 拾取和搬运 的兼容性选项。</IW.CountInventoryDesc>
 </LanguageData>

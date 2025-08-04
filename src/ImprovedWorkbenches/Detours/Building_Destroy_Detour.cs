@@ -16,11 +16,14 @@ namespace ImprovedWorkbenches
                 worldComp?.RemoveWorktableRestrictionData(workTable.thingIDNumber);
 
                 // Clean up bill data 
-                foreach (var bill in workTable.BillStack.Bills)
+                if (workTable.BillStack?.Bills != null)
                 {
-                    if (bill is Bill_Production billProduction)
+                    foreach (var bill in workTable.BillStack.Bills)
                     {
-                        Main.Instance.OnBillDeleted(billProduction);
+                        if (bill is Bill_Production billProduction)
+                        {
+                            Main.Instance.OnBillDeleted(billProduction);
+                        }
                     }
                 }
             }

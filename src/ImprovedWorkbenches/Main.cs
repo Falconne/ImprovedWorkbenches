@@ -111,7 +111,7 @@ namespace ImprovedWorkbenches
                 var getterMethodInfo = AccessTools.Property(groupBillsType, "BillsSelectedGroup").GetMethod;
                 Log.Message("getterMethodInfo: " + getterMethodInfo);
 
-                ColonyGroupsBillToPawnGroupDictGetter = 
+                ColonyGroupsBillToPawnGroupDictGetter =
                     (Func<IDictionary>)Delegate.CreateDelegate(typeof(Func<IDictionary>), getterMethodInfo);
             }
             catch (Exception e)
@@ -156,6 +156,11 @@ namespace ImprovedWorkbenches
         public bool ShouldCountOutsideStockpiles()
         {
             return _countOutsideStockpiles;
+        }
+
+        public bool ShouldCountInventory()
+        {
+            return _countInventory;
         }
 
         public bool ShouldCountCarriedByNonHumans()

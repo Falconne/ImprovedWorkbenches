@@ -42,9 +42,6 @@
     <IW.CountCorpseClothesLabel>Contabilizar la ropa de cadáveres</IW.CountCorpseClothesLabel>
     <IW.CountCorpseClothesDesc>Incluir ropa usada por cadáver en el recuento de productos</IW.CountCorpseClothesDesc>
 
-    <IW.CountInventoryLabel>Contar los objetos de los colonos</IW.CountInventoryLabel>
-    <IW.CountInventoryDesc>Contar también los artículos que están en uso, equipados o transportados por cualquier colono o animal de la colonia</IW.CountInventoryDesc>
-
     <IW.CountAwayLabel>Contar cuando esté fuera</IW.CountAwayLabel>
     <IW.CountAwayDesc>Contar también los artículos de cualquier colono o animal enviado en una caravana, cápsulas de transporte, sarcófago de criptosueño o que no estén disponibles por otros motivos.</IW.CountAwayDesc>
     <IW.OutputFilterLabel>Contar artículos adicionales</IW.OutputFilterLabel>
@@ -97,4 +94,6 @@
 
     <IW.WorkbenchRestrictionLabel>Restringir banco de trabajo</IW.WorkbenchRestrictionLabel>
     <IW.WorkbenchRestrictionDesc>Aplicar la restricción de este proyecto a todos los proyectos en el banco de trabajo</IW.WorkbenchRestrictionDesc>
+    <IW.CountInventory>Contar inventario (compatibilidad con Recoger y transportar)</IW.CountInventory>
+    <IW.CountInventoryDesc>Contar artículos que el colono tiene en su inventario o lleva consigo. Esta es una opción de compatibilidad para Recoger y transportar.</IW.CountInventoryDesc>
 </LanguageData>

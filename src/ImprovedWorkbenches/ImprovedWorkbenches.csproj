@@ -10,7 +10,7 @@
     <RootNamespace>ImprovedWorkbenches</RootNamespace>
     <AssemblyName>ImprovedWorkbenches</AssemblyName>
     <!-- Modify [VersionPrefix] to your mod Version-->
-    <VersionPrefix>1.6.1.2</VersionPrefix>
+    <VersionPrefix>1.6.1.3</VersionPrefix>
     <!-- Do not generate pdb file on standard configuration -->
     <DebugType>none</DebugType>
     <DebugSymbols>false</DebugSymbols>

@@ -18,15 +18,12 @@ namespace ImprovedWorkbenches
         {
             if (__instance.GetType() != typeof(Dialog_BillConfig)) return;
 
-            Bill_Production bill = (Bill_Production)BillGetter.GetValue(__instance);
-            if (bill == null)
-                return;
+            if (!(BillGetter?.GetValue(__instance) is Bill_Production bill) || bill == null) return;
 
-            Building_WorkTable workTable = Find.Selector.SingleSelectedThing as Building_WorkTable;
+            if (!(Find.Selector?.SingleSelectedThing is Building_WorkTable workTable)) return;
+
             WorktableRestrictionData workbenchRestrictionData = Find.World.GetComponent<WorktableRestrictionDataStorage>()?.GetWorktableRestrictionData(workTable.thingIDNumber);
-
-            if (workbenchRestrictionData == null || !workbenchRestrictionData.isRestricted)
-                return;
+            if (workbenchRestrictionData == null || !workbenchRestrictionData.isRestricted) return;
 
             // Skip if the restriction has not changed
             if (workbenchRestrictionData.restrictionPawn == bill.PawnRestriction &&
@@ -44,6 +41,8 @@ namespace ImprovedWorkbenches
             workbenchRestrictionData.restrictionMechsOnly = bill.MechsOnly;
             workbenchRestrictionData.restrictionNonMechsOnly = bill.NonMechsOnly;
             workbenchRestrictionData.restrictionAllowedSkillRange = bill.allowedSkillRange;
+
+            if (workTable.BillStack?.Bills == null) return;
 
             // Update all bills in the worktable to match the restriction data
             if (workbenchRestrictionData.restrictionPawn != null)

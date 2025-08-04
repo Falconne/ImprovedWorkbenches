@@ -89,7 +89,7 @@ namespace ImprovedWorkbenches
             }
 
             // Count Inventory - Compatibility with PickupandHaul (Ignore default product when includeEquipped is true)
-            if (!defaultProduct || !bill.includeEquipped)
+            if (Main.Instance.ShouldCountInventory() && (!defaultProduct || !bill.includeEquipped))
             {
                 foreach (Pawn pawn in AllPawnsToCount(bill.Map.mapPawns))
                 {

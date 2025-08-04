@@ -42,9 +42,6 @@
     <IW.CountCorpseClothesLabel>Count corpse clothes</IW.CountCorpseClothesLabel>
     <IW.CountCorpseClothesDesc>Include corpse worn clothing in item count</IW.CountCorpseClothesDesc>
 
-    <IW.CountInventoryLabel>Count colonist's items</IW.CountInventoryLabel>
-    <IW.CountInventoryDesc>Also count items currently being worn, equipped or carried by any colonist or colony animal</IW.CountInventoryDesc>
-
     <IW.CountAwayLabel>Count when away</IW.CountAwayLabel>
     <IW.CountAwayDesc>Also count items on any colonist or animal sent on a caravan, in transport pods, in cryptosleep chambers, or otherwise unavailable</IW.CountAwayDesc>
 
@@ -103,4 +100,7 @@
 
     <IW.WorkbenchRestrictionLabel>Restrict workbench</IW.WorkbenchRestrictionLabel>
     <IW.WorkbenchRestrictionDesc>Apply the restriction of this bill to all bills in the workbench</IW.WorkbenchRestrictionDesc>
+
+    <IW.CountInventory>Count inventory (Pick up and Haul compatibility)</IW.CountInventory>
+    <IW.CountInventoryDesc>Count items pawn have in their inventory or carried by them. This is a compatibility option for Pickup and Haul.</IW.CountInventoryDesc>
 </LanguageData>

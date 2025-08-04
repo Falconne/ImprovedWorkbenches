@@ -42,9 +42,6 @@
     <IW.CountCorpseClothesLabel>Учитывать одежду с трупов</IW.CountCorpseClothesLabel>
     <IW.CountCorpseClothesDesc>Включать одежду на трупах при учёте предметов</IW.CountCorpseClothesDesc>
 
-    <IW.CountInventoryLabel>Учитывать предметы в инвентаре</IW.CountInventoryLabel>
-    <IW.CountInventoryDesc>Включить учёт предметов, которые в настоящее время носят, экипируются или перевозятся любым животным или колонистом</IW.CountInventoryDesc>
-
     <IW.CountAwayLabel>... Даже когда вещи недоступны</IW.CountAwayLabel>
     <IW.CountAwayDesc>Также подсчитывайте предметы на любом колонисте или животном, отправленном с караваном, в транспортных контейнерах, в контейнерах криптосна, т.е. недоступным</IW.CountAwayDesc>
 
@@ -100,4 +97,6 @@
 
     <IW.WorkbenchRestrictionLabel>Ограничить верстак</IW.WorkbenchRestrictionLabel>
     <IW.WorkbenchRestrictionDesc>Применить ограничение этого проекта ко всем проектам на верстаке</IW.WorkbenchRestrictionDesc>
+    <IW.CountInventory>Подсчитывать инвентарь (совместимость с Поднять и перенести)</IW.CountInventory>
+    <IW.CountInventoryDesc>Подсчитывать предметы, которые колонист имеет в инвентаре или несет с собой. Это опция совместимости для Поднять и перенести.</IW.CountInventoryDesc>
 </LanguageData>

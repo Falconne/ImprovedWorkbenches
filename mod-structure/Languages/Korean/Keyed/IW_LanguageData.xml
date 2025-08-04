@@ -53,4 +53,6 @@
 
     <IW.WorkbenchRestrictionLabel>작업대 제한</IW.WorkbenchRestrictionLabel>
     <IW.WorkbenchRestrictionDesc>이 계획서의 제한을 작업대의 모든 계획서에 적용</IW.WorkbenchRestrictionDesc>
+    <IW.CountInventory>인벤토리 계산 (픽업 앤 홀 호환성)</IW.CountInventory>
+    <IW.CountInventoryDesc>식민지 주민이 인벤토리에 가지고 있거나 휴대하고 있는 아이템을 계산합니다. 이것은 픽업 앤 홀을 위한 호환성 옵션입니다.</IW.CountInventoryDesc>
 </LanguageData>

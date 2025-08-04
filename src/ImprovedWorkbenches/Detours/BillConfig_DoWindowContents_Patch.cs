@@ -15,16 +15,15 @@ namespace ImprovedWorkbenches
         [HarmonyPostfix]
         public static void DrawFilters(Dialog_BillConfig __instance, Rect inRect)
         {
-            var billRaw = (Bill_Production)BillGetter.GetValue(__instance);
-            if (billRaw == null)
-                return;
+            if (!(BillGetter?.GetValue(__instance) is Bill_Production billRaw)) return;
 
-            var extendedBillDataStorage = Main.Instance.GetExtendedBillDataStorage();
+            ExtendedBillDataStorage extendedBillDataStorage = Main.Instance.GetExtendedBillDataStorage();
+            if (extendedBillDataStorage == null) return;
+
             extendedBillDataStorage.MirrorBillToLinkedBills(billRaw);
 
-            var extendedBillData = extendedBillDataStorage.GetOrCreateExtendedDataFor(billRaw);
-            if (extendedBillData == null)
-                return;
+            ExtendedBillData extendedBillData = extendedBillDataStorage.GetOrCreateExtendedDataFor(billRaw);
+            if (extendedBillData == null) return;
 
             // Bill navigation buttons
             DrawWorkTableNavigation(__instance, billRaw, inRect);
@@ -106,8 +105,7 @@ namespace ImprovedWorkbenches
             optionsList.Gap(8f);
 
             // Workbench Restriction
-            Building_WorkTable workTable = Find.Selector.SingleSelectedThing as Building_WorkTable;
-            if (workTable != null)
+            if (Find.Selector?.SingleSelectedThing is Building_WorkTable workTable)
             {
                 WorktableRestrictionData workbenchRestrictionData = Find.World.GetComponent<WorktableRestrictionDataStorage>()?.GetWorktableRestrictionData(workTable.thingIDNumber);
                 if (workbenchRestrictionData != null)
