@@ -7,7 +7,7 @@ using Verse;
 
 namespace ImprovedWorkbenches
 {
-    // Automatically open proper tab when a workbench or stockpile is selected
+    // Automatically open proper tab when a workbench, stockpile or fishing zone is selected
     [HarmonyPatch(typeof(Selector), "Select")]
     public static class Open_Bills_Tab_On_Select
     {
@@ -46,7 +46,7 @@ namespace ImprovedWorkbenches
                 // Select any storage or bill tab the selected thing might have
                 //var tabToSelect = listOfTabs.OfType<ITab_Storage>().FirstOrDefault();
                 var tabToSelect = tabsOfSelectedThing
-                    .FirstOrDefault(t => t is ITab_Storage || t is ITab_Bills);
+                    .FirstOrDefault(t => t is ITab_Storage || t is ITab_Bills || t is ITab_Fishing);
 
                 if (tabToSelect == null)
                     return;
@@ -67,6 +67,9 @@ namespace ImprovedWorkbenches
         {
             if (__instance.SelectedZone is Zone_Stockpile stockpile)
                 return stockpile.GetInspectTabs();
+
+            if (__instance.SelectedZone is Zone_Fishing fishing)
+                return fishing.GetInspectTabs();
 
             if (__instance.SingleSelectedThing is Building_WorkTable workTable)
                 return workTable.GetInspectTabs();
