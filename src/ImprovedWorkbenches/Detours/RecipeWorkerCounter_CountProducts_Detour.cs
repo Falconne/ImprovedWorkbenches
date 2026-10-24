@@ -22,7 +22,11 @@ namespace ImprovedWorkbenches
             {
                 foreach (ThingDef def in extendedBillData.ProductAdditionalFilter.AllowedThingDefs)
                 {
-                    __result += CountProducts(extendedBillData, def, bill, __instance, def == defaultProduct);
+                    // The default product is counted below, counting it here too would double count it
+                    if (def == defaultProduct)
+                        continue;
+
+                    __result += CountProducts(extendedBillData, def, bill, __instance, false);
                 }
             }
 
